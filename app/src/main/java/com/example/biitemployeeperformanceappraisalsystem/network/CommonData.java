@@ -8,12 +8,13 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.models.Student;
 import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -120,6 +121,44 @@ public class CommonData {
             titles[i] = sessionList.get(i).getTitle();
         }
         return titles;
+    }
+
+    public void getEmployees(final Consumer<List<EmployeeDetails>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeDetails>> employees = apiNetwork.getEmployees();
+        employees.enqueue(new Callback<List<EmployeeDetails>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeDetails>> call, Response<List<EmployeeDetails>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeDetails>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching employees");
+            }
+        });
+    }
+
+    public void GetEmployeesWithKpiScores(final Consumer<List<EmployeeDetailsScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeDetailsScore>> employeeDetailsScoreList = apiNetwork.GetEmployeesWithKpiScores();
+        employeeDetailsScoreList.enqueue(new Callback<List<EmployeeDetailsScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeDetailsScore>> call, Response<List<EmployeeDetailsScore>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeDetailsScore>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching employees");
+            }
+        });
     }
 
     public void getSessionPerformance(){
