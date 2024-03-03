@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_questionnaire"
+        android:title="Questionnaire"
+        android:icon="@drawable/question_icon"
+        />
+    <item
+        android:id="@+id/navigation_kpi"
+        android:title="KPI"
+        android:icon="@drawable/ic_launcher_background"
+        />
+    <item
+        android:id="@+id/navigation_evaluation"
+        android:title="Evaluation"
+        android:icon="@drawable/ic_launcher_foreground"
+        />
+</menu>

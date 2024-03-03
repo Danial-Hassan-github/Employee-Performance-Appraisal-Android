@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/navigation_report"
+        android:title="Report"
+        android:icon="@drawable/performance_icon"
+        />
+    <item
+        android:id="@+id/navigation_tasks"
+        android:title="Tasks"
+        android:icon="@drawable/task_icon"
+        />
+    <item
+        android:id="@+id/navigation_evaluators"
+        android:title="Evaluators"
+        android:icon="@drawable/evaluators_icon"
+        />
+    <item
+        android:id="@+id/navigation_settings"
+        android:title="Settings"
+        android:icon="@drawable/setting_icon"
+        />
+</menu>

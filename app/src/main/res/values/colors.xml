@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="gradient_start_color">#C2F0F0</color>
+    <color name="gradient_center_color">#90E0E0</color>
+    <color name="gradient_end_color">#64B5F6</color>
+    <color name="gradient_secondary_end_color">#64B5F6</color>
+    <color name="brown">#913F01</color>
+
+    <color name="button_gradient_start_color">#96DCE6</color>
+    <color name="button_gradient_end_color">#2779BD</color>
+<!--    <color name="colorButtonText">#985EFF</color>-->
+    <color name="topBar">#3447B5</color>
+    <color name="bottomBar">#0A5E2D</color>
+    <color name="check">#3447B5</color>
+    <color name="edit_text_background_color">#F5F5F5</color>
+    <color name="metaData">#06BD00</color>
+    <color name="colorPrimary">#189F51</color>
+    <color name="colorTextPrimary">#000000</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="grey">#BEB9B9</color>
+</resources>
