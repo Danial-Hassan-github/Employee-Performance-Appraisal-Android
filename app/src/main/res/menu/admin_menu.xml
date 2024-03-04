@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+ j
+    <item
+        android:id="@+id/navigation_employees"
+        android:title="Employees"
+        android:icon="@drawable/employees_icon"
+        />
+    <item
+        android:id="@+id/navigation_course_assignment"
+        android:title="Assign Course"
+        android:icon="@drawable/course_assign_icon"
+        />
+    <item
+        android:id="@+id/navigation_chr"
+        android:title="CHR"
+        android:icon="@drawable/chr_icon"
+        />
+    <item
+        android:id="@+id/navigation_settings"
+        android:title="Setting"
+        android:icon="@drawable/setting_icon"
+        />
+</menu>

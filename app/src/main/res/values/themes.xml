@@ -4,7 +4,7 @@
         <!-- Customize your light theme here. -->
     </style>
 
-    <style name="Theme.BiitEmployeePerformanceAppraisalSystem" parent="Base.Theme.BiitEmployeePerformanceAppraisalSystem" >
+    <style name="Theme.BiitEmployeePerformanceAppraisalSystem" parent="Base.Theme.BiitEmployeePerformanceAppraisalSystem">
         <item name="colorPrimary">@color/bottomBar</item>
     </style>
 

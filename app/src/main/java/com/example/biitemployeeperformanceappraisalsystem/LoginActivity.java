@@ -9,6 +9,7 @@ import android.widget.EditText;
 
 import com.example.biitemployeeperformanceappraisalsystem.network.ApiNetwork;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.Login;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 
 public class LoginActivity extends AppCompatActivity {
@@ -27,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
         RetrofitClient retrofitClient = new RetrofitClient();
         apiNetwork = retrofitClient.getRetrofitInstance().create(ApiNetwork.class);
-        CommonData login=new CommonData(LoginActivity.this);
+        Login login=new Login(LoginActivity.this);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

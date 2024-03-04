@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.biitemployeeperformanceappraisalsystem.MyTasksFragment;
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
@@ -38,11 +39,8 @@ public class HodMainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        // DirectorMainActivity directorMainActivity = new DirectorMainActivity();
-
         replaceFragment(new PerformanceFragment());
 
-        // Set up click listener for the "Settings" menu item
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -51,13 +49,13 @@ public class HodMainActivity extends AppCompatActivity {
                     topText.setText("Performance");
                     replaceFragment(new PerformanceFragment());
                     return true;
-                }
-                else if (R.id.navigation_tasks==item.getItemId()) {
+                }else if (R.id.navigation_my_tasks==item.getItemId()) {
                     // Handle "Tasks" click
                     topText.setText("Tasks");
-                    replaceFragment(new TaskFragment());
+                    replaceFragment(new MyTasksFragment());
                     return true;
-                } else if (R.id.navigation_evaluate==item.getItemId()) {
+                }
+                else if (R.id.navigation_evaluate==item.getItemId()) {
                     topText.setText("Evaluate");
                     replaceFragment(new EvaluatorFragment());
                     return true;
@@ -67,9 +65,8 @@ public class HodMainActivity extends AppCompatActivity {
                     replaceFragment(new ScoresFragment());
                     return true;
 
-                } else if (R.id.navigation_questionnaire==item.getItemId()) {
-                    topText.setText("Questionnaire");
-                    replaceFragment(new QuestionnaireFragment());
+                } else if (R.id.navigation_more==item.getItemId()) {
+                    showPopupMenu(bottomNavigationView);
                     return true;
                 }
                 return false;
@@ -81,6 +78,31 @@ public class HodMainActivity extends AppCompatActivity {
     public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit();
+    }
+
+    private void showPopupMenu(View view) {
+        PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
+        popupMenu.getMenuInflater().inflate(R.menu.hod_popup_menu, popupMenu.getMenu());
+        // Set up click listener for items in the PopupMenu
+        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                if (R.id.navigation_questionnaire==item.getItemId()) {
+                    // Handle "Questionnaire" click
+                    replaceFragment(new QuestionnaireFragment());
+                    topText.setText("Questionnaire");
+                    return true;
+                }
+                else if (R.id.navigation_tasks==item.getItemId()) {
+                    replaceFragment(new TaskFragment());
+                    topText.setText("Tasks");
+                    return true;
+                }
+                return false;
+            }
+        });
+        popupMenu.show();
     }
 }

@@ -12,19 +12,4 @@
         android:title="My Tasks"
         android:icon="@drawable/task_icon"
         />
-    <item
-        android:id="@+id/navigation_evaluate"
-        android:title="Evaluate"
-        android:icon="@drawable/evaluators_icon"
-        />
-    <item
-        android:id="@+id/navigation_score"
-        android:title="Scores"
-        android:icon="@drawable/outline_scoreboard_24"
-        />
-    <item
-        android:id="@+id/navigation_more"
-        android:title="More"
-        android:icon="@drawable/plus_circular_icon"
-        />
 </menu>

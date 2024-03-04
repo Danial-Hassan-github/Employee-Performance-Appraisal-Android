@@ -19,20 +19,28 @@ import retrofit2.http.Query;
 public interface ApiNetwork {
     @GET("Login/Login")
     Call<Student> LoginStudent(@Query("emailOrAridNo") String emailOrAridNo, @Query("password") String password);
+
     @GET("Login/Login")
     Call<EmployeeDetails> LoginEmployee(@Query("emailOrAridNo") String emailOrAridNo, @Query("password") String password);
+
     @GET("Employee/GetEmployees")
     Call<List<EmployeeDetails>> getEmployees();
+
     @GET("Employee/GetEmployeesWithKpiScores")
     Call<List<EmployeeDetailsScore>> GetEmployeesWithKpiScores();
+
     @GET("Session/GetSessions")
     Call<List<Session>> GetSession();
+
     @GET("Task/getTasksDetail")
     Call<List<TaskDetails>> getTasks();
+
     @GET("Task/GetEmployeeTasks")
     Call<List<TaskDetails>> GetEmployeeTasks(@Query("employeeID") int employeeID);
+
     @GET("Questionaire/GetConfidentialQuestions")
     Call<List<Question>> GetConfidentialQuestions();
+
     @GET("Questionaire/GetQuestionnaireTypes")
     Call<List<QuestionnaireType>> getQuestionnaireTypes();
 }

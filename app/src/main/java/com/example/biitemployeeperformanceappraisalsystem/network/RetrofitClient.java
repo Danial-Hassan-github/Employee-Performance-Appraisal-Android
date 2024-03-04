@@ -16,8 +16,6 @@ public class RetrofitClient {
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
                 .create();
 
-
-
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();

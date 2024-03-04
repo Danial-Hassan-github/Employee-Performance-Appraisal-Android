@@ -19,6 +19,7 @@ import android.widget.Toast;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,13 +61,12 @@ public class EvaluationFragment extends Fragment {
             }
         });
 
-        CommonData data = new CommonData(view.getContext());
-        data.getSessions(sessions -> {
+        SessionData sessionData = new SessionData(view.getContext());
+        sessionData.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    CommonData commonData = new CommonData(view.getContext());
-                    commonData.populateSpinner(sessions, sessionSpinner);
+                    sessionData.populateSpinner(sessions, sessionSpinner);
 
                     // Set an item selected listener for the session spinner
                     sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

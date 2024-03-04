@@ -1,8 +1,9 @@
-package com.example.biitemployeeperformanceappraisalsystem.director;
+package com.example.biitemployeeperformanceappraisalsystem.admin;
+
+import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
-import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,32 +13,39 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsListAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
 
 import java.util.List;
 
-public class DirectorReportFragment extends Fragment {
-
-    List<EmployeeDetailsScore> employeeDetailsScoreList;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link EmployeeListFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class EmployeeListFragment extends Fragment {
+    List<EmployeeDetails> employeeDetailsList;
     ListView listView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_director_report, container, false);
+        View view = inflater.inflate(R.layout.fragment_employee_list, container, false);
 
         listView = view.findViewById(R.id.list_view);
         // employeeDetailsList = view.findViewById(R.id.list_view);
 
         CommonData data = new CommonData(view.getContext());
 
-        data.GetEmployeesWithKpiScores(
+        data.getEmployees(
                 // onSuccess callback
                 employeeDetails -> {
-                    employeeDetailsScoreList = employeeDetails;
+                    employeeDetailsList = employeeDetails;
                     // Create ArrayAdapter and set it to the ListView
-                    EmployeeDetailsScoreAdapter adapter = new EmployeeDetailsScoreAdapter(getContext(), R.layout.list_item_layout, employeeDetails);
+                    EmployeeDetailsListAdapter adapter = new EmployeeDetailsListAdapter(getContext(), R.layout.employee_list_item_layout, employeeDetails);
                     listView.setAdapter(adapter);
                 },
                 // onFailure callback
@@ -49,15 +57,15 @@ public class DirectorReportFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EmployeeDetailsScore employeeDetailsScore = employeeDetailsScoreList.get(position);
+                EmployeeDetails employeeDetails = employeeDetailsList.get(position);
                 // Pass employee data to PerformanceFragment
                 PerformanceFragment fragment = new PerformanceFragment();
                 Bundle args = new Bundle();
-                args.putInt("id",employeeDetailsScore.getEmployee().getId());
+                args.putInt("id",employeeDetails.getEmployee().getId());
 //                args.putParcelable("employee_details", employeeDetailsScore);
                 fragment.setArguments(args);
-                DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
-                directorMainActivity.replaceFragment(fragment);
+//                DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
+//               directorMainActivity.replaceFragment(fragment);
             }
         });
         return view;

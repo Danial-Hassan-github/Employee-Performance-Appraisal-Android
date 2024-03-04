@@ -39,14 +39,11 @@ public class DirectorMainActivity extends AppCompatActivity {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
                 if (R.id.navigation_report==item.getItemId()) {
-                    // Handle "Report" click
-                    // Replace content with the Report layout
                     topText.setText("Report");
                     replaceFragment(new DirectorReportFragment());
                     return true;
                 }
                 else if (R.id.navigation_tasks==item.getItemId()) {
-                    // Handle "Tasks" click
                     topText.setText("Tasks");
                     replaceFragment(new TaskFragment());
                     return true;
@@ -55,8 +52,6 @@ public class DirectorMainActivity extends AppCompatActivity {
                     replaceFragment(new EvaluatorFragment());
                     return true;
                 } else if (R.id.navigation_settings==item.getItemId()) {
-                    // Handle "Settings" click
-                    // Show PopupMenu for additional options
                     showPopupMenu(bottomNavigationView);
                     return true;
 
@@ -80,13 +75,11 @@ public class DirectorMainActivity extends AppCompatActivity {
                     return true;
                 }
                 else if (R.id.navigation_kpi==item.getItemId()) {
-                    // Handle "KPI" click
                     replaceFragment(new KpiFragment());
                     topText.setText("KPI");
                     return true;
                 }
                 else if (R.id.navigation_evaluation==item.getItemId()) {
-                    // Handle "Evaluation" click
                     replaceFragment(new EvaluationFragment());
                     topText.setText("Evaluation");
                     return true;
@@ -97,10 +90,27 @@ public class DirectorMainActivity extends AppCompatActivity {
         popupMenu.show();
     }
 
+    @Override
+    public void onBackPressed() {
+        // Get the current fragment in the container
+        Fragment currentFragment = getSupportFragmentManager().findFragmentById(R.id.fragment_container);
+
+        // Check if there are fragments in the back stack
+        if (currentFragment != null && getSupportFragmentManager().getBackStackEntryCount() > 0) {
+            // Pop the back stack to navigate to the previous fragment
+            getSupportFragmentManager().popBackStack();
+        } else {
+            // If no fragments in the back stack, proceed with default back button behavior
+            super.onBackPressed();
+        }
+    }
+
+
     // Method to replace the content of the FrameLayout with a new fragment
     public void replaceFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container, fragment)
+                .addToBackStack(null)
                 .commit();
     }
 }

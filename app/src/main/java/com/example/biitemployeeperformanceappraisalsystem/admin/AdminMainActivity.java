@@ -1,63 +1,57 @@
-package com.example.biitemployeeperformanceappraisalsystem.faculty;
+package com.example.biitemployeeperformanceappraisalsystem.admin;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.FrameLayout;
-import android.widget.PopupMenu;
 import android.widget.TextView;
 
 import com.example.biitemployeeperformanceappraisalsystem.MyTasksFragment;
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
-import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
-import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
 import com.example.biitemployeeperformanceappraisalsystem.director.EvaluatorFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
-public class FacultyMain extends AppCompatActivity {
+public class AdminMainActivity extends AppCompatActivity {
     private TextView topText;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_faculty_main);
+        setContentView(R.layout.activity_admin_main);
 
         topText = findViewById(R.id.txt_top);
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        replaceFragment(new PerformanceFragment());
+        replaceFragment(new EmployeeListFragment());
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                if (R.id.navigation_performance==item.getItemId()) {
+                if (R.id.navigation_employees==item.getItemId()) {
                     // Replace content with the Performance layout
-                    topText.setText("Performance");
-                    replaceFragment(new PerformanceFragment());
-                    return true;
-                }else if (R.id.navigation_my_tasks==item.getItemId()) {
-                    // Handle "Tasks" click
-                    topText.setText("Tasks");
-                    replaceFragment(new MyTasksFragment());
+                    topText.setText("Employees");
+                    replaceFragment(new EmployeeListFragment());
                     return true;
                 }
-                else if (R.id.navigation_evaluate==item.getItemId()) {
+                else if (R.id.navigation_course_assignment==item.getItemId()) {
                     topText.setText("Evaluate");
                     replaceFragment(new EvaluatorFragment());
                     return true;
-                } else if (R.id.navigation_score==item.getItemId()) {
+                }else if (R.id.navigation_chr==item.getItemId()) {
+                    // Handle "Tasks" click
+                    topText.setText("CHR");
+                    replaceFragment(new MyTasksFragment());
+                    return true;
+                } else if (R.id.navigation_settings==item.getItemId()) {
                     // Handle "Settings" click
-                    topText.setText("Scores");
+                    topText.setText("Setting");
                     replaceFragment(new ScoresFragment());
                     return true;
 

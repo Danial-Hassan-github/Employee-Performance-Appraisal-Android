@@ -16,4 +16,9 @@
         android:title="Evaluation"
         android:icon="@drawable/ic_launcher_foreground"
         />
+    <item
+        android:id="@+id/navigation_options_weightage"
+        android:title="Options weightage"
+        android:icon="@drawable/ic_launcher_foreground"
+        />
 </menu>

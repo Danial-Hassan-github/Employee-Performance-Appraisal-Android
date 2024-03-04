@@ -22,9 +22,4 @@
         android:title="Scores"
         android:icon="@drawable/outline_scoreboard_24"
         />
-    <item
-        android:id="@+id/navigation_more"
-        android:title="More"
-        android:icon="@drawable/plus_circular_icon"
-        />
 </menu>

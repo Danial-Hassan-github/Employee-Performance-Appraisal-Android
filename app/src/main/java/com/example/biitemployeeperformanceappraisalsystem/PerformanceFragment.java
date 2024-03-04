@@ -13,8 +13,10 @@ import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.BarData;
@@ -49,15 +51,14 @@ public class PerformanceFragment extends Fragment {
         fromSessionSpinner = view.findViewById(R.id.spinner_session_from);
         toSessionSpinner = view.findViewById(R.id.spinner_session_to);
 
-        CommonData data = new CommonData(view.getContext());
-        data.getSessions(sessions -> {
+        SessionData sessionData = new SessionData(view.getContext());
+        sessionData.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    CommonData commonData=new CommonData(view.getContext());
-                    commonData.populateSpinner(sessions,sessionSpinner);
-                    commonData.populateSpinner(sessions,fromSessionSpinner);
-                    commonData.populateSpinner(sessions,toSessionSpinner);
+                    sessionData.populateSpinner(sessions,sessionSpinner);
+                    sessionData.populateSpinner(sessions,fromSessionSpinner);
+                    sessionData.populateSpinner(sessions,toSessionSpinner);
                 },
                 // onFailure callback
                 errorMessage -> {
@@ -131,15 +132,16 @@ public class PerformanceFragment extends Fragment {
                 pieChart.setVisibility(View.VISIBLE);
 
                 ArrayList<PieEntry> entries = new ArrayList<>();
-                entries.add(new PieEntry(18.5f, "Green"));
-                entries.add(new PieEntry(26.7f, "Red"));
-                entries.add(new PieEntry(24.0f, "Blue"));
-                entries.add(new PieEntry(30.8f, "Yellow"));
+                entries.add(new PieEntry(18.5f, "Administrative"));
+                entries.add(new PieEntry(26.7f, "Academic"));
+                entries.add(new PieEntry(24.0f, "Punctuality"));
+                entries.add(new PieEntry(30.8f, "Project"));
 
                 PieDataSet dataSet = new PieDataSet(entries, "Pie Chart");
 
                 // Generate colors dynamically
-                ArrayList<Integer> colors = generateRandomColors(entries.size());
+                CommonMethods commonMethods=new CommonMethods();
+                ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
                 dataSet.setColors(colors);
 
                 PieData data = new PieData(dataSet);
@@ -169,10 +171,10 @@ public class PerformanceFragment extends Fragment {
                 group2.add(new BarEntry(1.33f, 25f)); // Note the difference in x-position
                 group2.add(new BarEntry(2.33f, 35f));
 
-                BarDataSet barDataSet1 = new BarDataSet(group1, "Group 1");
+                BarDataSet barDataSet1 = new BarDataSet(group1, "Fall-2020");
                 barDataSet1.setColor(Color.rgb(0, 155, 0));
 
-                BarDataSet barDataSet2 = new BarDataSet(group2, "Group 2");
+                BarDataSet barDataSet2 = new BarDataSet(group2, "Spring-2021");
                 barDataSet2.setColor(Color.rgb(155, 0, 0));
 
 // Adjust the bar width and spacing
@@ -193,15 +195,5 @@ public class PerformanceFragment extends Fragment {
 
         // Inflate the layout for this fragment
         return view;
-    }
-
-    private ArrayList<Integer> generateRandomColors(int count) {
-        ArrayList<Integer> colors = new ArrayList<>();
-        Random random = new Random();
-        for (int i = 0; i < count; i++) {
-            int color = Color.argb(255, random.nextInt(256), random.nextInt(256), random.nextInt(256));
-            colors.add(color);
-        }
-        return colors;
     }
 }
