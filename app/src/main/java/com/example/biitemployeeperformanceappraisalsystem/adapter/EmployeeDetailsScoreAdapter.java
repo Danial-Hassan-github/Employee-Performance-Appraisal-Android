@@ -44,7 +44,7 @@ public class EmployeeDetailsScoreAdapter extends ArrayAdapter<EmployeeDetailsSco
             // Set employee name, department, and score to the TextViews
             textName.setText("#"+(position+1));
             textDepartment.setText(employee.getEmployee().getName());
-            textScore.setText(String.valueOf(employee.getTotalScore()));
+            textScore.setText(String.valueOf(employee.getTotalScore())+"%");
         }
 
         return view;

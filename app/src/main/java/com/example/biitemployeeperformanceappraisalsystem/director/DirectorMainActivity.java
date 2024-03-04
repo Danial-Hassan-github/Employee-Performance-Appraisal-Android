@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.biitemployeeperformanceappraisalsystem.PieChartPerformanceFragment;
+import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -75,7 +75,7 @@ public class DirectorMainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (R.id.navigation_questionnaire==item.getItemId()) {
                     // Handle "Questionnaire" click
-                    replaceFragment(new KpiFragment());
+                    replaceFragment(new QuestionnaireFragment());
                     topText.setText("Questionnaire");
                     return true;
                 }

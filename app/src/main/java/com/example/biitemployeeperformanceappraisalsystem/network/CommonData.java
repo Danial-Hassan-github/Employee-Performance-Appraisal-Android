@@ -13,6 +13,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.models.Student;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
 import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
 import java.util.List;
@@ -157,6 +158,25 @@ public class CommonData {
             @Override
             public void onFailure(Call<List<EmployeeDetailsScore>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching employees");
+            }
+        });
+    }
+
+    public void getTasks(final Consumer<List<TaskDetails>> onSuccess, final Consumer<String> onFailure){
+        Call<List<TaskDetails>> employees = apiNetwork.getTasks();
+        employees.enqueue(new Callback<List<TaskDetails>>() {
+            @Override
+            public void onResponse(Call<List<TaskDetails>> call, Response<List<TaskDetails>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskDetails>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching tasks");
             }
         });
     }

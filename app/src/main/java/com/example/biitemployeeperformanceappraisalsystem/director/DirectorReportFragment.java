@@ -1,31 +1,26 @@
 package com.example.biitemployeeperformanceappraisalsystem.director;
 
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
-import com.example.biitemployeeperformanceappraisalsystem.PieChartPerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DirectorReportFragment extends Fragment {
 
-    List<EmployeeDetails> employeeDetailsList;
+    List<EmployeeDetailsScore> employeeDetailsScoreList;
     ListView listView;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -38,20 +33,10 @@ public class DirectorReportFragment extends Fragment {
 
         CommonData data = new CommonData(view.getContext());
 
-        // Create an ArrayAdapter and set it to the RecyclerView
-        // ArrayAdapter<String> adapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, employeeDetailsList);
         data.GetEmployeesWithKpiScores(
                 // onSuccess callback
                 employeeDetails -> {
-                    List<EmployeeDetailsScore> employeeDetailsScoreList = employeeDetails;
-                    // Extract employee names and scores
-                    List<String> employeeNames = new ArrayList<>();
-                    int i=1;
-                    for (EmployeeDetailsScore employee : employeeDetails) {
-                        employeeNames.add("#" + i + "   " + employee.getEmployee().getName() + "    " + employee.getTotalScore());
-                        i++;
-                    }
-
+                    employeeDetailsScoreList = employeeDetails;
                     // Create ArrayAdapter and set it to the ListView
                     EmployeeDetailsScoreAdapter adapter = new EmployeeDetailsScoreAdapter(getContext(), R.layout.list_item_layout, employeeDetails);
                     listView.setAdapter(adapter);
@@ -65,8 +50,15 @@ public class DirectorReportFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                EmployeeDetailsScore employeeDetailsScore = employeeDetailsScoreList.get(position);
+                // Pass employee data to PerformanceFragment
+                PerformanceFragment fragment = new PerformanceFragment();
+                Bundle args = new Bundle();
+                args.putInt("id",employeeDetailsScore.getEmployee().getId());
+//                args.putParcelable("employee_details", employeeDetailsScore);
+                fragment.setArguments(args);
                 DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
-                directorMainActivity.replaceFragment(new PerformanceFragment());
+                directorMainActivity.replaceFragment(fragment);
             }
         });
         return view;
