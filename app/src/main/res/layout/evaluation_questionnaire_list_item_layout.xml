@@ -11,42 +11,41 @@
         android:layout_height="wrap_content"
         />
 
-    <LinearLayout
+    <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:weightSum="2">
+        android:weightSum="4">
 
-        <CheckBox
-            android:id="@+id/btn_option1"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <CheckBox
-            android:id="@+id/btn_option2"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            <RadioButton
+                android:id="@+id/btn_option"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Poor"/>
 
-    </LinearLayout>
+            <RadioButton
+                android:id="@+id/btn_option2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Average"/>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2">
+            <RadioButton
+                android:id="@+id/btn_option3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Good"/>
 
-        <CheckBox
-            android:id="@+id/btn_option3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
-        <CheckBox
-            android:id="@+id/btn_option4"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            <RadioButton
+                android:id="@+id/btn_option4"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Excellent"/>
 
-    </LinearLayout>
+    </RadioGroup>
+
 
 </LinearLayout>

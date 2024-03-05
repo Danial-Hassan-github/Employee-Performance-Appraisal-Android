@@ -12,6 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+import com.example.biitemployeeperformanceappraisalsystem.EvaluateeListFragment;
+import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.MyTasksFragment;
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
@@ -53,7 +55,7 @@ public class FacultyMain extends AppCompatActivity {
                 }
                 else if (R.id.navigation_evaluate==item.getItemId()) {
                     topText.setText("Evaluate");
-                    replaceFragment(new EvaluatorFragment());
+                    replaceFragment(new EvaluateeListFragment());
                     return true;
                 } else if (R.id.navigation_score==item.getItemId()) {
                     // Handle "Settings" click

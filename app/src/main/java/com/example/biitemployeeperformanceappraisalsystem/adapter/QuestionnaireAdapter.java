@@ -38,8 +38,6 @@ public class QuestionnaireAdapter extends ArrayAdapter<Question> {
 
         // Lookup view for data population
         TextView questionTextView = convertView.findViewById(R.id.text_question);
-        // ImageView optionsButton = convertView.findViewById(R.id.btn_options);
-
         // Populate the data into the template view using the data object
         questionTextView.setText(question.getQuestion());
 
