@@ -35,7 +35,8 @@
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/grey"
+        android:background="#235F87"
+        android:textColor="@color/white"
         android:text="ADD Employee"/>
 
     <View

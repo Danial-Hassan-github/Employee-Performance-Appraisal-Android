@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -37,7 +38,7 @@ import java.util.Random;
  */
 public class PerformanceFragment extends Fragment {
     List<Session> sessionList;
-    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner;
+    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,courseSpinner;
     Button show,compare;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -47,9 +48,15 @@ public class PerformanceFragment extends Fragment {
         show=view.findViewById(R.id.btn_show);
         compare=view.findViewById(R.id.btn_compare);
 
+        courseSpinner = view.findViewById(R.id.spinner_course);
         sessionSpinner = view.findViewById(R.id.spinner_session);
         fromSessionSpinner = view.findViewById(R.id.spinner_session_from);
         toSessionSpinner = view.findViewById(R.id.spinner_session_to);
+
+        CommonData commonData=new CommonData(getContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, commonData.generateCourseNames());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        courseSpinner.setAdapter(adapter);
 
         SessionData sessionData = new SessionData(view.getContext());
         sessionData.getSessions(sessions -> {
@@ -132,10 +139,10 @@ public class PerformanceFragment extends Fragment {
                 pieChart.setVisibility(View.VISIBLE);
 
                 ArrayList<PieEntry> entries = new ArrayList<>();
-                entries.add(new PieEntry(18.5f, "Administrative"));
-                entries.add(new PieEntry(26.7f, "Academic"));
-                entries.add(new PieEntry(24.0f, "Punctuality"));
-                entries.add(new PieEntry(30.8f, "Project"));
+                entries.add(new PieEntry(20, "Administrative"));
+                entries.add(new PieEntry(25, "Academic"));
+                entries.add(new PieEntry(25, "Punctuality"));
+                entries.add(new PieEntry(30, "Project"));
 
                 PieDataSet dataSet = new PieDataSet(entries, "Pie Chart");
 
@@ -162,27 +169,35 @@ public class PerformanceFragment extends Fragment {
                 barChart.setVisibility(View.VISIBLE);
 
                 ArrayList<BarEntry> group1 = new ArrayList<>();
-                group1.add(new BarEntry(0f, 10f)); // Note the change in x-position
-                group1.add(new BarEntry(1f, 20f));
-                group1.add(new BarEntry(2f, 30f));
+                group1.add(new BarEntry(0, 27)); // Note the change in x-position
+                group1.add(new BarEntry(3, 23));
+                group1.add(new BarEntry(6, 35));
 
                 ArrayList<BarEntry> group2 = new ArrayList<>();
-                group2.add(new BarEntry(0.33f, 15f)); // Adjust the x-position to group the bars
-                group2.add(new BarEntry(1.33f, 25f)); // Note the difference in x-position
-                group2.add(new BarEntry(2.33f, 35f));
+                group2.add(new BarEntry(1, 32)); // Adjust the x-position to group the bars
+                group2.add(new BarEntry(4, 26)); // Note the difference in x-position
+                group2.add(new BarEntry(7, 40));
 
-                BarDataSet barDataSet1 = new BarDataSet(group1, "Fall-2020");
+                ArrayList<BarEntry> group3 = new ArrayList<>();
+                group3.add(new BarEntry(2, 28)); // Adjust the x-position to group the bars
+                group3.add(new BarEntry(5, 30)); // Note the difference in x-position
+                group3.add(new BarEntry(8, 35));
+
+                BarDataSet barDataSet1 = new BarDataSet(group1, "Academic");
                 barDataSet1.setColor(Color.rgb(0, 155, 0));
 
-                BarDataSet barDataSet2 = new BarDataSet(group2, "Spring-2021");
+                BarDataSet barDataSet2 = new BarDataSet(group2, "Project");
                 barDataSet2.setColor(Color.rgb(155, 0, 0));
 
-// Adjust the bar width and spacing
-                float groupSpace = 0.3f; // space between groups of bars
-                float barSpace = 0.04f; // space between individual bars within a group
-                float barWidth = 0.3f; // width of each bar
+                BarDataSet barDataSet3 = new BarDataSet(group3, "Punctuality");
+                barDataSet3.setColor(Color.rgb(0, 0, 155));
 
-                BarData barData = new BarData(barDataSet1, barDataSet2);
+// Adjust the bar width and spacing
+                float groupSpace = 0.2f; // space between groups of bars
+                float barSpace = 0.02f; // space between individual bars within a group
+                float barWidth = 0.15f; // width of each bar
+
+                BarData barData = new BarData(barDataSet1, barDataSet2, barDataSet3);
                 barData.setBarWidth(barWidth);
 
                 // Group the bars

@@ -7,9 +7,8 @@
     android:orientation="vertical"
     android:gravity="center"
     android:padding="40dp"
-    tools:context=".director.PeerEvaluationSettingFragment">
+    tools:context=".admin.StudentEvaluationSettingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,8 +16,7 @@
         android:textColor="@color/white"
         android:background="@color/brown"
         android:textSize="30dp"
-        android:text="Peer Evaluation"/>
-
+        android:text="Student Evaluation"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,9 +26,11 @@
         android:id="@+id/start_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableRight="@drawable/calendar_icon"
         android:layout_marginBottom="5dp"
-        android:inputType="datetime"/>
+        android:inputType="text"
+        android:drawableRight="@drawable/calendar_icon"
+        android:clickable="true"
+        android:focusable="false" />
 
     <TextView
         android:layout_width="match_parent"
@@ -41,8 +41,10 @@
         android:id="@+id/end_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:inputType="text"
         android:drawableRight="@drawable/calendar_icon"
-        android:inputType="datetime"/>
+        android:clickable="true"
+        android:focusable="true" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/save_button"

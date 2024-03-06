@@ -10,6 +10,7 @@
         android:id="@+id/text_question"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:textSize="20sp"
         android:layout_weight="0.9"
         />
     <ImageView

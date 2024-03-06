@@ -32,7 +32,7 @@ public class DirectorMainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        replaceFragment(new DirectorReportFragment());
+        replaceFragment(new TaskFragment());
 
         // Set up click listener for the "Settings" menu item
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -82,6 +82,10 @@ public class DirectorMainActivity extends AppCompatActivity {
                 else if (R.id.navigation_evaluation==item.getItemId()) {
                     replaceFragment(new EvaluationFragment());
                     topText.setText("Evaluation");
+                    return true;
+                }else if (R.id.navigation_options_weightage==item.getItemId()) {
+                    replaceFragment(new OptionsWeightageFragment());
+                    topText.setText("Options Weightage");
                     return true;
                 }
                 return false;

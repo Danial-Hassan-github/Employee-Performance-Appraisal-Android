@@ -94,10 +94,10 @@ public class KpiFragment extends Fragment {
 //        pieChart.setVisibility(View.VISIBLE);
 
         ArrayList<PieEntry> entries = new ArrayList<>();
-        entries.add(new PieEntry(18.5f, "Administrative"));
-        entries.add(new PieEntry(26.7f, "Academic"));
-        entries.add(new PieEntry(24.0f, "Punctuality"));
-        entries.add(new PieEntry(30.8f, "Project"));
+        entries.add(new PieEntry(20, "Administrative"));
+        entries.add(new PieEntry(25, "Academic"));
+        entries.add(new PieEntry(25, "Punctuality"));
+        entries.add(new PieEntry(30, "Project"));
 
         PieDataSet dataSet = new PieDataSet(entries, "KPI Graph");
 

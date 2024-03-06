@@ -25,6 +25,12 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/btn_add_question"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD Question"/>
+
    <ListView
        android:id="@+id/questtionnaire_list_view"
        android:layout_width="wrap_content"

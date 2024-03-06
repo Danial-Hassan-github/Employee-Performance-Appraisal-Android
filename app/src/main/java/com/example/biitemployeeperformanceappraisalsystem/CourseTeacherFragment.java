@@ -7,22 +7,16 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Spinner;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
-
-import java.util.List;
+import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link ScoresFragment#newInstance} factory method to
+ * Use the {@link CourseTeacherFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class ScoresFragment extends Fragment {
-    List<Session> sessionList;
-    Spinner sessionSpinner;
+public class CourseTeacherFragment extends Fragment {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,7 +27,7 @@ public class ScoresFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public ScoresFragment() {
+    public CourseTeacherFragment() {
         // Required empty public constructor
     }
 
@@ -43,11 +37,11 @@ public class ScoresFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment ScoresFragment.
+     * @return A new instance of fragment CourseTeacherFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static ScoresFragment newInstance(String param1, String param2) {
-        ScoresFragment fragment = new ScoresFragment();
+    public static CourseTeacherFragment newInstance(String param1, String param2) {
+        CourseTeacherFragment fragment = new CourseTeacherFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -67,22 +61,20 @@ public class ScoresFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.fragment_course_teacher, container, false);
+        TextView textView=view.findViewById(R.id.text_teacher1);
 
-        View view=inflater.inflate(R.layout.fragment_scores, container, false);
-
-        sessionSpinner = view.findViewById(R.id.spinner_session);
-        SessionData sessionData = new SessionData(view.getContext());
-        sessionData.getSessions(sessions -> {
-                    // Handle the list of sessions here
-                    sessionList = sessions;
-                    // Populate the spinner with session titles
-                    sessionData.populateSpinner(sessions,sessionSpinner);
-                },
-                // onFailure callback
-                errorMessage -> {
-                    // Handle failure
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                });
+        StudentMainActivity studentMainActivity=(StudentMainActivity) getActivity();
+        TextView textView1=studentMainActivity.findViewById(R.id.txt_top);
+        textView1.setText("Teachers");
+        textView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView textView1=studentMainActivity.findViewById(R.id.txt_top);
+                textView1.setText("Evaluate");
+                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment());
+            }
+        });
         // Inflate the layout for this fragment
         return view;
     }

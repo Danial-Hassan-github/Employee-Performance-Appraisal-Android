@@ -1,5 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.director;
 
+import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
@@ -21,8 +22,10 @@ import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
 import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -94,8 +97,16 @@ public class EvaluationFragment extends Fragment {
 
         //Setting data in listview
         ArrayList<String> evaluations = new ArrayList<String>();
-        evaluations.add("Peer\nStart:xyz\nEnd\nxyz");
-        evaluations.add("Confidential\nStart:xyz\nEnd\nxyz");
+        LocalDateTime localDateTime=null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            localDateTime=LocalDateTime.now();
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            evaluations.add("Peer\nStart: "+localDateTime.toString()+"\nEnd: "+localDateTime.plusDays(2L));
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            evaluations.add("Confidential\nStart: "+localDateTime.toString()+"\nEnd: "+localDateTime.plusDays(2L));
+        }
         ArrayAdapter<String> evaluationTimeDetails = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_list_item_1, evaluations);
         listView.setAdapter(evaluationTimeDetails);
         // Inflate the layout for this fragment

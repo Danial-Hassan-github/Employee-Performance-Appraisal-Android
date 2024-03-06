@@ -3,12 +3,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:orientation="vertical"
     android:gravity="center"
     android:padding="40dp"
     tools:context=".director.PeerEvaluationSettingFragment">
 
-    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:textColor="@color/white"
+        android:background="@color/brown"
+        android:textSize="30dp"
+        android:text="Confidential Evaluation"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -31,7 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp"
         android:inputType="text"
-        android:drawableLeft="@drawable/calendar_icon"
+        android:drawableRight="@drawable/calendar_icon"
         android:clickable="true"
         android:focusable="false" />
 
@@ -45,7 +54,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:inputType="text"
-        android:drawableLeft="@drawable/calendar_icon"
+        android:drawableRight="@drawable/calendar_icon"
         android:clickable="true"
         android:focusable="true" />
 

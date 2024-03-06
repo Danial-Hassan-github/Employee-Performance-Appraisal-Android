@@ -14,6 +14,7 @@ import android.widget.ListView;
 
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
+import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,8 +38,8 @@ public class EvaluateeListFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment();
-                FacultyMain facultyMainActivity = (FacultyMain) getActivity();
-                facultyMainActivity.replaceFragment(fragment);
+                HodMainActivity hodMainActivity = (HodMainActivity) getActivity();
+                hodMainActivity.replaceFragment(fragment);
             }
         });
         // Inflate the layout for this fragment

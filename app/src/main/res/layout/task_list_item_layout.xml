@@ -19,7 +19,7 @@
             android:layout_width="0dp"
             android:layout_height="20dp"
             android:layout_weight=".5"
-            android:src="@drawable/pending_icon"/>
+            android:src="@drawable/three_dots_icon"/>
 
     </LinearLayout>
 
@@ -70,22 +70,15 @@
             android:id="@+id/text_score"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="2"
+            android:layout_weight="2.5"
             android:hint="Enter Score"/>
 
         <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/btn_ok"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".4"
+            android:layout_weight=".5"
             android:text="Ok"/>
-
-        <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/btn_delete"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight=".7"
-            android:text="Delete"/>
 
     </LinearLayout>
 

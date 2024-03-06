@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
@@ -16,6 +17,7 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsListAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
@@ -59,13 +61,17 @@ public class EmployeeListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EmployeeDetails employeeDetails = employeeDetailsList.get(position);
                 // Pass employee data to PerformanceFragment
-                PerformanceFragment fragment = new PerformanceFragment();
+                AddEmployeeFragment fragment = new AddEmployeeFragment();
                 Bundle args = new Bundle();
                 args.putInt("id",employeeDetails.getEmployee().getId());
 //                args.putParcelable("employee_details", employeeDetailsScore);
                 fragment.setArguments(args);
 //                DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
 //               directorMainActivity.replaceFragment(fragment);
+                AdminMainActivity adminMainActivity=(AdminMainActivity) getActivity();
+                TextView textView=adminMainActivity.findViewById(R.id.txt_top);
+                textView.setText("Employee");
+                adminMainActivity.replaceFragment(fragment);
             }
         });
         return view;

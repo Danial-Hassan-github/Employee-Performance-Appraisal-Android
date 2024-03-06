@@ -10,9 +10,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.biitemployeeperformanceappraisalsystem.MyTasksFragment;
-import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.director.EvaluatorFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -52,7 +50,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 } else if (R.id.navigation_settings==item.getItemId()) {
                     // Handle "Settings" click
                     topText.setText("Setting");
-                    replaceFragment(new ScoresFragment());
+                    replaceFragment(new StudentEvaluationSettingFragment());
                     return true;
 
                 }

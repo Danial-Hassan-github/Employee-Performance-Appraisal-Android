@@ -1,14 +1,19 @@
 package com.example.biitemployeeperformanceappraisalsystem;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionAdapter;
@@ -67,6 +72,46 @@ public class QuestionnaireFragment extends Fragment {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 }
         );
+
+        //Modal code
+        // Inside your activity or fragment
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setView(R.layout.question_modal_layout);
+
+
+        AlertDialog dialog = builder.create();
+
+        Button showModalButton = view.findViewById(R.id.btn_add_question);
+        showModalButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Inflate the layout for the dialog
+                View dialogView = getLayoutInflater().inflate(R.layout.question_modal_layout, null);
+
+                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+                builder.setView(dialogView);
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // Handle Save button click
+                        AlertDialog alertDialog = (AlertDialog) dialog;
+                        TextView descriptionTextView = alertDialog.findViewById(R.id.text_question);
+                        // Get the description text and save the task
+                        dialog.dismiss();
+                    }
+                });
+
+                AlertDialog dialog = builder.create();
+                dialog.show();
+            }
+        });
+
 
         // Inflate the layout for this fragment
         return view;

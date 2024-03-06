@@ -32,10 +32,11 @@ public class PeerEvaluationSettingFragment extends Fragment {
         endTimeEditText = view.findViewById(R.id.end_time);
         saveButton = view.findViewById(R.id.save_button);
 
+        DateTime dateTime=new DateTime();
+
         startTimeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DateTime dateTime=new DateTime();
                 dateTime.showDateTimePicker(startTimeEditText,getContext());
             }
         });
@@ -43,7 +44,6 @@ public class PeerEvaluationSettingFragment extends Fragment {
         endTimeEditText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DateTime dateTime=new DateTime();
                 dateTime.showDateTimePicker(endTimeEditText,getContext());
             }
         });

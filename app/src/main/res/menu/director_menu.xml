@@ -3,14 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <item
-        android:id="@+id/navigation_report"
-        android:title="Report"
-        android:icon="@drawable/performance_icon"
-        />
-    <item
         android:id="@+id/navigation_tasks"
         android:title="Tasks"
         android:icon="@drawable/task_icon"
+        />
+    <item
+        android:id="@+id/navigation_report"
+        android:title="Report"
+        android:icon="@drawable/performance_icon"
         />
     <item
         android:id="@+id/navigation_evaluators"

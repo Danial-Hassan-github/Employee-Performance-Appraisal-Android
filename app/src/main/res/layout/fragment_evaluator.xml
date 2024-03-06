@@ -58,6 +58,8 @@
         <Spinner
             android:id="@+id/spinner_evaluatee"
             android:layout_width="match_parent"
+            style="@style/Widget.AppCompat.Spinner.DropDown"
+            tools:listitem="@layout/custom_spinner_item_layout"
             android:layout_height="40dp"/>
 
     </LinearLayout>
