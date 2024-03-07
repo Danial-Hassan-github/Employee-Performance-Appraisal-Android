@@ -15,9 +15,7 @@ import android.widget.Toast;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
-import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
-import com.github.mikephil.charting.charts.BarChart;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
@@ -48,12 +46,12 @@ public class KpiFragment extends Fragment {
         });
 
         // Inflate the layout for this fragment
-        SessionData sessionData = new SessionData(view.getContext());
-        sessionData.getSessions(sessions -> {
+        SessionService sessionService = new SessionService(view.getContext());
+        sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    sessionData.populateSpinner(sessions,sessionSpinner);
+                    sessionService.populateSpinner(sessions,sessionSpinner);
                 },
                 // onFailure callback
                 errorMessage -> {

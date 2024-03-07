@@ -7,15 +7,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-import com.example.biitemployeeperformanceappraisalsystem.network.ApiNetwork;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
-import com.example.biitemployeeperformanceappraisalsystem.network.Login;
-import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.LoginService;
 
 public class LoginActivity extends AppCompatActivity {
     EditText emailOrAridNo, password;
     private Button btnLogin;
-    ApiNetwork apiNetwork;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,9 +22,7 @@ public class LoginActivity extends AppCompatActivity {
         password = findViewById(R.id.password);
         btnLogin = findViewById(R.id.login_button);
 
-        RetrofitClient retrofitClient = new RetrofitClient();
-        apiNetwork = retrofitClient.getRetrofitInstance().create(ApiNetwork.class);
-        Login login=new Login(LoginActivity.this);
+        LoginService login=new LoginService(LoginActivity.this);
 
         btnLogin.setOnClickListener(new View.OnClickListener() {
             @Override

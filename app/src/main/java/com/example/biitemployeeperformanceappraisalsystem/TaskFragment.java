@@ -17,18 +17,14 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.TaskAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.helper.DateTime;
 import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.TaskService;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -55,9 +51,9 @@ public class TaskFragment extends Fragment {
         ArrayAdapter<String> taskTypeAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, taskTypes);
         spinner.setAdapter(taskTypeAdapter);
 
-        CommonData data = new CommonData(view.getContext());
+        TaskService taskService = new TaskService(view.getContext());
 
-        data.getTasks(
+        taskService.getTasks(
                 // onSuccess callback
                 taskDetails -> {
                     taskDetailsList = taskDetails;

@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem.network;
+package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit;
-    public Retrofit getRetrofitInstance() {
+    public static Retrofit getRetrofitInstance() {
         // Create a Gson instance with custom date format
         Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ss")
@@ -20,7 +20,7 @@ public class RetrofitClient {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();
         if (retrofit == null) {
-            retrofit = new Retrofit.Builder().baseUrl("http://192.168.178.167/api/").client(client).addConverterFactory(GsonConverterFactory.create(gson)).build();
+            retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.14/api/").client(client).addConverterFactory(GsonConverterFactory.create(gson)).build();
         }
         return retrofit;
     }

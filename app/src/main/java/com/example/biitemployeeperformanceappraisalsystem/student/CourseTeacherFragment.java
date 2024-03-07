@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem;
+package com.example.biitemployeeperformanceappraisalsystem.student;
 
 import android.os.Bundle;
 
@@ -9,7 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
+import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
+import com.example.biitemployeeperformanceappraisalsystem.R;
 
 /**
  * A simple {@link Fragment} subclass.

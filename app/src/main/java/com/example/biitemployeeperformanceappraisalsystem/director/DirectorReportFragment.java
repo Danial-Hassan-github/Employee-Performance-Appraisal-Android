@@ -14,7 +14,8 @@ import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class DirectorReportFragment extends Fragment {
         listView = view.findViewById(R.id.list_view);
         // employeeDetailsList = view.findViewById(R.id.list_view);
 
-        CommonData data = new CommonData(view.getContext());
+        EmployeeService data = new EmployeeService(view.getContext());
 
         data.GetEmployeesWithKpiScores(
                 // onSuccess callback

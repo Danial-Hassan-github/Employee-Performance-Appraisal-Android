@@ -10,16 +10,14 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
-import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 
 import java.util.List;
 
@@ -67,12 +65,12 @@ public class AddKpiFragment extends Fragment {
         CommonData commonData = new CommonData(getContext());
         List<String> subKpiNames = commonData.getSubKPITypes();
 
-        SessionData sessionData=new SessionData(getContext());
-        sessionData.getSessions(sessions -> {
+        SessionService sessionService=new SessionService(getContext());
+        sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    sessionData.populateSpinner(sessions,sessionSpinner);
+                    sessionService.populateSpinner(sessions,sessionSpinner);
                 },
                 // onFailure callback
                 errorMessage -> {

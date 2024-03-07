@@ -6,7 +6,7 @@
     android:background="@color/grey"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".CourseTeacherFragment">
+    tools:context=".student.CourseTeacherFragment">
 
     <TextView
         android:id="@+id/text_teacher1"

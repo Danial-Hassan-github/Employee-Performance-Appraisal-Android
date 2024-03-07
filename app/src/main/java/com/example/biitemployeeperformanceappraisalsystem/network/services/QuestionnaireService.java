@@ -1,14 +1,13 @@
-package com.example.biitemployeeperformanceappraisalsystem.network;
+package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
-import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.QuestionnaireServiceListener;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -17,18 +16,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Questionnaire {
-    ApiNetwork apiNetwork;
-    RetrofitClient retrofitClient;
+public class QuestionnaireService {
+    QuestionnaireServiceListener questionnaireServiceListener;
     Context context;
-    public Questionnaire(Context context){
-        retrofitClient = new RetrofitClient();
-        apiNetwork=retrofitClient.getRetrofitInstance().create(ApiNetwork.class);
+    public QuestionnaireService(Context context){
+        questionnaireServiceListener=RetrofitClient.getRetrofitInstance().create(QuestionnaireServiceListener.class);
         this.context=context;
     }
 
     public void getConfidentialQuestions(final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
-        Call<List<Question>> employees = apiNetwork.GetConfidentialQuestions();
+        Call<List<Question>> employees = questionnaireServiceListener.GetConfidentialQuestions();
         employees.enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
@@ -47,7 +44,7 @@ public class Questionnaire {
     }
 
     public void getQuestionnaireType(final Consumer<List<QuestionnaireType>> onSuccess, final Consumer<String> onFailure){
-        Call<List<QuestionnaireType>> questionnaireTypes = apiNetwork.getQuestionnaireTypes();
+        Call<List<QuestionnaireType>> questionnaireTypes = questionnaireServiceListener.getQuestionnaireTypes();
         questionnaireTypes.enqueue(new Callback<List<QuestionnaireType>>() {
             @Override
             public void onResponse(Call<List<QuestionnaireType>> call, Response<List<QuestionnaireType>> response) {

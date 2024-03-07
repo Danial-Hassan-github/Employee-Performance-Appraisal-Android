@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -17,11 +16,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.adapter.TaskAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
-import com.example.biitemployeeperformanceappraisalsystem.network.Questionnaire;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 
 import java.util.List;
 
@@ -44,7 +41,7 @@ public class QuestionnaireFragment extends Fragment {
         questionnaireListView=view.findViewById(R.id.questtionnaire_list_view);
         questionnaireTypeSpinner=view.findViewById(R.id.quetionnaire_type_spinner);
 
-        Questionnaire questionnaire=new Questionnaire(view.getContext());
+        QuestionnaireService questionnaire=new QuestionnaireService(view.getContext());
 
         questionnaire.getConfidentialQuestions(
                 // onSuccess callback

@@ -4,7 +4,6 @@ import android.os.Build;
 import android.os.Bundle;
 
 import androidx.appcompat.widget.AppCompatButton;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.view.LayoutInflater;
@@ -12,20 +11,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
-import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -64,12 +60,12 @@ public class EvaluationFragment extends Fragment {
             }
         });
 
-        SessionData sessionData = new SessionData(view.getContext());
-        sessionData.getSessions(sessions -> {
+        SessionService sessionService = new SessionService(view.getContext());
+        sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    sessionData.populateSpinner(sessions, sessionSpinner);
+                    sessionService.populateSpinner(sessions, sessionSpinner);
 
                     // Set an item selected listener for the session spinner
                     sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

@@ -8,14 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
-import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionnaireAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
-import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
-import com.example.biitemployeeperformanceappraisalsystem.network.Questionnaire;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 
 import java.util.List;
 
@@ -34,7 +31,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
 
         questionnaireListView=view.findViewById(R.id.evaluation_questionnaire_list_view);
 
-        Questionnaire questionnaire=new Questionnaire(view.getContext());
+        QuestionnaireService questionnaire=new QuestionnaireService(view.getContext());
 
         questionnaire.getConfidentialQuestions(
                 // onSuccess callback

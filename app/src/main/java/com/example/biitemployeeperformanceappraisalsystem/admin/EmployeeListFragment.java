@@ -12,15 +12,11 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsListAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
-import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 
 import java.util.List;
 
@@ -40,7 +36,7 @@ public class EmployeeListFragment extends Fragment {
         listView = view.findViewById(R.id.list_view);
         // employeeDetailsList = view.findViewById(R.id.list_view);
 
-        CommonData data = new CommonData(view.getContext());
+        EmployeeService data = new EmployeeService(view.getContext());
 
         data.getEmployees(
                 // onSuccess callback
@@ -66,8 +62,6 @@ public class EmployeeListFragment extends Fragment {
                 args.putInt("id",employeeDetails.getEmployee().getId());
 //                args.putParcelable("employee_details", employeeDetailsScore);
                 fragment.setArguments(args);
-//                DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
-//               directorMainActivity.replaceFragment(fragment);
                 AdminMainActivity adminMainActivity=(AdminMainActivity) getActivity();
                 TextView textView=adminMainActivity.findViewById(R.id.txt_top);
                 textView.setText("Employee");

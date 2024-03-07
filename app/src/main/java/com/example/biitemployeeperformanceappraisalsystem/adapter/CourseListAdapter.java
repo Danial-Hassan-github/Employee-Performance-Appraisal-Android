@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem;
+package com.example.biitemployeeperformanceappraisalsystem.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
+import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 
 import java.util.ArrayList;

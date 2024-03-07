@@ -11,7 +11,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.SessionData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 
 import java.util.List;
 
@@ -71,12 +71,12 @@ public class ScoresFragment extends Fragment {
         View view=inflater.inflate(R.layout.fragment_scores, container, false);
 
         sessionSpinner = view.findViewById(R.id.spinner_session);
-        SessionData sessionData = new SessionData(view.getContext());
-        sessionData.getSessions(sessions -> {
+        SessionService sessionService = new SessionService(view.getContext());
+        sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
                     // Populate the spinner with session titles
-                    sessionData.populateSpinner(sessions,sessionSpinner);
+                    sessionService.populateSpinner(sessions,sessionSpinner);
                 },
                 // onFailure callback
                 errorMessage -> {

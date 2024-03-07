@@ -8,8 +8,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
-import com.example.biitemployeeperformanceappraisalsystem.CourseListAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.CourseTeacherFragment;
+import com.example.biitemployeeperformanceappraisalsystem.adapter.CourseListAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 

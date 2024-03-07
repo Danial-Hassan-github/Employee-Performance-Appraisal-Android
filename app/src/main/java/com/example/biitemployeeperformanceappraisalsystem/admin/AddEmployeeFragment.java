@@ -11,7 +11,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.network.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
 
 /**
  * A simple {@link Fragment} subclass.

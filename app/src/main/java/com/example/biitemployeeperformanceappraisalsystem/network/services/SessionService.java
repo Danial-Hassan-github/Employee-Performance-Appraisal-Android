@@ -1,9 +1,11 @@
-package com.example.biitemployeeperformanceappraisalsystem.network;
+package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
+
+import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.SessionServiceListener;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -12,18 +14,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class SessionData {
-    ApiNetwork apiNetwork;
-    RetrofitClient retrofitClient;
+public class SessionService {
+    SessionServiceListener sessionServiceListener;
     Context context;
 
-    public SessionData(Context context) {
-        retrofitClient = new RetrofitClient();
-        apiNetwork = retrofitClient.getRetrofitInstance().create(ApiNetwork.class);
+    public SessionService(Context context) {
+        sessionServiceListener = RetrofitClient.getRetrofitInstance().create(SessionServiceListener.class);
         this.context = context;
     }
+
     public void getSessions(final Consumer<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> sessionCall = apiNetwork.GetSession();
+        Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> sessionCall = sessionServiceListener.GetSession();
         sessionCall.enqueue(new Callback<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>>() {
             @Override
             public void onResponse(Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> call, Response<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> response) {

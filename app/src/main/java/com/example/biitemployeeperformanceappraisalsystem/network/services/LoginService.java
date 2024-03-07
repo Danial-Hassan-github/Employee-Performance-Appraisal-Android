@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem.network;
+package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 import android.content.Intent;
@@ -10,24 +10,23 @@ import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.Student;
+import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.LoginServiceListener;
 import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class Login {
-    ApiNetwork apiNetwork;
-    RetrofitClient retrofitClient;
+public class LoginService {
+    LoginServiceListener loginServiceListener;
     Context context;
 
-    public Login(Context context) {
-        retrofitClient = new RetrofitClient();
-        apiNetwork = retrofitClient.getRetrofitInstance().create(ApiNetwork.class);
+    public LoginService(Context context) {
+        loginServiceListener = RetrofitClient.getRetrofitInstance().create(LoginServiceListener.class);
         this.context = context;
     }
     public void loginStudent(String emailOrAridNo, String password) {
-        Call<Student> loginCall = apiNetwork.LoginStudent(emailOrAridNo, password);
+        Call<Student> loginCall = loginServiceListener.LoginStudent(emailOrAridNo, password);
         loginCall.enqueue(new Callback<Student>() {
             @Override
             public void onResponse(Call<Student> call, Response<Student> response) {
@@ -50,7 +49,7 @@ public class Login {
     }
 
     public void loginEmployee(String emailOrAridNo, String password) {
-        Call<EmployeeDetails> loginCall = apiNetwork.LoginEmployee(emailOrAridNo.toString(), password.toString());
+        Call<EmployeeDetails> loginCall = loginServiceListener.LoginEmployee(emailOrAridNo.toString(), password.toString());
         loginCall.enqueue(new Callback<EmployeeDetails>() {
             @Override
             public void onResponse(Call<EmployeeDetails> call, Response<EmployeeDetails> response) {

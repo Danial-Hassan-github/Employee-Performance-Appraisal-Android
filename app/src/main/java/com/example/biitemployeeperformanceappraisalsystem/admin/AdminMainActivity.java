@@ -39,13 +39,13 @@ public class AdminMainActivity extends AppCompatActivity {
                     return true;
                 }
                 else if (R.id.navigation_course_assignment==item.getItemId()) {
-                    topText.setText("Evaluate");
-                    replaceFragment(new EvaluatorFragment());
+                    topText.setText("Assign Course");
+                    replaceFragment(new UploadExcelFileFragment());
                     return true;
                 }else if (R.id.navigation_chr==item.getItemId()) {
                     // Handle "Tasks" click
                     topText.setText("CHR");
-                    replaceFragment(new MyTasksFragment());
+                    replaceFragment(new UploadExcelFileFragment());
                     return true;
                 } else if (R.id.navigation_settings==item.getItemId()) {
                     // Handle "Settings" click
