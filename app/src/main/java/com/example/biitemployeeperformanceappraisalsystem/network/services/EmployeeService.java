@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
+import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeServiceListener;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class EmployeeService {
     EmployeeServiceListener employeeServiceListener;
     Context context;
     public EmployeeService(Context context){
-        employeeServiceListener=RetrofitClient.getRetrofitInstance().create(employeeServiceListener.getClass());
+        employeeServiceListener= RetrofitClient.getRetrofitInstance().create(employeeServiceListener.getClass());
         this.context=context;
     }
     public void getEmployees(final Consumer<List<EmployeeDetails>> onSuccess, final Consumer<String> onFailure) {

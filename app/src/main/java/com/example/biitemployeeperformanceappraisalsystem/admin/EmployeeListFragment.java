@@ -39,14 +39,11 @@ public class EmployeeListFragment extends Fragment {
         EmployeeService data = new EmployeeService(view.getContext());
 
         data.getEmployees(
-                // onSuccess callback
                 employeeDetails -> {
                     employeeDetailsList = employeeDetails;
-                    // Create ArrayAdapter and set it to the ListView
                     EmployeeDetailsListAdapter adapter = new EmployeeDetailsListAdapter(getContext(), R.layout.employee_list_item_layout, employeeDetails);
                     listView.setAdapter(adapter);
                 },
-                // onFailure callback
                 errorMessage -> {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 }

@@ -29,14 +29,13 @@ import java.util.List;
 public class AddKpiFragment extends Fragment {
     List<Session> sessionList;
     ListView subKpiListView;
-    Spinner sessionSpinner,employeeTypeSpinner,designationSpinner,departmentSpinner,employeeSpinner,subKpiSpinner;
+    Spinner sessionSpinner,employeeTypeSpinner,designationSpinner,departmentSpinner,subKpiSpinner;
     Button btnSave;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_add_kpi, container, false);
         sessionSpinner = view.findViewById(R.id.spinner_session);
-        employeeSpinner = view.findViewById(R.id.spinner_employee);
         employeeTypeSpinner = view.findViewById(R.id.spinner_employee_type);
         designationSpinner = view.findViewById(R.id.spinner_designation);
         departmentSpinner = view.findViewById(R.id.spinner_department);
@@ -45,11 +44,8 @@ public class AddKpiFragment extends Fragment {
 
         CommonData data=new CommonData(getContext());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateNames());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        employeeSpinner.setAdapter(adapter);
-
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
         employeeTypeSpinner.setAdapter(adapter);
 
         adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDepartments());

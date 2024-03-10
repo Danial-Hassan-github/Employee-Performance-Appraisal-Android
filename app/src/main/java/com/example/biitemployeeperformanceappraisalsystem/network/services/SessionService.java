@@ -5,6 +5,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.SessionServiceListener;
 
 import java.util.List;
@@ -24,10 +26,10 @@ public class SessionService {
     }
 
     public void getSessions(final Consumer<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> sessionCall = sessionServiceListener.GetSession();
-        sessionCall.enqueue(new Callback<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>>() {
+        Call<List<Session>> sessionCall = sessionServiceListener.GetSession();
+        sessionCall.enqueue(new Callback<List<Session>>() {
             @Override
-            public void onResponse(Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> call, Response<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> response) {
+            public void onResponse(Call<List<Session>> call, Response<List<Session>> response) {
                 if (response.isSuccessful()) {
                     onSuccess.accept(response.body());
                 } else {
@@ -36,7 +38,7 @@ public class SessionService {
             }
 
             @Override
-            public void onFailure(Call<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> call, Throwable t) {
+            public void onFailure(Call<List<Session>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching sessions");
             }
         });
@@ -52,7 +54,6 @@ public class SessionService {
         }
     }
 
-    // Method to get session titles from the list of sessions
     public String[] getSessionTitles(List<com.example.biitemployeeperformanceappraisalsystem.models.Session> sessionList) {
         String[] titles = new String[sessionList.size()];
         for (int i = 0; i < sessionList.size(); i++) {

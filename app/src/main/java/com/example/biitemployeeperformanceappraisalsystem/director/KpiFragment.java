@@ -27,7 +27,7 @@ public class KpiFragment extends Fragment {
 
     List<Session> sessionList;
     Spinner sessionSpinner;
-    Button btnAddKpi;
+    Button btnAddKpi,btnAddGroupKpi,btnAddIndividualKpi;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -35,7 +35,9 @@ public class KpiFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_kpi, container, false);
 
         sessionSpinner = view.findViewById(R.id.spinner_session);
-        btnAddKpi = view.findViewById(R.id.btn_add_kpi);
+        btnAddKpi = view.findViewById(R.id.btn_add_general_kpi);
+        btnAddGroupKpi =view.findViewById(R.id.btn_add_group_kpi);
+        btnAddIndividualKpi = view.findViewById(R.id.btn_add_individual_kpi);
 
         DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
         btnAddKpi.setOnClickListener(new View.OnClickListener() {
@@ -45,21 +47,28 @@ public class KpiFragment extends Fragment {
             }
         });
 
-        // Inflate the layout for this fragment
+        btnAddGroupKpi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directorMainActivity.replaceFragment(new AddGroupKpiFragment());
+            }
+        });
+
+        btnAddIndividualKpi.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                directorMainActivity.replaceFragment(new AddIndividualKpiFragment());
+            }
+        });
+
         SessionService sessionService = new SessionService(view.getContext());
         sessionService.getSessions(sessions -> {
-                    // Handle the list of sessions here
                     sessionList = sessions;
-                    // Populate the spinner with session titles
                     sessionService.populateSpinner(sessions,sessionSpinner);
                 },
-                // onFailure callback
                 errorMessage -> {
-                    // Handle failure
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 });
-        //Show Kpi Graph
-        showKpiGraph(view);
 
         // Set an item selected listener for the session spinner
         sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -78,6 +87,8 @@ public class KpiFragment extends Fragment {
                 // Handle case where nothing is selected
             }
         });
+
+        showKpiGraph(view);
 
         return view;
     }

@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
+import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.TaskServiceListener;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class TaskService {
     TaskServiceListener taskServiceListener;
     Context context;
     public TaskService(Context context){
-        taskServiceListener=RetrofitClient.getRetrofitInstance().create(TaskServiceListener.class);
+        taskServiceListener= RetrofitClient.getRetrofitInstance().create(TaskServiceListener.class);
         this.context=context;
     }
 

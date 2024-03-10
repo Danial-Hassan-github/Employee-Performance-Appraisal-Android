@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
+import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.QuestionnaireServiceListener;
 
 import java.util.List;
@@ -20,7 +21,7 @@ public class QuestionnaireService {
     QuestionnaireServiceListener questionnaireServiceListener;
     Context context;
     public QuestionnaireService(Context context){
-        questionnaireServiceListener=RetrofitClient.getRetrofitInstance().create(QuestionnaireServiceListener.class);
+        questionnaireServiceListener= RetrofitClient.getRetrofitInstance().create(QuestionnaireServiceListener.class);
         this.context=context;
     }
 
