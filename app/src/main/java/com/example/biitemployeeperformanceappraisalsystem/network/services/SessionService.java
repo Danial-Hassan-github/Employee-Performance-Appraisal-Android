@@ -25,7 +25,7 @@ public class SessionService {
         this.context = context;
     }
 
-    public void getSessions(final Consumer<List<com.example.biitemployeeperformanceappraisalsystem.models.Session>> onSuccess, final Consumer<String> onFailure) {
+    public void getSessions(final Consumer<List<Session>> onSuccess, final Consumer<String> onFailure) {
         Call<List<Session>> sessionCall = sessionServiceListener.GetSession();
         sessionCall.enqueue(new Callback<List<Session>>() {
             @Override
@@ -44,7 +44,7 @@ public class SessionService {
         });
     }
 
-    public void populateSpinner(List<com.example.biitemployeeperformanceappraisalsystem.models.Session> sessionList, Spinner spinner) {
+    public void populateSpinner(List<Session> sessionList, Spinner spinner) {
         if (sessionList != null && !sessionList.isEmpty()) {
             ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getSessionTitles(sessionList));
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -54,7 +54,7 @@ public class SessionService {
         }
     }
 
-    public String[] getSessionTitles(List<com.example.biitemployeeperformanceappraisalsystem.models.Session> sessionList) {
+    public String[] getSessionTitles(List<Session> sessionList) {
         String[] titles = new String[sessionList.size()];
         for (int i = 0; i < sessionList.size(); i++) {
             titles[i] = sessionList.get(i).getTitle();

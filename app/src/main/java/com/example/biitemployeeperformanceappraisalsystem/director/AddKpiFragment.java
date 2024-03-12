@@ -36,25 +36,25 @@ public class AddKpiFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_add_kpi, container, false);
         sessionSpinner = view.findViewById(R.id.spinner_session);
-        employeeTypeSpinner = view.findViewById(R.id.spinner_employee_type);
-        designationSpinner = view.findViewById(R.id.spinner_designation);
-        departmentSpinner = view.findViewById(R.id.spinner_department);
+        //employeeTypeSpinner = view.findViewById(R.id.spinner_employee_type);
+        //designationSpinner = view.findViewById(R.id.spinner_designation);
+        //departmentSpinner = view.findViewById(R.id.spinner_department);
         subKpiSpinner =  view.findViewById(R.id.spinner_sub_kpi);
         //subKpiListView = view.findViewById(R.id.list_view_subKpi);
 
         CommonData data=new CommonData(getContext());
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        employeeTypeSpinner.setAdapter(adapter);
-
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDepartments());
-        departmentSpinner.setAdapter(adapter);
-
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDesignations());
-        designationSpinner.setAdapter(adapter);
-
-        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
+//        employeeTypeSpinner.setAdapter(adapter);
+//
+//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDepartments());
+//        departmentSpinner.setAdapter(adapter);
+//
+//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDesignations());
+//        designationSpinner.setAdapter(adapter);
+//
+//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
         subKpiSpinner.setAdapter(adapter);
 
 

@@ -33,7 +33,7 @@ public class DirectorReportFragment extends Fragment {
 
         EmployeeService data = new EmployeeService(view.getContext());
 
-        data.GetEmployeesWithKpiScores(
+        data.getEmployeesWithKpiScores(
                 // onSuccess callback
                 employeeDetails -> {
                     employeeDetailsScoreList = employeeDetails;

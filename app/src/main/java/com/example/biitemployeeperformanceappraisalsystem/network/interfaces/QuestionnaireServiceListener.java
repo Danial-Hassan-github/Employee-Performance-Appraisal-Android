@@ -7,10 +7,13 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
+import retrofit2.http.Query;
 
 public interface QuestionnaireServiceListener {
-    @GET("Questionaire/GetConfidentialQuestions")
+    @GET("Questionnaire/GetConfidentialQuestions")
     Call<List<Question>> GetConfidentialQuestions();
-    @GET("Questionaire/GetQuestionnaireTypes")
+    @GET("Questionnaire/GetQuestionnaireTypes")
     Call<List<QuestionnaireType>> getQuestionnaireTypes();
+    @GET("Questionnaire/GetQuestionnaireByType")
+    Call<List<Question>> getQuestionnaireByType(@Query("questionnaireTypeId") int questionnaireTypeId);
 }

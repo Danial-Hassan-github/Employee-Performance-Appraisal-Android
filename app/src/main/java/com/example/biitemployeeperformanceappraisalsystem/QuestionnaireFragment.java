@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -58,9 +59,7 @@ public class QuestionnaireFragment extends Fragment {
 
         questionnaire.getQuestionnaireType(
                 questionnaireTypeList -> {
-                    // Handle the list of sessions here
                     questionnaireTypes = questionnaireTypeList;
-                    // Populate the spinner with questionnaire Type titles
                     questionnaire.populateSpinner(questionnaireTypes,questionnaireTypeSpinner);
                 },
                 // onFailure callback
@@ -69,6 +68,31 @@ public class QuestionnaireFragment extends Fragment {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 }
         );
+
+        questionnaireTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                questionnaire.getQuestionnaireByType(
+                        questionnaireTypes.get(position).getId(),
+                        // onSuccess callback
+                        questions -> {
+                            questionsList = questions;
+                            // Create ArrayAdapter and set it to the ListView
+                            QuestionAdapter adapter =  new QuestionAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
+                            questionnaireListView.setAdapter(adapter);
+                        },
+                        // onFailure callback
+                        errorMessage -> {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                        );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
 
         //Modal code
         // Inside your activity or fragment

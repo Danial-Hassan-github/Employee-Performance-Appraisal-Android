@@ -26,8 +26,8 @@ public class QuestionnaireService {
     }
 
     public void getConfidentialQuestions(final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
-        Call<List<Question>> employees = questionnaireServiceListener.GetConfidentialQuestions();
-        employees.enqueue(new Callback<List<Question>>() {
+        Call<List<Question>> questions = questionnaireServiceListener.GetConfidentialQuestions();
+        questions.enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
                 if (response.isSuccessful()) {
@@ -39,7 +39,26 @@ public class QuestionnaireService {
 
             @Override
             public void onFailure(Call<List<Question>> call, Throwable t) {
-                onFailure.accept("Something went wrong while fetching employees");
+                onFailure.accept("Something went wrong while fetching questionnaire");
+            }
+        });
+    }
+
+    public void getQuestionnaireByType(int questionnaireTypeId, final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
+        Call<List<Question>> questions = questionnaireServiceListener.getQuestionnaireByType(questionnaireTypeId);
+        questions.enqueue(new Callback<List<Question>>() {
+            @Override
+            public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Question>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching questionnaire");
             }
         });
     }

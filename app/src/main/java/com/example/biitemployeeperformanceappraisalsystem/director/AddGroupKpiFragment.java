@@ -7,8 +7,20 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.models.Department;
+import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
+import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.DepartmentService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.DesignationService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -16,51 +28,64 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
  * create an instance of this fragment.
  */
 public class AddGroupKpiFragment extends Fragment {
-
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public AddGroupKpiFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment AddGroupKpiFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static AddGroupKpiFragment newInstance(String param1, String param2) {
-        AddGroupKpiFragment fragment = new AddGroupKpiFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
-    }
-
+    List<Session> sessionList;
+    List<Designation> designationList;
+    List<Department> departmentList;
+    List<EmployeeType> employeeTypeList;
+    Spinner sessionSpinner,designationSpinner,departmentSpinner,employeeTypeSpinner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        View view=inflater.inflate(R.layout.fragment_add_group_kpi, container, false);
+        sessionSpinner = view.findViewById(R.id.spinner_session);
+        designationSpinner=view.findViewById(R.id.spinner_designation);
+        departmentSpinner=view.findViewById(R.id.spinner_department);
+        employeeTypeSpinner=view.findViewById(R.id.spinner_employee_type);
+
+        DesignationService designationService=new DesignationService(view.getContext());
+        DepartmentService departmentService=new DepartmentService(view.getContext());
+        SessionService sessionService=new SessionService(getContext());
+        EmployeeService employeeService=new EmployeeService(getContext());
+
+        sessionService.getSessions(sessions -> {
+                    sessionList = sessions;
+                    sessionService.populateSpinner(sessions,sessionSpinner);
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+                });
+
+
+        designationService.getDesignations(
+                designations -> {
+                    designationList=designations;
+                    designationService.populateDesignationSpinner(designations,designationSpinner);
+                },errorMessage ->{
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                }
+        );
+
+        departmentService.getDepartments(
+                departments -> {
+                    departmentList=departments;
+                    departmentService.populateDepartmentSpinner(departments,departmentSpinner);
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                }
+        );
+
+        employeeService.getEmployeeTypes(
+                employeeTypes -> {
+                    employeeTypeList=employeeTypes;
+                    employeeService.populateEmployeeTypeSpinner(employeeTypes,employeeTypeSpinner);
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                }
+        );
+
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_add_group_kpi, container, false);
+        return view;
     }
 }

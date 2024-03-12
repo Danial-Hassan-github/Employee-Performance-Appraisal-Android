@@ -1,7 +1,11 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.Department;
 import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.DesignationServiceListener;
@@ -39,5 +43,23 @@ public class DesignationService {
                 onFailure.accept("Something went wrong while fetching designations");
             }
         });
+    }
+
+    public void populateDesignationSpinner(List<Designation> designationList, Spinner spinner) {
+        if (designationList != null && !designationList.isEmpty()) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getDesignationTitles(designationList));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        } else {
+            Toast.makeText(context, "Department list is empty", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public String[] getDesignationTitles(List<Designation> designationList) {
+        String[] titles = new String[designationList.size()];
+        for (int i = 0; i < designationList.size(); i++) {
+            titles[i] = designationList.get(i).getName();
+        }
+        return titles;
     }
 }

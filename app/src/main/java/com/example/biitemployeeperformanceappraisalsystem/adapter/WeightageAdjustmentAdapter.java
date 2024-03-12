@@ -5,22 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 
 import java.util.List;
 
-public class QuestionnaireAdapter extends ArrayAdapter<Question> {
+public class WeightageAdjustmentAdapter extends ArrayAdapter<KPI> {
     private LayoutInflater inflater;
     private int resourceId;
-    public QuestionnaireAdapter(Context context, int resourceId, List<Question> questions) {
-        super(context, resourceId, questions);
+    public WeightageAdjustmentAdapter(Context context, int resourceId, List<KPI> kpiList){
+        super(context, resourceId, kpiList);
         this.inflater = LayoutInflater.from(context);
         this.resourceId = resourceId;
     }
@@ -28,19 +29,16 @@ public class QuestionnaireAdapter extends ArrayAdapter<Question> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        // Get the data item for this position
-        Question question = getItem(position);
-
-        // Check if an existing view is being reused, otherwise inflate the view
+        KPI kpi=getItem(position);
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.evaluation_questionnaire_list_item_layout, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.kpi_weightage_adjustment_list_item_layout, parent, false);
         }
+        TextView kpiTextView = convertView.findViewById(R.id.txt_kpi_title);
+        EditText KpiWeightage = convertView.findViewById(R.id.text_kpi_weightage);
 
-        // Lookup view for data population
-        TextView questionTextView = convertView.findViewById(R.id.text_question);
-        questionTextView.setText(question.getQuestion());
+        kpiTextView.setText(kpi.getName().toString());
+        //KpiWeightage.setText(kpi.);
 
-        // Return the completed view to render on screen
-        return convertView;
+        return super.getView(position, convertView, parent);
     }
 }

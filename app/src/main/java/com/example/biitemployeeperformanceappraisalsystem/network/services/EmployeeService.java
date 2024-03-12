@@ -1,9 +1,14 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
+import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeServiceListener;
 
@@ -18,7 +23,7 @@ public class EmployeeService {
     EmployeeServiceListener employeeServiceListener;
     Context context;
     public EmployeeService(Context context){
-        employeeServiceListener= RetrofitClient.getRetrofitInstance().create(employeeServiceListener.getClass());
+        employeeServiceListener= RetrofitClient.getRetrofitInstance().create(EmployeeServiceListener.class);
         this.context=context;
     }
     public void getEmployees(final Consumer<List<EmployeeDetails>> onSuccess, final Consumer<String> onFailure) {
@@ -40,8 +45,8 @@ public class EmployeeService {
         });
     }
 
-    public void GetEmployeesWithKpiScores(final Consumer<List<EmployeeDetailsScore>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<EmployeeDetailsScore>> employeeDetailsScoreList = employeeServiceListener.GetEmployeesWithKpiScores();
+    public void getEmployeesWithKpiScores(final Consumer<List<EmployeeDetailsScore>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<EmployeeDetailsScore>> employeeDetailsScoreList = employeeServiceListener.getEmployeesWithKpiScores();
         employeeDetailsScoreList.enqueue(new Callback<List<EmployeeDetailsScore>>() {
             @Override
             public void onResponse(Call<List<EmployeeDetailsScore>> call, Response<List<EmployeeDetailsScore>> response) {
@@ -57,5 +62,42 @@ public class EmployeeService {
                 onFailure.accept("Something went wrong while fetching employees");
             }
         });
+    }
+
+    public void getEmployeeTypes(final Consumer<List<EmployeeType>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<EmployeeType>> employeeTypes = employeeServiceListener.getEmployeeTypes();
+        employeeTypes.enqueue(new Callback<List<EmployeeType>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeType>> call, Response<List<EmployeeType>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeType>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching employee types");
+            }
+        });
+    }
+
+    public void populateEmployeeTypeSpinner(List<EmployeeType> employeeTypeList, Spinner spinner) {
+        if (employeeTypeList != null && !employeeTypeList.isEmpty()) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getEmployeeTypeTitles(employeeTypeList));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        } else {
+            Toast.makeText(context, "Department list is empty", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public String[] getEmployeeTypeTitles(List<EmployeeType> employeeTypeList) {
+        String[] titles = new String[employeeTypeList.size()];
+        for (int i = 0; i < employeeTypeList.size(); i++) {
+            titles[i] = employeeTypeList.get(i).getTitle();
+        }
+        return titles;
     }
 }
