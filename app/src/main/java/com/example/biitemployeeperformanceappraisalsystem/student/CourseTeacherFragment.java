@@ -19,33 +19,13 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
  */
 public class CourseTeacherFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    public CourseTeacherFragment() {
-        // Required empty public constructor
-    }
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment CourseTeacherFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static CourseTeacherFragment newInstance(String param1, String param2) {
+    int studentID, courseID, sessionID;
+    public static CourseTeacherFragment newInstance(int studentID, int courseID, int sessionID) {
         CourseTeacherFragment fragment = new CourseTeacherFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt("studentID", studentID);
+        args.putInt("courseID", courseID);
+        args.putInt("sessionID", sessionID);
         fragment.setArguments(args);
         return fragment;
     }
@@ -54,8 +34,9 @@ public class CourseTeacherFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            studentID = getArguments().getInt("studentID");
+            courseID = getArguments().getInt("courseID");
+            sessionID = getArguments().getInt("sessionID");
         }
     }
 
@@ -63,19 +44,24 @@ public class CourseTeacherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_teacher, container, false);
-        TextView textView=view.findViewById(R.id.text_teacher1);
+        TextView txt_teacher1=view.findViewById(R.id.text_teacher1);
+        TextView txt_teacher2=view.findViewById(R.id.text_teacher2);
 
         StudentMainActivity studentMainActivity=(StudentMainActivity) getActivity();
         TextView textView1=studentMainActivity.findViewById(R.id.txt_top);
         textView1.setText("Teachers");
-        textView.setOnClickListener(new View.OnClickListener() {
+        // Define a common OnClickListener for both text views
+        View.OnClickListener teacherClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                TextView textView1=studentMainActivity.findViewById(R.id.txt_top);
                 textView1.setText("Evaluate");
                 studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment());
             }
-        });
+        };
+
+        // Set the same OnClickListener for both text views
+        txt_teacher1.setOnClickListener(teacherClickListener);
+        txt_teacher2.setOnClickListener(teacherClickListener);
         // Inflate the layout for this fragment
         return view;
     }

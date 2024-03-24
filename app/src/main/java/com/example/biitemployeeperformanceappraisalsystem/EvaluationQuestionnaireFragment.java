@@ -22,6 +22,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class EvaluationQuestionnaireFragment extends Fragment {
+    int evaluatorID, evaluateeID;
     private List<Question> questionsList;
     ListView questionnaireListView;
     @Override

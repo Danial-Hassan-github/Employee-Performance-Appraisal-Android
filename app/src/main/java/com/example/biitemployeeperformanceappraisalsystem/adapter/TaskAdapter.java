@@ -8,17 +8,15 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.models.Task;
-import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TaskAdapter extends ArrayAdapter<TaskDetails> {
+public class TaskAdapter extends ArrayAdapter<TaskWithEmployees> {
 
     private LayoutInflater inflater;
     private int resourceId;
-    public TaskAdapter(Context context, int resourceId, List<TaskDetails> tasks) {
+    public TaskAdapter(Context context, int resourceId, List<TaskWithEmployees> tasks) {
         super(context, resourceId, tasks);
         this.inflater = LayoutInflater.from(context);
         this.resourceId = resourceId;
@@ -26,7 +24,7 @@ public class TaskAdapter extends ArrayAdapter<TaskDetails> {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
-        TaskDetails task = getItem(position);
+        TaskWithEmployees task = getItem(position);
 
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.task_list_item_layout, parent, false);

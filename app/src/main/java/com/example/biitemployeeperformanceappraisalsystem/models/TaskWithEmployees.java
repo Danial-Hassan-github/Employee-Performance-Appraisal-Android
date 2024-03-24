@@ -1,6 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
-public class TaskDetails {
+public class TaskWithEmployees {
     private Task task;
     private Employee assigned_to;
     private Employee assigned_by;

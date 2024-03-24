@@ -12,17 +12,19 @@
         android:id="@+id/text_teacher1"
         android:layout_width="match_parent"
         android:layout_height="60dp"
+        android:layout_marginBottom="2dp"
         android:background="@color/white"
         android:gravity="center"
-        android:layout_marginBottom="2dp"
         android:textSize="20dp"
-        android:text="Azhar Jamil"/>
+        android:visibility="invisible" />
+
     <TextView
+        android:id="@+id/text_teacher2"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@color/white"
         android:gravity="center"
         android:textSize="20dp"
-        android:text="Tehmima"/>
+        android:visibility="invisible" />
 
 </LinearLayout>

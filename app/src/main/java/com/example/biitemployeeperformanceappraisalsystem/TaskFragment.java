@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,8 +20,12 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.TaskAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.helper.DateTime;
-import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
+import com.example.biitemployeeperformanceappraisalsystem.models.Task;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.TaskService;
 
 import java.util.ArrayList;
@@ -32,15 +37,18 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class TaskFragment extends Fragment {
+    private Task task;
     private ListView taskListView;
-    private List<TaskDetails> taskDetailsList;
-    private Spinner spinner;
+    private List<TaskWithEmployees> taskWithEmployeesList;
+    private List<EmployeeType> employeeTypeList;
+    private List<Employee> employeeList;
+    private Spinner tasksSpinner,employeeSpinner,employeeTypeSpinner;
     EditText dueDateEditText;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_task, container, false);
-        spinner = view.findViewById(R.id.spinner);
+        tasksSpinner = view.findViewById(R.id.spinner_tasks);
         taskListView = view.findViewById(R.id.task_list_view);
 
         ArrayList<String> taskTypes = new ArrayList<String>();
@@ -49,23 +57,55 @@ public class TaskFragment extends Fragment {
         taskTypes.add("Completed");
 
         ArrayAdapter<String> taskTypeAdapter = new ArrayAdapter<>(view.getContext(), android.R.layout.simple_spinner_item, taskTypes);
-        spinner.setAdapter(taskTypeAdapter);
+        tasksSpinner.setAdapter(taskTypeAdapter);
 
         TaskService taskService = new TaskService(view.getContext());
 
-        taskService.getTasks(
-                // onSuccess callback
-                taskDetails -> {
-                    taskDetailsList = taskDetails;
-                    // Create ArrayAdapter and set it to the ListView
-                    TaskAdapter adapter = new TaskAdapter(getContext(), R.layout.task_list_item_layout, taskDetails);
-                    taskListView.setAdapter(adapter);
-                },
-                // onFailure callback
-                errorMessage -> {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+        tasksSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position==0){
+                    taskService.getTasks(
+                            tasksWithEmployees -> {
+                                taskWithEmployeesList = tasksWithEmployees;
+                                TaskAdapter adapter = new TaskAdapter(getContext(), R.layout.task_list_item_layout, tasksWithEmployees);
+                                taskListView.setAdapter(adapter);
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
+                }else if (position==1){
+                    taskService.getPendingTasks(
+                            tasksWithEmployees -> {
+                                taskWithEmployeesList = tasksWithEmployees;
+                                TaskAdapter adapter = new TaskAdapter(getContext(), R.layout.task_list_item_layout, tasksWithEmployees);
+                                taskListView.setAdapter(adapter);
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
+                }else {
+                    taskService.getCompletedTasks(
+                            tasksWithEmployees -> {
+                                taskWithEmployeesList = tasksWithEmployees;
+                                TaskAdapter adapter = new TaskAdapter(getContext(), R.layout.task_list_item_layout, tasksWithEmployees);
+                                taskListView.setAdapter(adapter);
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
                 }
-        );
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
 
         //Modal code
         // Inside your activity or fragment
@@ -81,8 +121,8 @@ public class TaskFragment extends Fragment {
             public void onClick(View v) {
                 // Inflate the layout for the dialog
                 View dialogView = getLayoutInflater().inflate(R.layout.task_modal_layout, null);
-                Spinner employeeSpinner = dialogView.findViewById(R.id.spinner_employee);
-                Spinner employeeTypeSpinner = dialogView.findViewById(R.id.spinner_employee_type);
+                employeeSpinner = dialogView.findViewById(R.id.spinner_employee);
+                employeeTypeSpinner = dialogView.findViewById(R.id.spinner_employee_type);
                 dueDateEditText = dialogView.findViewById(R.id.text_due_date);
 
                 DateTime dateTime=new DateTime();
@@ -94,14 +134,35 @@ public class TaskFragment extends Fragment {
                     }
                 });
 
+                EmployeeService employeeService=new EmployeeService(getContext());
                 CommonData data = new CommonData(getContext());
 
-                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateNames());
-                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                employeeSpinner.setAdapter(adapter);
+                employeeService.getEmployeeTypes(
+                        employeeTypes -> {
+                            employeeTypeList = employeeTypes;
+                            employeeService.populateEmployeeTypeSpinner(employeeTypes, employeeTypeSpinner);
+                        },
+                        errorMessage -> {
+                            Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                        }
+                );
 
-                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
-                employeeTypeSpinner.setAdapter(adapter);
+                employeeService.getEmployees(
+                        employees -> {
+                            employeeList = employees;
+                            employeeService.populateEmployeesSpinner(employees, employeeSpinner);
+                        },
+                        errorMessage -> {
+                            Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                        }
+                );
+
+//                ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
+//                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//                employeeSpinner.setAdapter(adapter);
+//
+//                adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateEmployeeTypes());
+//                employeeTypeSpinner.setAdapter(adapter);
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                 builder.setView(dialogView);
@@ -117,6 +178,10 @@ public class TaskFragment extends Fragment {
                         // Handle Save button click
                         AlertDialog alertDialog = (AlertDialog) dialog;
                         TextView descriptionTextView = alertDialog.findViewById(R.id.text_task_description);
+                        Employee employee=employeeList.get(employeeSpinner.getSelectedItemPosition());
+                        EmployeeType employeeType=employeeTypeList.get(employeeTypeSpinner.getSelectedItemPosition());
+
+
                         // Get the description text and save the task
                         dialog.dismiss();
                     }

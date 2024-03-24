@@ -42,8 +42,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/bottomBar"
-        app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
+        app:itemRippleColor="#ABC7CC"
+        app:itemTextColor="@color/white"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:menu="@menu/admin_menu" />
 
 </LinearLayout>

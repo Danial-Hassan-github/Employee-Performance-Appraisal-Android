@@ -1,14 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/kpi_weightage_adjustment_form_layout"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    tools:context=".director.KpiWeightageAdjustmentFormFragment">
+    android:padding="16dp"
+    tools:context="director.KpiWeightageAdjustmentFormFragment">
 
-    <ListView
+    <!-- Dynamic input fields will be added here programmatically -->
+
+    <Button
+        android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/kpi_weightage_adjustment_list_item_layout"/>
+        android:text="Save"
+        android:layout_marginTop="16dp"/>
 
 </LinearLayout>

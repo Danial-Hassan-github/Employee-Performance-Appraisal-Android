@@ -20,7 +20,7 @@
             android:textSize="20sp"
             android:text="Enter Title"/>
         <EditText
-            android:id="@+id/text_title"
+            android:id="@+id/text_kpi_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Title..."/>
@@ -77,7 +77,7 @@
             android:textStyle="bold"
             android:text="Enter Weightage"/>
         <EditText
-            android:id="@+id/text_weightage"
+            android:id="@+id/text_kpi_weightage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Kpi Weightage..."/>

@@ -2,10 +2,15 @@
     <!-- Base application theme. -->
     <style name="Base.Theme.BiitEmployeePerformanceAppraisalSystem" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
+        <item name="colorPrimary">@color/bottomBar</item>
+        <item name="colorPrimaryVariant">@color/bottomBar</item>
+        <item name="android:statusBarColor">@color/bottomBar</item>
     </style>
 
-    <style name="Theme.BiitEmployeePerformanceAppraisalSystem" parent="Base.Theme.BiitEmployeePerformanceAppraisalSystem">
-        <item name="colorPrimary">@color/bottomBar</item>
+    <style name="Theme.BiitEmployeePerformanceAppraisalSystem" parent="Base.Theme.BiitEmployeePerformanceAppraisalSystem"/>
+
+    <style name="App.Custom.Indicator" parent="Widget.Material3.BottomNavigationView.ActiveIndicator">
+        <item name="android:color">@color/grey</item>
     </style>
 
 </resources>

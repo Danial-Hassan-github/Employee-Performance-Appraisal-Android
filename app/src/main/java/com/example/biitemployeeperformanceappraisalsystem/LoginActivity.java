@@ -28,10 +28,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Perform login request
-                if (emailOrAridNo.getText().toString().toUpperCase().contains("ARID")){
-                    login.loginStudent(emailOrAridNo.getText().toString(),password.getText().toString());
-                }else {
+                if (emailOrAridNo.getText().toString().toUpperCase().contains("@")){
                     login.loginEmployee(emailOrAridNo.getText().toString(),password.getText().toString());
+                }else {
+                    login.loginStudent(emailOrAridNo.getText().toString(),password.getText().toString());
                 }
             }
         });

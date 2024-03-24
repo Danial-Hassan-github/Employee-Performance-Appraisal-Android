@@ -12,8 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.MyTasksAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
-import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.TaskService;
 
 import java.util.ArrayList;
@@ -26,28 +25,32 @@ import java.util.List;
  */
 public class MyTasksFragment extends Fragment {
     private ListView taskListView;
-    private List<TaskDetails> taskDetailsList;
+    private List<TaskWithEmployees> taskWithEmployeesList;
     private Spinner spinner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_my_tasks, container, false);
+
+        int employeeID=1;
+
         //spinner=view.findViewById(R.id.spinner);
         taskListView=view.findViewById(R.id.my_tasks_list_view);
 
-        ArrayList<String> taskTypes = new ArrayList<String>();
-        taskTypes.add("All");
-        taskTypes.add("Pending");
-        taskTypes.add("Completed");
+//        ArrayList<String> taskTypes = new ArrayList<String>();
+//        taskTypes.add("All");
+//        taskTypes.add("Pending");
+//        taskTypes.add("Completed");
 
         TaskService taskService = new TaskService(view.getContext());
 
-        taskService.getTasks(
+        taskService.getEmployeeTasks(
+                employeeID,
                 // onSuccess callback
-                taskDetails -> {
-                    taskDetailsList = taskDetails;
+                tasksWithEmployees -> {
+                    taskWithEmployeesList = tasksWithEmployees;
                     // Create ArrayAdapter and set it to the ListView
-                    MyTasksAdapter adapter = new MyTasksAdapter(getContext(), R.layout.my_tasks_list_item_layout, taskDetails);
+                    MyTasksAdapter adapter = new MyTasksAdapter(getContext(), R.layout.my_tasks_list_item_layout, tasksWithEmployees);
                     taskListView.setAdapter(adapter);
                 },
                 // onFailure callback

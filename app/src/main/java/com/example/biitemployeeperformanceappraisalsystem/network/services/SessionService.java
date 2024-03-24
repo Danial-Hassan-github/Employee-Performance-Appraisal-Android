@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.SessionServiceListener;
@@ -26,7 +27,7 @@ public class SessionService {
     }
 
     public void getSessions(final Consumer<List<Session>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<Session>> sessionCall = sessionServiceListener.GetSession();
+        Call<List<Session>> sessionCall = sessionServiceListener.getSessions();
         sessionCall.enqueue(new Callback<List<Session>>() {
             @Override
             public void onResponse(Call<List<Session>> call, Response<List<Session>> response) {
@@ -40,6 +41,28 @@ public class SessionService {
             @Override
             public void onFailure(Call<List<Session>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching sessions");
+            }
+        });
+    }
+
+    public void getCurrentSession() {
+        Call<Session> sessionCall = sessionServiceListener.getCurrentSession();
+        sessionCall.enqueue(new Callback<Session>() {
+            @Override
+            public void onResponse(Call<Session> call, Response<Session> response) {
+                if (response.isSuccessful()) {
+                    // onSuccess.accept(response.body());
+                    Session session = response.body();
+                    SharedPreferencesManager sharedPreferencesManager =new SharedPreferencesManager(context.getApplicationContext());
+                    sharedPreferencesManager.saveSessionId(session.getId());
+                } else {
+                    // onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Session> call, Throwable t) {
+                // onFailure.accept("Something went wrong while fetching current session");
             }
         });
     }

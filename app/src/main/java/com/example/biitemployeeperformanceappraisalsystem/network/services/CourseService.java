@@ -42,7 +42,7 @@ public class CourseService {
         });
     }
 
-    public void getStudentCourses(final Consumer<List<Course>> onSuccess,final Consumer<String> onFailure,int studentID,int sessionID){
+    public void getStudentCourses(int studentID,int sessionID,final Consumer<List<Course>> onSuccess,final Consumer<String> onFailure){
         Call<List<Course>> courseCall = courseServiceListener.getStudentCourses(studentID,sessionID);
         courseCall.enqueue(new Callback<List<Course>>() {
             @Override
@@ -61,8 +61,27 @@ public class CourseService {
         });
     }
 
-    public void getTeacherCourses(final Consumer<List<Course>> onSuccess,final Consumer<String> onFailure,int sessionID){
-        Call<List<Course>> courseCall = courseServiceListener.getTeacherCourses(sessionID);
+    public void getTeacherCourses(int teacherID, final Consumer<List<Course>> onSuccess, final Consumer<String> onFailure){
+        Call<List<Course>> courseCall = courseServiceListener.getTeacherCourses(teacherID);
+        courseCall.enqueue(new Callback<List<Course>>() {
+            @Override
+            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Course>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching teacher courses");
+            }
+        });
+    }
+
+    public void getTeacherCourses(int studentID, int courseID, int sessionID, final Consumer<List<Course>> onSuccess, final Consumer<String> onFailure){
+        Call<List<Course>> courseCall = courseServiceListener.getCourseTeachers(studentID, courseID, sessionID);
         courseCall.enqueue(new Callback<List<Course>>() {
             @Override
             public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {

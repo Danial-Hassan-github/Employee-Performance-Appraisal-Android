@@ -9,5 +9,7 @@ import retrofit2.http.GET;
 
 public interface SessionServiceListener {
     @GET("Session/GetSessions")
-    Call<List<Session>> GetSession();
+    Call<List<Session>> getSessions();
+    @GET("Session/GetCurrentSession")
+    Call<Session> getCurrentSession();
 }

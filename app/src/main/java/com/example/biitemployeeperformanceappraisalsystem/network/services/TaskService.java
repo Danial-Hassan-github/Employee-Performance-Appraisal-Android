@@ -2,7 +2,8 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.TaskDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.Task;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.TaskServiceListener;
 
@@ -21,11 +22,11 @@ public class TaskService {
         this.context=context;
     }
 
-    public void getTasks(final Consumer<List<TaskDetails>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<TaskDetails>> employees = taskServiceListener.getTasks();
-        employees.enqueue(new Callback<List<TaskDetails>>() {
+    public void getTasks(final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.getTasks();
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
             @Override
-            public void onResponse(Call<List<TaskDetails>> call, Response<List<TaskDetails>> response) {
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
                 if (response.isSuccessful()) {
                     onSuccess.accept(response.body());
                 } else {
@@ -34,7 +35,83 @@ public class TaskService {
             }
 
             @Override
-            public void onFailure(Call<List<TaskDetails>> call, Throwable t) {
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching tasks");
+            }
+        });
+    }
+
+    public void getPendingTasks(final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.getPendingTasks();
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
+            @Override
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching tasks");
+            }
+        });
+    }
+
+    public void getCompletedTasks(final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.getCompletedTasks();
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
+            @Override
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching tasks");
+            }
+        });
+    }
+
+    public void getEmployeeTasks(int employeeId, final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.getEmployeeTasks(employeeId);
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
+            @Override
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching tasks");
+            }
+        });
+    }
+
+    public void postTask(Task task, final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.postTask(task);
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
+            @Override
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching tasks");
             }
         });

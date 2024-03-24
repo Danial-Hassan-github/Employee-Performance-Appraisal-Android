@@ -1,8 +1,8 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class Session {
-    public int id;
-    public String title;
+    private int id;
+    private String title;
 
     public int getId() {
         return id;

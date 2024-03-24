@@ -44,18 +44,18 @@ public class QuestionnaireFragment extends Fragment {
 
         QuestionnaireService questionnaire=new QuestionnaireService(view.getContext());
 
-        questionnaire.getConfidentialQuestions(
-                // onSuccess callback
-                questions -> {
-                    questionsList = questions;
-                    // Create ArrayAdapter and set it to the ListView
-                    QuestionAdapter adapter =  new QuestionAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
-                    questionnaireListView.setAdapter(adapter);
-                },
-                // onFailure callback
-                errorMessage -> {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                });
+//        questionnaire.getConfidentialQuestions(
+//                // onSuccess callback
+//                questions -> {
+//                    questionsList = questions;
+//                    // Create ArrayAdapter and set it to the ListView
+//                    QuestionAdapter adapter =  new QuestionAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
+//                    questionnaireListView.setAdapter(adapter);
+//                },
+//                // onFailure callback
+//                errorMessage -> {
+//                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                });
 
         questionnaire.getQuestionnaireType(
                 questionnaireTypeList -> {

@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem.director;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,9 +18,12 @@ import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ public class KpiFragment extends Fragment {
     List<Session> sessionList;
     Spinner sessionSpinner;
     Button btnAddKpi,btnAddGroupKpi,btnAddIndividualKpi;
+    ArrayList<Float> pieChartValues;
+    ArrayList<String> pieChartTitles;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -94,7 +100,7 @@ public class KpiFragment extends Fragment {
     }
 
     private void showKpiGraph(View view){
-        PieChart pieChart = view.findViewById(R.id.pie_chart);
+        PieChart pieChart = view.findViewById(R.id.pie_chart_kpi);
 
         // Hide the bar chart
 //        BarChart barChart = view.findViewById(R.id.bar_chart);
@@ -110,6 +116,19 @@ public class KpiFragment extends Fragment {
 
         PieDataSet dataSet = new PieDataSet(entries, "KPI Graph");
 
+        // Set up the pie chart
+        pieChartValues = new ArrayList<>();
+        pieChartTitles = new ArrayList<>();
+        // Add your pie chart data
+        pieChartValues.add(20f);
+        pieChartValues.add(25f);
+        pieChartValues.add(25f);
+        pieChartValues.add(30f);
+        pieChartTitles.add("Administrative");
+        pieChartTitles.add("Academic");
+        pieChartTitles.add("Punctuality");
+        pieChartTitles.add("Project");
+
         // Generate colors dynamically
         CommonMethods commonMethods=new CommonMethods();
         ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
@@ -118,6 +137,30 @@ public class KpiFragment extends Fragment {
         PieData data = new PieData(dataSet);
         pieChart.setData(data);
         pieChart.invalidate();
-    }
 
+        pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                // Extract data associated with the selected slice
+                PieEntry entry = (PieEntry) e;
+                String kpiName = entry.getLabel();
+                float kpiValue = entry.getValue();
+
+                // Pass data to editable form fragment
+                AddKpiFragment addKpiFragment = AddKpiFragment.newInstance(kpiName, kpiValue, pieChartValues, pieChartTitles);
+
+                FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                transaction.replace(R.id.fragment_container, addKpiFragment);
+                transaction.addToBackStack(null);
+                transaction.commit();
+            }
+
+            @Override
+            public void onNothingSelected() {
+                // Handle case where no slice is selected
+            }
+        });
+
+        // Other pie chart setup code...
+    }
 }

@@ -7,6 +7,7 @@ import android.widget.Toast;
 import com.example.biitemployeeperformanceappraisalsystem.admin.AdminMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.Student;
@@ -20,12 +21,18 @@ import retrofit2.Response;
 
 public class LoginService {
     LoginServiceListener loginServiceListener;
+    SharedPreferencesManager sharedPreferencesManager;
+    SessionService sessionService;
     Context context;
 
     public LoginService(Context context) {
         loginServiceListener = RetrofitClient.getRetrofitInstance().create(LoginServiceListener.class);
         this.context = context;
+        sharedPreferencesManager = new SharedPreferencesManager(context);
+        sessionService = new SessionService(context);
+        sessionService.getCurrentSession();
     }
+
     public void loginStudent(String emailOrAridNo, String password) {
         Call<Student> loginCall = loginServiceListener.LoginStudent(emailOrAridNo, password);
         loginCall.enqueue(new Callback<Student>() {
@@ -34,6 +41,7 @@ public class LoginService {
                 if (response.isSuccessful()) {
                     // Check the type of user and navigate accordingly
                     Student user = response.body(); // You may need to cast this to the appropriate user type
+                    sharedPreferencesManager.saveStudentUserDetails(user);
                     context.startActivity(new Intent(context, StudentMainActivity.class));
                 } else {
                     // Handle unsuccessful login response
@@ -58,6 +66,7 @@ public class LoginService {
                     // Check the type of user and navigate accordingly
                     EmployeeDetails user = response.body(); // You may need to cast this to the appropriate user type
                     if (user != null) {
+                        sharedPreferencesManager.saveEmployeeUserDetails(user);
                         if (user.getDesignation().getName().equalsIgnoreCase("Director")) {
                             context.startActivity(new Intent(context, DirectorMainActivity.class));
                         } else if (user.getDesignation().getName().equalsIgnoreCase("HOD")) {

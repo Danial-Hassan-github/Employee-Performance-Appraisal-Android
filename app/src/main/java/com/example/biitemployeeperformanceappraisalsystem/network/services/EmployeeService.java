@@ -6,9 +6,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
+import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeServiceListener;
 
@@ -26,8 +28,28 @@ public class EmployeeService {
         employeeServiceListener= RetrofitClient.getRetrofitInstance().create(EmployeeServiceListener.class);
         this.context=context;
     }
-    public void getEmployees(final Consumer<List<EmployeeDetails>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<EmployeeDetails>> employees = employeeServiceListener.getEmployees();
+
+    public void getEmployees(final Consumer<List<Employee>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<Employee>> employees = employeeServiceListener.getEmployees();
+        employees.enqueue(new Callback<List<Employee>>() {
+            @Override
+            public void onResponse(Call<List<Employee>> call, Response<List<Employee>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Employee>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching employees");
+            }
+        });
+    }
+
+    public void getEmployeesWithDetails(final Consumer<List<EmployeeDetails>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<EmployeeDetails>> employees = employeeServiceListener.getEmployeesWithDetails();
         employees.enqueue(new Callback<List<EmployeeDetails>>() {
             @Override
             public void onResponse(Call<List<EmployeeDetails>> call, Response<List<EmployeeDetails>> response) {
@@ -81,6 +103,24 @@ public class EmployeeService {
                 onFailure.accept("Something went wrong while fetching employee types");
             }
         });
+    }
+
+    public void populateEmployeesSpinner(List<Employee> employeeList, Spinner spinner) {
+        if (employeeList != null && !employeeList.isEmpty()) {
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, getEmployeeNames(employeeList));
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinner.setAdapter(adapter);
+        } else {
+            Toast.makeText(context, "Employee list is empty", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public String[] getEmployeeNames(List<Employee> employeeList) {
+        String[] names = new String[employeeList.size()];
+        for (int i = 0; i < employeeList.size(); i++) {
+            names[i] = employeeList.get(i).getName();
+        }
+        return names;
     }
 
     public void populateEmployeeTypeSpinner(List<EmployeeType> employeeTypeList, Spinner spinner) {

@@ -11,11 +11,16 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CourseListAdapter extends ArrayAdapter<Course> {
 
-    public CourseListAdapter(Context context, ArrayList<Course> courses) {
-        super(context, 0, courses);
+    private LayoutInflater inflater;
+    private int resourceId;
+    public CourseListAdapter(Context context, int resourceId, List<Course> courses) {
+        super(context, resourceId, courses);
+        this.inflater = LayoutInflater.from(context);
+        this.resourceId = resourceId;
     }
 
     @Override
@@ -23,14 +28,16 @@ public class CourseListAdapter extends ArrayAdapter<Course> {
         Course course = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.courses_list_view_layout, parent, false);
+            convertView = inflater.from(getContext()).inflate(resourceId, parent, false);
         }
 
         TextView nameTextView = convertView.findViewById(R.id.course_name);
         TextView codeTextView = convertView.findViewById(R.id.course_code);
 
-        nameTextView.setText(course.getName());
-        codeTextView.setText(course.getCode());
+        if (course!=null){
+            nameTextView.setText(course.getName());
+            codeTextView.setText(course.getCode());
+        }
 
         return convertView;
     }

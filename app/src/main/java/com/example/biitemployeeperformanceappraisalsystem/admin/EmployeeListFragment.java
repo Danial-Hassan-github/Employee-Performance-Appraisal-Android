@@ -38,7 +38,7 @@ public class EmployeeListFragment extends Fragment {
 
         EmployeeService data = new EmployeeService(view.getContext());
 
-        data.getEmployees(
+        data.getEmployeesWithDetails(
                 employeeDetails -> {
                     employeeDetailsList = employeeDetails;
                     EmployeeDetailsListAdapter adapter = new EmployeeDetailsListAdapter(getContext(), R.layout.employee_list_item_layout, employeeDetails);
