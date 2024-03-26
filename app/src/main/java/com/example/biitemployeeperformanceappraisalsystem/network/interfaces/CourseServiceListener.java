@@ -1,6 +1,7 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 
 import java.util.List;
 
@@ -16,5 +17,5 @@ public interface CourseServiceListener {
     @GET("Course/GetStudentCourses")
     Call<List<Course>> getStudentCourses(@Query("studentID") int studentID,@Query("sessionID") int sessionID);
     @GET("Course/GetCourseTeachers")
-    Call<List<Course>> getCourseTeachers(@Query("studentID") int studentID,@Query("courseID") int courseID,@Query("sessionID") int sessionID);
+    Call<List<Employee>> getCourseTeachers(@Query("studentID") int studentID, @Query("courseID") int courseID, @Query("sessionID") int sessionID);
 }

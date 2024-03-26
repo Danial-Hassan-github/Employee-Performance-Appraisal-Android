@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.CourseServiceListener;
 
@@ -80,11 +81,11 @@ public class CourseService {
         });
     }
 
-    public void getTeacherCourses(int studentID, int courseID, int sessionID, final Consumer<List<Course>> onSuccess, final Consumer<String> onFailure){
-        Call<List<Course>> courseCall = courseServiceListener.getCourseTeachers(studentID, courseID, sessionID);
-        courseCall.enqueue(new Callback<List<Course>>() {
+    public void getCourseTeachers(int studentID, int courseID, int sessionID, final Consumer<List<Employee>> onSuccess, final Consumer<String> onFailure){
+        Call<List<Employee>> courseCall = courseServiceListener.getCourseTeachers(studentID, courseID, sessionID);
+        courseCall.enqueue(new Callback<List<Employee>>() {
             @Override
-            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+            public void onResponse(Call<List<Employee>> call, Response<List<Employee>> response) {
                 if (response.isSuccessful()) {
                     onSuccess.accept(response.body());
                 } else {
@@ -93,7 +94,7 @@ public class CourseService {
             }
 
             @Override
-            public void onFailure(Call<List<Course>> call, Throwable t) {
+            public void onFailure(Call<List<Employee>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching teacher courses");
             }
         });

@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,6 +26,11 @@ public class EvaluationQuestionnaireFragment extends Fragment {
     int evaluatorID, evaluateeID;
     private List<Question> questionsList;
     ListView questionnaireListView;
+    Button btnSubmit;
+    boolean allQuestionsAnswered = false;
+    public EvaluationQuestionnaireFragment(int evaluateeID){
+        this.evaluateeID=evaluateeID;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -46,7 +52,6 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                 errorMessage -> {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 });
-
         // Inflate the layout for this fragment
         return view;
     }

@@ -37,7 +37,7 @@ public class EvaluateeListFragment extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment();
+                EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment(0);
                 HodMainActivity hodMainActivity = (HodMainActivity) getActivity();
                 hodMainActivity.replaceFragment(fragment);
             }

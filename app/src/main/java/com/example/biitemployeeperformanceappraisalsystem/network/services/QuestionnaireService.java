@@ -5,6 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.OptionsWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
@@ -77,6 +78,25 @@ public class QuestionnaireService {
 
             @Override
             public void onFailure(Call<List<QuestionnaireType>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching employees");
+            }
+        });
+    }
+
+    public void getOptionsWeightages(final Consumer<List<OptionsWeightage>> onSuccess, final Consumer<String> onFailure){
+        Call<List<OptionsWeightage>> optionsWeightage = questionnaireServiceListener.getOptionsWeightage();
+        optionsWeightage.enqueue(new Callback<List<OptionsWeightage>>() {
+            @Override
+            public void onResponse(Call<List<OptionsWeightage>> call, Response<List<OptionsWeightage>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<OptionsWeightage>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching employees");
             }
         });

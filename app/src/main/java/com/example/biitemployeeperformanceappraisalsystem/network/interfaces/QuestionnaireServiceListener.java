@@ -1,5 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.OptionsWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 
@@ -16,4 +17,6 @@ public interface QuestionnaireServiceListener {
     Call<List<QuestionnaireType>> getQuestionnaireTypes();
     @GET("Questionnaire/GetQuestionnaireByType")
     Call<List<Question>> getQuestionnaireByType(@Query("questionnaireTypeId") int questionnaireTypeId);
+    @GET("Questionnaire/GetOptionsWeightages")
+    Call<List<OptionsWeightage>> getOptionsWeightage();
 }

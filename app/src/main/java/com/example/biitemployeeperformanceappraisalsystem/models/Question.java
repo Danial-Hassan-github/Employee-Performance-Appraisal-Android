@@ -1,5 +1,7 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
+import java.util.List;
+
 public class Question {
     private int id;
     private String question;
