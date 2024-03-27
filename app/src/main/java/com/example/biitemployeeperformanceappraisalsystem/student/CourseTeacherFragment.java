@@ -28,8 +28,12 @@ public class CourseTeacherFragment extends Fragment {
     int studentID, courseID, sessionID;
     SharedPreferencesManager sharedPreferencesManager;
     List<Employee> teacherList;
+
+    public CourseTeacherFragment(int courseID){
+        this.courseID=courseID;
+    }
     public static CourseTeacherFragment newInstance(int studentID, int courseID, int sessionID) {
-        CourseTeacherFragment fragment = new CourseTeacherFragment();
+        CourseTeacherFragment fragment = new CourseTeacherFragment(courseID);
         Bundle args = new Bundle();
         args.putInt("studentID", studentID);
         args.putInt("courseID", courseID);
@@ -87,7 +91,7 @@ public class CourseTeacherFragment extends Fragment {
                 // Pass the ID of the clicked teacher
                 int teacherId = teacherList.get(index).getId();
                 textView1.setText("Evaluate");
-                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId));
+                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId,courseID));
             }
         };
 
