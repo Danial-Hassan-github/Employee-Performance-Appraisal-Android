@@ -55,7 +55,7 @@ public class FacultyMain extends AppCompatActivity {
                 }
                 else if (R.id.navigation_evaluate==item.getItemId()) {
                     topText.setText("Evaluate");
-                    replaceFragment(new EvaluateeListFragment());
+                    replaceFragment(new EvaluateeListFragment(fragmentContainer.getId()));
                     return true;
                 } else if (R.id.navigation_score==item.getItemId()) {
                     // Handle "Settings" click

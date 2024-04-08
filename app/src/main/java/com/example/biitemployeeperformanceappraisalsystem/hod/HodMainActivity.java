@@ -1,9 +1,12 @@
 package com.example.biitemployeeperformanceappraisalsystem.hod;
 
+import static com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils.replaceFragment;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.MenuItem;
@@ -40,7 +43,7 @@ public class HodMainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        replaceFragment(new PerformanceFragment());
+        replaceFragment(getSupportFragmentManager(),new PerformanceFragment(),fragmentContainer.getId());
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -48,22 +51,22 @@ public class HodMainActivity extends AppCompatActivity {
                 if (R.id.navigation_performance==item.getItemId()) {
                     // Replace content with the Report layout
                     topText.setText("Performance");
-                    replaceFragment(new PerformanceFragment());
+                    replaceFragment(getSupportFragmentManager(),new PerformanceFragment(),fragmentContainer.getId());
                     return true;
                 }else if (R.id.navigation_my_tasks==item.getItemId()) {
                     // Handle "Tasks" click
                     topText.setText("Tasks");
-                    replaceFragment(new MyTasksFragment());
+                    replaceFragment(getSupportFragmentManager(),new MyTasksFragment(),fragmentContainer.getId());
                     return true;
                 }
                 else if (R.id.navigation_evaluate==item.getItemId()) {
                     topText.setText("Evaluate");
-                    replaceFragment(new EvaluateeListFragment());
+                    replaceFragment(getSupportFragmentManager(),new EvaluateeListFragment(fragmentContainer.getId()),fragmentContainer.getId());
                     return true;
                 } else if (R.id.navigation_score==item.getItemId()) {
                     // Handle "Settings" click
                     topText.setText("Scores");
-                    replaceFragment(new ScoresFragment());
+                    replaceFragment(getSupportFragmentManager(),new ScoresFragment(),fragmentContainer.getId());
                     return true;
 
                 } else if (R.id.navigation_more==item.getItemId()) {
@@ -75,14 +78,6 @@ public class HodMainActivity extends AppCompatActivity {
         });
     }
 
-    // Method to replace the content of the FrameLayout with a new fragment
-    public void replaceFragment(Fragment fragment) {
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container, fragment)
-                .addToBackStack(null)
-                .commit();
-    }
-
     private void showPopupMenu(View view) {
         PopupMenu popupMenu = new PopupMenu(this, view, Gravity.RIGHT);
         popupMenu.getMenuInflater().inflate(R.menu.hod_popup_menu, popupMenu.getMenu());
@@ -92,12 +87,12 @@ public class HodMainActivity extends AppCompatActivity {
             public boolean onMenuItemClick(MenuItem item) {
                 if (R.id.navigation_questionnaire==item.getItemId()) {
                     // Handle "Questionnaire" click
-                    replaceFragment(new QuestionnaireFragment());
+                    replaceFragment(getSupportFragmentManager(),new QuestionnaireFragment(),fragmentContainer.getId());
                     topText.setText("Questionnaire");
                     return true;
                 }
                 else if (R.id.navigation_tasks==item.getItemId()) {
-                    replaceFragment(new TaskFragment());
+                    replaceFragment(getSupportFragmentManager(),new TaskFragment(),fragmentContainer.getId());
                     topText.setText("Tasks");
                     return true;
                 }

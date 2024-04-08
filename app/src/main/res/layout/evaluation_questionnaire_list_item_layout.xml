@@ -16,7 +16,7 @@
         android:id="@+id/options_radio_group"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:orientation="vertical"
         android:weightSum="4">
 
     </RadioGroup>

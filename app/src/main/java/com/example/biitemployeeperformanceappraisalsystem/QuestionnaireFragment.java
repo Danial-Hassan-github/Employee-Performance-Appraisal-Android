@@ -16,7 +16,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.adapter.QuestionnaireAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
@@ -78,7 +78,7 @@ public class QuestionnaireFragment extends Fragment {
                         questions -> {
                             questionsList = questions;
                             // Create ArrayAdapter and set it to the ListView
-                            QuestionAdapter adapter =  new QuestionAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
+                            QuestionnaireAdapter adapter =  new QuestionnaireAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
                             questionnaireListView.setAdapter(adapter);
                         },
                         // onFailure callback

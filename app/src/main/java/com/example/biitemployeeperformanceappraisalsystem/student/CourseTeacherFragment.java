@@ -15,6 +15,7 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
 
 import java.util.List;
 
@@ -28,6 +29,8 @@ public class CourseTeacherFragment extends Fragment {
     int studentID, courseID, sessionID;
     SharedPreferencesManager sharedPreferencesManager;
     List<Employee> teacherList;
+    EvaluationService evaluationService;
+    View fragmentContainer;
 
     public CourseTeacherFragment(int courseID){
         this.courseID=courseID;
@@ -59,12 +62,16 @@ public class CourseTeacherFragment extends Fragment {
         TextView txt_teacher1=view.findViewById(R.id.text_teacher1);
         TextView txt_teacher2=view.findViewById(R.id.text_teacher2);
         sharedPreferencesManager=new SharedPreferencesManager(getContext());
+        evaluationService = new EvaluationService(getContext());
+        studentID = sharedPreferencesManager.getStudentUserObject().getId();
+        sessionID = sharedPreferencesManager.getSessionId();
+
 
         CourseService courseService=new CourseService(getContext());
         courseService.getCourseTeachers(
-                sharedPreferencesManager.getStudentUserObject().getId(),
-                1,
-                sharedPreferencesManager.getSessionId(),
+                studentID,
+                courseID,
+                sessionID,
                 teachers -> {
                     teacherList = teachers;
                     txt_teacher1.setVisibility(View.VISIBLE);
@@ -80,6 +87,7 @@ public class CourseTeacherFragment extends Fragment {
         );
 
         StudentMainActivity studentMainActivity=(StudentMainActivity) getActivity();
+        fragmentContainer = studentMainActivity.findViewById(R.id.fragment_container);
         TextView textView1=studentMainActivity.findViewById(R.id.txt_top);
         textView1.setText("Teachers");
         // Define a common OnClickListener for both text views
@@ -91,7 +99,23 @@ public class CourseTeacherFragment extends Fragment {
                 // Pass the ID of the clicked teacher
                 int teacherId = teacherList.get(index).getId();
                 textView1.setText("Evaluate");
-                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId,courseID));
+                evaluationService.IsEvaluated(
+                        studentID,
+                        teacherId,
+                        courseID,
+                        sessionID,
+                        "Confidential",
+                        result -> {
+                            boolean check = result;
+                            if (check){
+                                Toast.makeText(getContext(), "You have already Evaluated this teacher", Toast.LENGTH_SHORT).show();
+                            }else {
+                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, "Student", fragmentContainer.getId()));
+                            }
+                        },
+                        errorMessage -> {
+                            Toast.makeText(getContext(), errorMessage.toString(), Toast.LENGTH_SHORT).show();
+                        });
             }
         };
 

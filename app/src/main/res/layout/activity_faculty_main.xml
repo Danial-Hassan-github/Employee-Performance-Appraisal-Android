@@ -21,7 +21,6 @@
             android:text="Performance"
             android:textSize="30dp"
             android:textStyle="bold"
-            style="@style/App.Custom.Indicator"
             android:textColor="@color/white"
             android:background="@color/bottomBar" />
 
@@ -41,6 +40,7 @@
         android:layout_height="wrap_content"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
+        app:itemActiveIndicatorStyle="@style/App.Custom.Indicator"
         app:menu="@menu/teacher_menu"
         android:background="@color/bottomBar"/>
 

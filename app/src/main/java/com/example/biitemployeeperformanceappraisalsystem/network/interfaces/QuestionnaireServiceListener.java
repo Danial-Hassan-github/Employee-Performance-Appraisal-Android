@@ -11,12 +11,20 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface QuestionnaireServiceListener {
-    @GET("Questionnaire/GetConfidentialQuestions")
-    Call<List<Question>> GetConfidentialQuestions();
     @GET("Questionnaire/GetQuestionnaireTypes")
     Call<List<QuestionnaireType>> getQuestionnaireTypes();
+    @GET("Questionnaire/GetQuestionnaireByTypeID")
+    Call<List<Question>> getQuestionnaireByTypeID(@Query("questionnaireTypeId") int questionnaireTypeId);
     @GET("Questionnaire/GetQuestionnaireByType")
-    Call<List<Question>> getQuestionnaireByType(@Query("questionnaireTypeId") int questionnaireTypeId);
+    Call<List<Question>> getQuestionnaireByType(@Query("questionnaireType") String questionnaireType);
+    @GET("Questionnaire/GetConfidentialQuestions")
+    Call<List<Question>> GetConfidentialQuestions();
+    @GET("Questionnaire/GetStudentQuestions")
+    Call<List<Question>> GetStudentQuestions();
+    @GET("Questionnaire/GetPeerQuestions")
+    Call<List<Question>> GetPeerQuestions();
+    @GET("Questionnaire/GetSeniorQuestions")
+    Call<List<Question>> GetSeniorQuestions();
     @GET("Questionnaire/GetOptionsWeightages")
     Call<List<OptionsWeightage>> getOptionsWeightage();
 }

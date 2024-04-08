@@ -26,8 +26,8 @@ public class QuestionnaireService {
         this.context=context;
     }
 
-    public void getConfidentialQuestions(final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
-        Call<List<Question>> questions = questionnaireServiceListener.GetConfidentialQuestions();
+    public void getEvaluationQuestionnaire(String questionnaireType, final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
+        Call<List<Question>> questions = questionnaireServiceListener.getQuestionnaireByType(questionnaireType);
         questions.enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
@@ -46,7 +46,7 @@ public class QuestionnaireService {
     }
 
     public void getQuestionnaireByType(int questionnaireTypeId, final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
-        Call<List<Question>> questions = questionnaireServiceListener.getQuestionnaireByType(questionnaireTypeId);
+        Call<List<Question>> questions = questionnaireServiceListener.getQuestionnaireByTypeID(questionnaireTypeId);
         questions.enqueue(new Callback<List<Question>>() {
             @Override
             public void onResponse(Call<List<Question>> call, Response<List<Question>> response) {
