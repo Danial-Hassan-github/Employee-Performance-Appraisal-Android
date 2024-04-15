@@ -25,6 +25,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluati
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluatorService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
+import com.example.biitemployeeperformanceappraisalsystem.student.CourseTeacherFragment;
 import com.example.biitemployeeperformanceappraisalsystem.student.StudentCoursesFragment;
 import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
@@ -108,6 +109,8 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                     Toast.makeText(getContext(), studentEvaluation.getStudent_id() + "\n" + studentEvaluation.getSession_id() + "\n" + studentEvaluation.getCourse_id(), Toast.LENGTH_SHORT).show();
                 }
                 evaluationService.postStudentEvaluations(studentEvaluations);
+                CourseTeacherFragment fragment = new CourseTeacherFragment(courseID);
+                replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
             } else {
                 for (Pair<Integer, Integer> pair : selectedAnswers) {
                     PeerEvaluation peerEvaluation = new PeerEvaluation();
@@ -120,12 +123,14 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                     Toast.makeText(getContext(), peerEvaluation.getEvaluator_id() + "\n" + peerEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                 }
                 evaluationService.postPeerEvaluations(peerEvaluations);
+                EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+                replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
             }
             // studentMainActivity=(StudentMainActivity) getActivity();
             // studentMainActivity.replaceFragment(new StudentCoursesFragment());
-            EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
-            replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
-            Toast.makeText(getContext(), "Teacher Evaluated", Toast.LENGTH_SHORT).show();
+            // EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+            // replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
+            Toast.makeText(getContext(), "Evaluated Successfully", Toast.LENGTH_SHORT).show();
 
             // Now you have a list of StudentEvaluation objects with the necessary values set
             // You can proceed to use this list as needed

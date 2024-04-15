@@ -26,6 +26,25 @@ public class QuestionnaireService {
         this.context=context;
     }
 
+    public void postQuestion(Question question, final Consumer<Question> onSuccess, final Consumer<String> onFailure){
+        Call<Question> questionCall = questionnaireServiceListener.postQuestion(question);
+        questionCall.enqueue(new Callback<Question>() {
+            @Override
+            public void onResponse(Call<Question> call, Response<Question> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Question> call, Throwable t) {
+                onFailure.accept("Something went wrong while adding question");
+            }
+        });
+    }
+
     public void getEvaluationQuestionnaire(String questionnaireType, final Consumer<List<Question>> onSuccess, final Consumer<String> onFailure){
         Call<List<Question>> questions = questionnaireServiceListener.getQuestionnaireByType(questionnaireType);
         questions.enqueue(new Callback<List<Question>>() {

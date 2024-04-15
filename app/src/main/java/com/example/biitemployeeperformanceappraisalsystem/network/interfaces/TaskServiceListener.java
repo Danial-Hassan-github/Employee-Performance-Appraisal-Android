@@ -2,6 +2,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Task;
 import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithRole;
 
 import java.util.List;
 
@@ -26,4 +27,6 @@ public interface TaskServiceListener {
 
     @POST("Task/PostTask")
     Call<List<TaskWithEmployees>> postTask(@Body Task task);
+    @POST("Task/PostRoleBasedTask")
+    Call<List<TaskWithEmployees>> postRoleBasedTask(@Body TaskWithRole taskWithRole);
 }

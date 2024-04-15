@@ -7,10 +7,14 @@ import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireTy
 import java.util.List;
 
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.GET;
+import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface QuestionnaireServiceListener {
+    @POST("Questionnaire/PostQuestion")
+    Call<Question> postQuestion(@Body Question question);
     @GET("Questionnaire/GetQuestionnaireTypes")
     Call<List<QuestionnaireType>> getQuestionnaireTypes();
     @GET("Questionnaire/GetQuestionnaireByTypeID")

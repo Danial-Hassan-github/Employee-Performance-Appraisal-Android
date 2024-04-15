@@ -15,6 +15,24 @@
         android:textSize="18sp"
         android:textStyle="bold" />
 
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/task_assignment_type_tab"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_individual_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Individual" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_role_based_task"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Role Based" />
+    </com.google.android.material.tabs.TabLayout>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -29,27 +47,97 @@
         android:hint="Enter Task Description"
         android:textSize="16sp" />
 
-    <TextView
+    <LinearLayout
+        android:id="@+id/employee_spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Select Person"/>
+        android:orientation="vertical"
+        android:visibility="visible">
 
-    <Spinner
-        android:id="@+id/spinner_employee"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Select Employee"/>
 
-    <TextView
+        <Spinner
+            android:id="@+id/spinner_employee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/employee_role_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textStyle="bold"
-        android:text="Select Role"/>
+        android:orientation="vertical"
+        android:visibility="gone">
 
-    <Spinner
-        android:id="@+id/spinner_employee_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        <androidx.constraintlayout.utils.widget.MotionLabel
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Employee Role"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Select Role"/>
+
+                <Spinner
+                    android:id="@+id/spinner_designation"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_weight="1">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textStyle="bold"
+                    android:text="Select Department"/>
+
+                <Spinner
+                    android:id="@+id/spinner_department"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:text="Select Employee Type"/>
+
+        <Spinner
+            android:id="@+id/spinner_employee_type"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="match_parent"
@@ -81,6 +169,5 @@
         android:clickable="true"
         android:drawableRight="@drawable/calendar_icon"
         android:textSize="16sp" />
-
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.Task;
 import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
+import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithRole;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.TaskServiceListener;
 
@@ -112,7 +113,26 @@ public class TaskService {
 
             @Override
             public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
-                onFailure.accept("Something went wrong while fetching tasks");
+                onFailure.accept("Something went wrong while adding task");
+            }
+        });
+    }
+
+    public void postRoleBasedTask(TaskWithRole taskWithRole, final Consumer<List<TaskWithEmployees>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<TaskWithEmployees>> tasks = taskServiceListener.postRoleBasedTask(taskWithRole);
+        tasks.enqueue(new Callback<List<TaskWithEmployees>>() {
+            @Override
+            public void onResponse(Call<List<TaskWithEmployees>> call, Response<List<TaskWithEmployees>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<TaskWithEmployees>> call, Throwable t) {
+                onFailure.accept("Something went wrong while adding task");
             }
         });
     }

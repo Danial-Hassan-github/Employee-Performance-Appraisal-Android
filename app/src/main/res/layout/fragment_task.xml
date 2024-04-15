@@ -1,48 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     tools:context=".TaskFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/task_fragment_tabLayout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="2">
+        android:layout_height="wrap_content">
 
-        <Spinner
-            android:id="@+id/spinner_tasks"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="2">
-
-        <Button
-            android:id="@+id/btn_add_task"
-            android:layout_width="match_parent"
-            android:background="@color/bottomBar"
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/all_tasks_tab"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Assign Task"/>
+            android:text="All" />
 
-    </LinearLayout>
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/pending_tasks_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pending" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/completed_tasks_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Completed" />
+    </com.google.android.material.tabs.TabLayout>
 
     <ListView
         android:id="@+id/task_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/task_list_item_layout"/>
+        android:layout_below="@id/task_fragment_tabLayout"
+        tools:listitem="@layout/task_list_item_layout" />
 
-</LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/btn_add_task"
+        style="@style/Widget.Material3.Button.Icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/plus_icon"
+        android:src="@drawable/plus_icon" />
+
+</RelativeLayout>

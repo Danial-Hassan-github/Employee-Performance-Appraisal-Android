@@ -3,12 +3,33 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".EvaluateeListFragment">
+    tools:context=".EvaluateeListFragment"
+    android:orientation="vertical">
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/evaluatee_list_fragment_tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/peer_evaluatees_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Peer" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/junior_evaluatees_tab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Junior" />
+    </com.google.android.material.tabs.TabLayout>
 
     <ListView
         android:id="@+id/evaluatee_list_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:listitem="@layout/evaluatee_list_item_layout"/>
+        tools:listitem="@layout/evaluatee_list_item_layout">
+
+    </ListView>
 
 </LinearLayout>

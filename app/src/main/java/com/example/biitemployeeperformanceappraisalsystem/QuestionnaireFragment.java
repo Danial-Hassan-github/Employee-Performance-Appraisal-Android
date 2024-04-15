@@ -30,6 +30,7 @@ import java.util.List;
  */
 public class QuestionnaireFragment extends Fragment {
 
+    int questionnaireTypeSpinnerSelectedItemId;
     private List<Question> questionsList;
     private List<QuestionnaireType> questionnaireTypes;
     ListView questionnaireListView;
@@ -72,6 +73,7 @@ public class QuestionnaireFragment extends Fragment {
         questionnaireTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                questionnaireTypeSpinnerSelectedItemId = questionnaireTypes.get(position).getId();
                 questionnaire.getQuestionnaireByType(
                         questionnaireTypes.get(position).getId(),
                         // onSuccess callback
@@ -122,7 +124,20 @@ public class QuestionnaireFragment extends Fragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // Handle Save button click
                         AlertDialog alertDialog = (AlertDialog) dialog;
-                        TextView descriptionTextView = alertDialog.findViewById(R.id.text_question);
+                        TextView questionTextView = alertDialog.findViewById(R.id.text_question);
+                        Question question = new Question();
+                        question.setQuestion(questionTextView.toString().trim());
+                        question.setId(questionnaireTypeSpinnerSelectedItemId);
+                        questionnaire.postQuestion(
+                                question,
+                                question1 -> {
+                                    questionsList.add(question1);
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                        );
+
                         // Get the description text and save the task
                         dialog.dismiss();
                     }

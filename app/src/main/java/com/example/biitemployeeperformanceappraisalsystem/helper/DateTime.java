@@ -1,7 +1,5 @@
 package com.example.biitemployeeperformanceappraisalsystem.helper;
 
-import static java.security.AccessController.getContext;
-
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
@@ -9,7 +7,9 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class DateTime {
     public void showDateTimePicker(final EditText editText, Context context) {
@@ -28,15 +28,24 @@ public class DateTime {
                         calendar.set(Calendar.MONTH, monthOfYear);
                         calendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
+                        // Format date
+                        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy", Locale.getDefault());
+                        String formattedDate = dateFormat.format(calendar.getTime());
+
                         TimePickerDialog timePickerDialog = new TimePickerDialog(context,
                                 new TimePickerDialog.OnTimeSetListener() {
                                     @Override
                                     public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                                         calendar.set(Calendar.HOUR_OF_DAY, hourOfDay);
                                         calendar.set(Calendar.MINUTE, minute);
-                                        editText.setText(calendar.getTime().toString());
+
+                                        // Format time
+                                        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                        String formattedTime = timeFormat.format(calendar.getTime());
+
+                                        editText.setText(formattedDate + " " + formattedTime);
                                     }
-                                }, hour, minute, false);
+                                }, hour, minute, false); // Set false to use 12-hour format
                         timePickerDialog.show();
                     }
                 }, year, month, day);

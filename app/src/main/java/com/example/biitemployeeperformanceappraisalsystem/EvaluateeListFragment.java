@@ -35,6 +35,7 @@ import java.util.List;
  */
 public class EvaluateeListFragment extends Fragment {
     int evaluatorID, sessionID;
+    String evaluationType;
     ListView listView;
     List<Employee> evaluateeList;
     List<String> evaluateesNames;
@@ -58,6 +59,7 @@ public class EvaluateeListFragment extends Fragment {
         parentActivity = getActivity();
         evaluatorID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
         sessionID = sharedPreferencesManager.getSessionId();
+        evaluationType = sharedPreferencesManager.getEmployeeUserObject().getEmployeeType().getTitle();
     }
 
     @Override
@@ -88,6 +90,7 @@ public class EvaluateeListFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Employee selectedEmployee = evaluateeList.get(position);
                 int evaluateeID = selectedEmployee.getId();
+
                 EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment(evaluateeID,0, "Peer", fragmentContainer.getId());
 
                 replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
