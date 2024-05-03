@@ -28,16 +28,16 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddGroupKpiFragment extends Fragment {
-    List<Session> sessionList;
+    //List<Session> sessionList;
     List<Designation> designationList;
     List<Department> departmentList;
     List<EmployeeType> employeeTypeList;
-    Spinner sessionSpinner,designationSpinner,departmentSpinner,employeeTypeSpinner;
+    Spinner designationSpinner,departmentSpinner,employeeTypeSpinner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_add_group_kpi, container, false);
-        sessionSpinner = view.findViewById(R.id.spinner_session);
+        // sessionSpinner = view.findViewById(R.id.spinner_session);
         designationSpinner=view.findViewById(R.id.spinner_designation);
         departmentSpinner=view.findViewById(R.id.spinner_department);
         employeeTypeSpinner=view.findViewById(R.id.spinner_employee_type);
@@ -47,13 +47,13 @@ public class AddGroupKpiFragment extends Fragment {
         SessionService sessionService=new SessionService(getContext());
         EmployeeService employeeService=new EmployeeService(getContext());
 
-        sessionService.getSessions(sessions -> {
-                    sessionList = sessions;
-                    sessionService.populateSpinner(sessions,sessionSpinner);
-                },
-                errorMessage -> {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                });
+//        sessionService.getSessions(sessions -> {
+//                    sessionList = sessions;
+//                    sessionService.populateSpinner(sessions,sessionSpinner);
+//                },
+//                errorMessage -> {
+//                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
+//                });
 
 
         designationService.getDesignations(

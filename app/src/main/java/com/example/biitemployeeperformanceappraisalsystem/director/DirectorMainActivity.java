@@ -12,9 +12,13 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.biitemployeeperformanceappraisalsystem.EvaluateeListFragment;
+import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
+import com.example.biitemployeeperformanceappraisalsystem.admin.EmployeeListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DirectorMainActivity extends AppCompatActivity {
@@ -68,24 +72,32 @@ public class DirectorMainActivity extends AppCompatActivity {
         popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
-                if (R.id.navigation_questionnaire==item.getItemId()) {
+                if (R.id.navigation_questionnaire == item.getItemId()) {
                     // Handle "Questionnaire" click
                     replaceFragment(new QuestionnaireFragment());
                     topText.setText("Questionnaire");
                     return true;
                 }
-                else if (R.id.navigation_kpi==item.getItemId()) {
+                else if (R.id.navigation_kpi == item.getItemId()) {
                     replaceFragment(new KpiFragment());
                     topText.setText("KPI");
                     return true;
                 }
-                else if (R.id.navigation_evaluation==item.getItemId()) {
+                else if (R.id.navigation_evaluation == item.getItemId()) {
                     replaceFragment(new EvaluationFragment());
                     topText.setText("Evaluation");
                     return true;
-                }else if (R.id.navigation_options_weightage==item.getItemId()) {
+                }else if (R.id.navigation_options_weightage == item.getItemId()) {
                     replaceFragment(new OptionsWeightageFragment());
                     topText.setText("Options Weightage");
+                    return true;
+                } else if (R.id.navigation_director_evaluation == item.getItemId()) {
+                    replaceFragment(new EmployeeListFragment());
+                    topText.setText("Director Evaluation");
+                    return true;
+                } else if (R.id.employee_questions_scores == item.getItemId()) {
+                    replaceFragment(new ScoresFragment());
+                    topText.setText("Scores");
                     return true;
                 }
                 return false;

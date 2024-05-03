@@ -7,10 +7,17 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeQuestionScoreService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 
 import java.util.List;
@@ -22,7 +29,10 @@ import java.util.List;
  */
 public class ScoresFragment extends Fragment {
     List<Session> sessionList;
-    Spinner sessionSpinner;
+    List<Employee> employeeList;
+    List<EmployeeQuestionScore> employeeQuestionScoreList;
+    ListView employeeScoreListView;
+    Spinner sessionSpinner,employeeSpinner;
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -70,8 +80,21 @@ public class ScoresFragment extends Fragment {
 
         View view=inflater.inflate(R.layout.fragment_scores, container, false);
 
+        employeeScoreListView = view.findViewById(R.id.employee_questions_scores);
         sessionSpinner = view.findViewById(R.id.spinner_session);
+        employeeSpinner = view.findViewById(R.id.spinner_employee);
+
         SessionService sessionService = new SessionService(view.getContext());
+        EmployeeService employeeService = new EmployeeService(view.getContext());
+        employeeService.getEmployees(
+                employees -> {
+                    employeeList = employees;
+                    employeeService.populateEmployeesSpinner(employees, employeeSpinner);
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
         sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
@@ -83,7 +106,61 @@ public class ScoresFragment extends Fragment {
                     // Handle failure
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 });
+
+        // Add OnItemSelectedListener to sessionSpinner
+        sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSpinnerSelectionChange();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle no selection
+            }
+        });
+
+        // Add OnItemSelectedListener to employeeSpinner
+        employeeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                handleSpinnerSelectionChange();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Handle no selection
+            }
+        });
+
         // Inflate the layout for this fragment
         return view;
+    }
+
+    private void handleSpinnerSelectionChange() {
+        employeeScoreListView.setAdapter(null);
+        int sessionId = sessionList.get(sessionSpinner.getSelectedItemPosition()).getId();
+        int employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
+        int evaluationTypeId = 2;
+        EmployeeQuestionScoreService employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
+        employeeQuestionScoreService.getEmployeeQuestionScore(
+                employeeId,
+                sessionId,
+                evaluationTypeId,
+                employeeQuestionScores -> {
+                    employeeQuestionScoreList = employeeQuestionScores;
+                    String[] scoresData = new String[employeeQuestionScoreList.size()];
+                    // Populate the array with the data from employeeScoreList
+                    for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
+                        EmployeeQuestionScore score = employeeQuestionScoreList.get(i);
+                        // Assuming you have some method to format EmployeeQuestionScore to String
+                        String scoreString = score != null ? score.getQuestion().getQuestion().toString()+"\n"+score.getObtainedScore()+"/"+score.getTotalScore() : ""; // Handle null case
+                        scoresData[i] = scoreString;
+                    }
+                    employeeScoreListView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, scoresData));
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                });
     }
 }

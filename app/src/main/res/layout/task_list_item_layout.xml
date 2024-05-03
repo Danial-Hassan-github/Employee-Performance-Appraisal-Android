@@ -11,14 +11,22 @@
         android:weightSum="10">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="Task: "/>
+        <TextView
             android:id="@+id/text_task_description"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="9.5"/>
+            android:textSize="16dp"
+            android:layout_weight="9"/>
         <ImageView
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:layout_weight=".5"
+            android:textSize="16dp"
+            android:layout_weight="1"
             android:src="@drawable/three_dots_icon"/>
 
     </LinearLayout>
@@ -29,16 +37,30 @@
         android:weightSum="2">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="Due: "/>
+        <TextView
             android:id="@+id/text_due_date"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"/>
+            android:textSize="16dp"
+            android:layout_weight="1.2"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="To: "/>
         <TextView
             android:id="@+id/text_assigned_to"
             android:layout_width="0dp"
+            android:textSize="16dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"/>
+            android:layout_weight=".8"/>
 
     </LinearLayout>
 
@@ -48,29 +70,45 @@
         android:weightSum="2">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="Weightage: "/>
+        <TextView
             android:id="@+id/text_weightage"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.5"/>
+            android:textSize="16dp"
+            android:layout_weight="1.07"/>
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textStyle="bold"
+            android:textSize="16dp"
+            android:text="By: "/>
         <TextView
             android:id="@+id/text_assigned_by"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight=".5"/>
+            android:textSize="16dp"
+            android:layout_weight=".93"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:weightSum="3">
 
         <EditText
             android:id="@+id/text_score"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_weight="2.5"
+            android:background="@drawable/text_field"
             android:hint="Enter Score"/>
 
         <androidx.appcompat.widget.AppCompatButton

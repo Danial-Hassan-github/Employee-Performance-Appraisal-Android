@@ -21,4 +21,14 @@
         android:title="Options weightage"
         android:icon="@drawable/ic_launcher_foreground"
         />
+    <item
+        android:id="@+id/navigation_director_evaluation"
+        android:title="Director Evaluation"
+        android:icon="@drawable/ic_launcher_foreground"
+        />
+    <item
+        android:id="@+id/employee_questions_scores"
+        android:title="Employee Question Scores"
+        android:icon="@drawable/ic_launcher_foreground"
+        />
 </menu>

@@ -8,6 +8,31 @@
     android:orientation="vertical"
     tools:context=".student.CourseTeacherFragment">
 
+    <RadioGroup
+        android:id="@+id/evaluation_type_radio_group"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:weightSum="3">
+
+        <RadioButton
+            android:id="@+id/rd_student"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="Student"
+            android:layout_weight="1"/>
+
+        <RadioButton
+            android:id="@+id/rd_confidential"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confidential"
+            android:layout_weight="1"/>
+
+    </RadioGroup>
+
     <TextView
         android:id="@+id/text_teacher1"
         android:layout_width="match_parent"

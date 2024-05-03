@@ -62,7 +62,11 @@ public class EvaluationQuestionnaireFragment extends Fragment {
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         evaluationService = new EvaluationService(getContext());
         parentActivity = getActivity();
-        evaluatorID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
+//        if (parentActivity instanceof StudentMainActivity){
+//
+//        }else {
+//            evaluatorID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
+//        }
         sessionID = sharedPreferencesManager.getSessionId();
     }
 

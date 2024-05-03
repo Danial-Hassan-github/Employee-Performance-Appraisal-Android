@@ -126,8 +126,9 @@ public class QuestionnaireFragment extends Fragment {
                         AlertDialog alertDialog = (AlertDialog) dialog;
                         TextView questionTextView = alertDialog.findViewById(R.id.text_question);
                         Question question = new Question();
-                        question.setQuestion(questionTextView.toString().trim());
-                        question.setId(questionnaireTypeSpinnerSelectedItemId);
+                        question.setQuestion(questionTextView.getText().toString().trim());
+                        question.setType_id(questionnaireTypeSpinnerSelectedItemId);
+                        question.setDeleted(false);
                         questionnaire.postQuestion(
                                 question,
                                 question1 -> {

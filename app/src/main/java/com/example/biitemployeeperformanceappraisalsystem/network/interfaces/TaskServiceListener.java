@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface TaskServiceListener {
@@ -29,4 +30,6 @@ public interface TaskServiceListener {
     Call<List<TaskWithEmployees>> postTask(@Body Task task);
     @POST("Task/PostRoleBasedTask")
     Call<List<TaskWithEmployees>> postRoleBasedTask(@Body TaskWithRole taskWithRole);
+    @PUT("Task/PutTask")
+    Call<Task> putTask(@Body Task task);
 }

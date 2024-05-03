@@ -8,7 +8,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Session"/>
+        android:text="Select Session"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -30,33 +30,33 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:weightSum="2"
-        android:background="@color/white">
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:weightSum="2"-->
+<!--        android:background="@color/white">-->
 
-        <Button
-            android:id="@+id/btn_add_group_kpi"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@color/bottomBar"
-            android:text="Add Group KPI"
-            />
+<!--        <Button-->
+<!--            android:id="@+id/btn_add_group_kpi"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:background="@color/bottomBar"-->
+<!--            android:text="Add Group KPI"-->
+<!--            />-->
 
-        <Button
-            android:id="@+id/btn_add_individual_kpi"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginLeft="1dp"
-            android:background="@color/bottomBar"
-            android:text="Add Employee KPI"
-            />
+<!--        <Button-->
+<!--            android:id="@+id/btn_add_individual_kpi"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="1"-->
+<!--            android:layout_marginLeft="1dp"-->
+<!--            android:background="@color/bottomBar"-->
+<!--            android:text="Add Employee KPI"-->
+<!--            />-->
 
-    </LinearLayout>
+<!--    </LinearLayout>-->
 
     <!-- TODO: Update blank fragment layout -->
     <com.github.mikephil.charting.charts.PieChart

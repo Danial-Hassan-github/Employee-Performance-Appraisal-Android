@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,10 +28,12 @@ import java.util.List;
 public class CourseTeacherFragment extends Fragment {
 
     int studentID, courseID, sessionID;
+    boolean isConfidential = false;
     SharedPreferencesManager sharedPreferencesManager;
     List<Employee> teacherList;
     EvaluationService evaluationService;
     View fragmentContainer;
+    RadioGroup evaluationTypeRadioGroup;
 
     public CourseTeacherFragment(int courseID){
         this.courseID=courseID;
@@ -59,6 +62,7 @@ public class CourseTeacherFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_course_teacher, container, false);
+        evaluationTypeRadioGroup = view.findViewById(R.id.evaluation_type_radio_group);
         TextView txt_teacher1=view.findViewById(R.id.text_teacher1);
         TextView txt_teacher2=view.findViewById(R.id.text_teacher2);
         sharedPreferencesManager=new SharedPreferencesManager(getContext());
@@ -66,6 +70,17 @@ public class CourseTeacherFragment extends Fragment {
         studentID = sharedPreferencesManager.getStudentUserObject().getId();
         sessionID = sharedPreferencesManager.getSessionId();
 
+        evaluationTypeRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                // Handle radio button selection changes here
+                if (checkedId == R.id.rd_student){
+                    isConfidential = false;
+                }else {
+                    isConfidential = true;
+                }
+            }
+        });
 
         CourseService courseService=new CourseService(getContext());
         courseService.getCourseTeachers(
@@ -104,13 +119,13 @@ public class CourseTeacherFragment extends Fragment {
                         teacherId,
                         courseID,
                         sessionID,
-                        "Confidential",
+                        isConfidential ? "Confidential" : "Student",
                         result -> {
                             boolean check = result;
                             if (check){
                                 Toast.makeText(getContext(), "You have already Evaluated this teacher", Toast.LENGTH_SHORT).show();
                             }else {
-                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, "Student", fragmentContainer.getId()));
+                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, isConfidential?"Confidential":"Student", fragmentContainer.getId()));
                             }
                         },
                         errorMessage -> {

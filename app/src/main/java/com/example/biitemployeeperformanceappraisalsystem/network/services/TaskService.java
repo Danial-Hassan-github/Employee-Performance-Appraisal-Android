@@ -136,4 +136,23 @@ public class TaskService {
             }
         });
     }
+
+    public void putTask(Task task, final Consumer<Task> onSuccess, final Consumer<String> onFailure) {
+        Call<Task> tasks = taskServiceListener.putTask(task);
+        tasks.enqueue(new Callback<Task>() {
+            @Override
+            public void onResponse(Call<Task> call, Response<Task> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Task> call, Throwable t) {
+                onFailure.accept("Something went wrong while updating task");
+            }
+        });
+    }
 }

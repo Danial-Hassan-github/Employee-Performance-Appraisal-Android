@@ -15,8 +15,9 @@
     <color name="edit_text_background_color">#F5F5F5</color>
     <color name="metaData">#A5A8A8</color>
     <color name="colorPrimary">#189F51</color>
+    <color name="lightGreen">#BADFCA</color>
     <color name="colorTextPrimary">#000000</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="grey">#BEB9B9</color>
+    <color name="grey">#F3EDED</color>
 </resources>

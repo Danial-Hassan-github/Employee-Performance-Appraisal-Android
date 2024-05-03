@@ -1,5 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.director;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -42,8 +43,8 @@ public class KpiFragment extends Fragment {
 
         sessionSpinner = view.findViewById(R.id.spinner_session);
         btnAddKpi = view.findViewById(R.id.btn_add_general_kpi);
-        btnAddGroupKpi =view.findViewById(R.id.btn_add_group_kpi);
-        btnAddIndividualKpi = view.findViewById(R.id.btn_add_individual_kpi);
+        // btnAddGroupKpi =view.findViewById(R.id.btn_add_group_kpi);
+        // btnAddIndividualKpi = view.findViewById(R.id.btn_add_individual_kpi);
 
         DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
         btnAddKpi.setOnClickListener(new View.OnClickListener() {
@@ -53,19 +54,19 @@ public class KpiFragment extends Fragment {
             }
         });
 
-        btnAddGroupKpi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                directorMainActivity.replaceFragment(new AddGroupKpiFragment());
-            }
-        });
+//        btnAddGroupKpi.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                directorMainActivity.replaceFragment(new AddGroupKpiFragment());
+//            }
+//        });
 
-        btnAddIndividualKpi.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                directorMainActivity.replaceFragment(new AddIndividualKpiFragment());
-            }
-        });
+//        btnAddIndividualKpi.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//                directorMainActivity.replaceFragment(new AddIndividualKpiFragment());
+//            }
+//        });
 
         SessionService sessionService = new SessionService(view.getContext());
         sessionService.getSessions(sessions -> {
@@ -101,6 +102,7 @@ public class KpiFragment extends Fragment {
 
     private void showKpiGraph(View view){
         PieChart pieChart = view.findViewById(R.id.pie_chart_kpi);
+        pieChart.getDescription().setTextColor(Color.TRANSPARENT);
 
         // Hide the bar chart
 //        BarChart barChart = view.findViewById(R.id.bar_chart);
@@ -114,7 +116,8 @@ public class KpiFragment extends Fragment {
         entries.add(new PieEntry(25, "Punctuality"));
         entries.add(new PieEntry(30, "Project"));
 
-        PieDataSet dataSet = new PieDataSet(entries, "KPI Graph");
+        PieDataSet dataSet = new PieDataSet(entries, "");
+        dataSet.setValueTextSize(12f);
 
         // Set up the pie chart
         pieChartValues = new ArrayList<>();
@@ -147,10 +150,10 @@ public class KpiFragment extends Fragment {
                 float kpiValue = entry.getValue();
 
                 // Pass data to editable form fragment
-                AddKpiFragment addKpiFragment = AddKpiFragment.newInstance(kpiName, kpiValue, pieChartValues, pieChartTitles);
+                AddGeneralKpiFragment addGeneralKpiFragment = AddGeneralKpiFragment.newInstance(kpiName, kpiValue, pieChartValues, pieChartTitles);
 
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                transaction.replace(R.id.fragment_container, addKpiFragment);
+                transaction.replace(R.id.fragment_container, addGeneralKpiFragment);
                 transaction.addToBackStack(null);
                 transaction.commit();
             }
