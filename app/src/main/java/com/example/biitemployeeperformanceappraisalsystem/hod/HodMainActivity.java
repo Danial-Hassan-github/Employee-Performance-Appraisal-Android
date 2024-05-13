@@ -27,9 +27,11 @@ import com.example.biitemployeeperformanceappraisalsystem.director.DirectorRepor
 import com.example.biitemployeeperformanceappraisalsystem.director.EvaluationFragment;
 import com.example.biitemployeeperformanceappraisalsystem.director.EvaluatorFragment;
 import com.example.biitemployeeperformanceappraisalsystem.director.KpiFragment;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class HodMainActivity extends AppCompatActivity {
+    SharedPreferencesManager sharedPreferencesManager;
     private TextView topText;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
@@ -43,7 +45,9 @@ public class HodMainActivity extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        replaceFragment(getSupportFragmentManager(),new PerformanceFragment(),fragmentContainer.getId());
+        sharedPreferencesManager = new SharedPreferencesManager(getApplicationContext());
+        int employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getEmployeeTypeId();
+        replaceFragment(getSupportFragmentManager(),new PerformanceFragment(employeeID),fragmentContainer.getId());
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -51,7 +55,7 @@ public class HodMainActivity extends AppCompatActivity {
                 if (R.id.navigation_performance==item.getItemId()) {
                     // Replace content with the Report layout
                     topText.setText("Performance");
-                    replaceFragment(getSupportFragmentManager(),new PerformanceFragment(),fragmentContainer.getId());
+                    replaceFragment(getSupportFragmentManager(),new PerformanceFragment(employeeID),fragmentContainer.getId());
                     return true;
                 }else if (R.id.navigation_my_tasks==item.getItemId()) {
                     // Handle "Tasks" click

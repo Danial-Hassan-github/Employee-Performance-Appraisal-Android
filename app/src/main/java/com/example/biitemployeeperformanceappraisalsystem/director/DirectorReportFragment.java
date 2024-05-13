@@ -52,7 +52,8 @@ public class DirectorReportFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 EmployeeDetailsScore employeeDetailsScore = employeeDetailsScoreList.get(position);
                 // Pass employee data to PerformanceFragment
-                PerformanceFragment fragment = new PerformanceFragment();
+                int employeeID = employeeDetailsScore.getEmployee().getId();
+                PerformanceFragment fragment = new PerformanceFragment(employeeID);
                 Bundle args = new Bundle();
                 args.putInt("id",employeeDetailsScore.getEmployee().getId());
 //                args.putParcelable("employee_details", employeeDetailsScore);

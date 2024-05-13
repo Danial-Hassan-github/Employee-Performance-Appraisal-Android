@@ -21,9 +21,11 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
 import com.example.biitemployeeperformanceappraisalsystem.director.EvaluatorFragment;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class FacultyMain extends AppCompatActivity {
+    SharedPreferencesManager sharedPreferencesManager;
     private TextView topText;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
@@ -37,7 +39,9 @@ public class FacultyMain extends AppCompatActivity {
         bottomNavigationView = findViewById(R.id.bottom_navigation);
         fragmentContainer = findViewById(R.id.fragment_container);
 
-        replaceFragment(new PerformanceFragment());
+        sharedPreferencesManager = new SharedPreferencesManager(getApplicationContext());
+        int employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getEmployeeTypeId();
+        replaceFragment(new PerformanceFragment(employeeID));
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -45,7 +49,7 @@ public class FacultyMain extends AppCompatActivity {
                 if (R.id.navigation_performance==item.getItemId()) {
                     // Replace content with the Performance layout
                     topText.setText("Performance");
-                    replaceFragment(new PerformanceFragment());
+                    replaceFragment(new PerformanceFragment(employeeID));
                     return true;
                 }else if (R.id.navigation_my_tasks==item.getItemId()) {
                     // Handle "Tasks" click

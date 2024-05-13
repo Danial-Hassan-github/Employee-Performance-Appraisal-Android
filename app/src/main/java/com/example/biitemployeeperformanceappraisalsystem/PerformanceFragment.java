@@ -16,8 +16,11 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeKpiScoreService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
@@ -40,6 +43,9 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class PerformanceFragment extends Fragment {
+    int employeeID;
+    List<EmployeeKpiScore> employeeKpiScoreList;
+    List<EmployeeKpiScoreMultiSession> employeeKpiScoreMultiSessionList;
     List<Session> sessionList;
     LinearLayout sessionLayout, comparisonSessionLayout;
     PieChart pieChart;
@@ -47,6 +53,11 @@ public class PerformanceFragment extends Fragment {
     TabLayout tabLayout;
     Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,courseSpinner;
     Button show,compare;
+
+    public PerformanceFragment(int employeeID){
+        this.employeeID = employeeID;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -68,6 +79,7 @@ public class PerformanceFragment extends Fragment {
         fromSessionSpinner = view.findViewById(R.id.spinner_session_from);
         toSessionSpinner = view.findViewById(R.id.spinner_session_to);
 
+        EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
         CommonData commonData=new CommonData(getContext());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, commonData.generateCourseNames());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -154,22 +166,35 @@ public class PerformanceFragment extends Fragment {
                         pieChart.setVisibility(View.VISIBLE);
                         sessionLayout.setVisibility(View.VISIBLE);
 
-                        ArrayList<PieEntry> entries = new ArrayList<>();
-                        entries.add(new PieEntry(20, "Administrative"));
-                        entries.add(new PieEntry(25, "Academic"));
-                        entries.add(new PieEntry(25, "Punctuality"));
-                        entries.add(new PieEntry(30, "Project"));
+                        employeeKpiScoreService.getEmployeeKpiScore(
+                                employeeID,
+                                sessionList.get(sessionSpinner.getSelectedItemPosition()).getId(),
+                                employeeKpiScores -> {
+                                    employeeKpiScoreList = employeeKpiScores;
+                                    ArrayList<PieEntry> entries = new ArrayList<>();
+                                    for (EmployeeKpiScore e:employeeKpiScores) {
+                                        entries.add(new PieEntry(e.getScore(),e.getKpi_title()+"="+e.getWeightage()));
+                                    }
+//                                    entries.add(new PieEntry(20, "Administrative"));
+//                                    entries.add(new PieEntry(25, "Academic"));
+//                                    entries.add(new PieEntry(25, "Punctuality"));
+//                                    entries.add(new PieEntry(30, "Project"));
 
-                        PieDataSet dataSet = new PieDataSet(entries, "");
+                                    PieDataSet dataSet = new PieDataSet(entries, "");
 
-                        // Generate colors dynamically
-                        CommonMethods commonMethods=new CommonMethods();
-                        ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
-                        dataSet.setColors(colors);
+                                    // Generate colors dynamically
+                                    CommonMethods commonMethods=new CommonMethods();
+                                    ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
+                                    dataSet.setColors(colors);
 
-                        PieData data = new PieData(dataSet);
-                        pieChart.setData(data);
-                        pieChart.invalidate();
+                                    PieData data = new PieData(dataSet);
+                                    pieChart.setData(data);
+                                    pieChart.invalidate();
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                        );
                         break;
                     case 1:
                         pieChart.setVisibility(View.GONE);
@@ -197,6 +222,16 @@ public class PerformanceFragment extends Fragment {
                             }
                         });
 
+                        employeeKpiScoreService.getEmployeeKpiScoreMultiSession(
+                                employeeID,
+                                sessionList.get(fromSessionSpinner.getSelectedItemPosition()).getId(),
+                                sessionList.get(toSessionSpinner.getSelectedItemPosition()).getId(),
+                                employeeKpiScoreMultiSessions -> {
+                                    employeeKpiScoreMultiSessionList = employeeKpiScoreMultiSessions;
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT);
+                                });
                         ArrayList<BarEntry> group1 = new ArrayList<>();
                         group1.add(new BarEntry(0, 27)); // Note the change in x-position
                         group1.add(new BarEntry(3, 23));
