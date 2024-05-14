@@ -158,6 +158,7 @@ public class PerformanceFragment extends Fragment {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 int position = tab.getPosition();
+                CommonMethods commonMethods=new CommonMethods();
                 switch (position){
                     case 0:
                         barChart.setVisibility(View.GONE);
@@ -183,7 +184,6 @@ public class PerformanceFragment extends Fragment {
                                     PieDataSet dataSet = new PieDataSet(entries, "");
 
                                     // Generate colors dynamically
-                                    CommonMethods commonMethods=new CommonMethods();
                                     ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
                                     dataSet.setColors(colors);
 
@@ -227,47 +227,70 @@ public class PerformanceFragment extends Fragment {
                                 sessionList.get(fromSessionSpinner.getSelectedItemPosition()).getId(),
                                 sessionList.get(toSessionSpinner.getSelectedItemPosition()).getId(),
                                 employeeKpiScoreMultiSessions -> {
+                                    BarData barData = new BarData();
                                     employeeKpiScoreMultiSessionList = employeeKpiScoreMultiSessions;
+                                    if (employeeKpiScoreMultiSessionList.size()>0){
+                                        employeeKpiScoreMultiSessionList.get(0).getScores().size();
+                                        for (int i = 0; i < employeeKpiScoreMultiSessionList.size(); i++){
+                                            ArrayList<BarEntry> group = new ArrayList<>();
+                                            String kpiTitle = null;
+                                            for (int j=0;j<employeeKpiScoreMultiSessionList.get(i).getScores().size();j++){
+                                                EmployeeKpiScoreMultiSession employeeKpiScoreMultiSession = employeeKpiScoreMultiSessionList.get(j);
+                                                List<EmployeeKpiScore> scores = employeeKpiScoreMultiSession.getScores();
+                                                group.add(new BarEntry(j*i*3, scores.get(j).getScore()));
+                                                kpiTitle = employeeKpiScoreMultiSession.getScores().get(j).getKpi_title();
+                                            }
+                                            BarDataSet barDataSet = new BarDataSet(group, kpiTitle);
+                                            barData.addDataSet(barDataSet);
+                                        }
+                                        float groupSpace = 0.2f; // space between groups of bars
+                                        float barSpace = 0.02f; // space between individual bars within a group
+                                        float barWidth = 0.15f; // width of each bar
+                                        barChart.setData(barData);
+                                        barData.setBarWidth(barWidth);
+                                        barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
+                                        barChart.invalidate();
+                                    }
                                 },
                                 errorMessage -> {
                                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT);
                                 });
-                        ArrayList<BarEntry> group1 = new ArrayList<>();
-                        group1.add(new BarEntry(0, 27)); // Note the change in x-position
-                        group1.add(new BarEntry(3, 23));
-                        group1.add(new BarEntry(6, 35));
-
-                        ArrayList<BarEntry> group2 = new ArrayList<>();
-                        group2.add(new BarEntry(1, 32)); // Adjust the x-position to group the bars
-                        group2.add(new BarEntry(4, 26)); // Note the difference in x-position
-                        group2.add(new BarEntry(7, 40));
-
-                        ArrayList<BarEntry> group3 = new ArrayList<>();
-                        group3.add(new BarEntry(2, 28)); // Adjust the x-position to group the bars
-                        group3.add(new BarEntry(5, 30)); // Note the difference in x-position
-                        group3.add(new BarEntry(8, 35));
-
-                        BarDataSet barDataSet1 = new BarDataSet(group1, "Academic");
-                        barDataSet1.setColor(Color.rgb(0, 155, 0));
-
-                        BarDataSet barDataSet2 = new BarDataSet(group2, "Project");
-                        barDataSet2.setColor(Color.rgb(155, 0, 0));
-
-                        BarDataSet barDataSet3 = new BarDataSet(group3, "Punctuality");
-                        barDataSet3.setColor(Color.rgb(0, 0, 155));
-
-// Adjust the bar width and spacing
-                        float groupSpace = 0.2f; // space between groups of bars
-                        float barSpace = 0.02f; // space between individual bars within a group
-                        float barWidth = 0.15f; // width of each bar
-
-                        BarData barData = new BarData(barDataSet1, barDataSet2, barDataSet3);
-                        barData.setBarWidth(barWidth);
-
-                        // Group the bars
-                        barChart.setData(barData);
-                        barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
-                        barChart.invalidate();
+//                        ArrayList<BarEntry> group1 = new ArrayList<>();
+//                        group1.add(new BarEntry(0, 27)); // Note the change in x-position
+//                        group1.add(new BarEntry(3, 23));
+//                        group1.add(new BarEntry(6, 35));
+//
+//                        ArrayList<BarEntry> group2 = new ArrayList<>();
+//                        group2.add(new BarEntry(1, 32)); // Adjust the x-position to group the bars
+//                        group2.add(new BarEntry(4, 26)); // Note the difference in x-position
+//                        group2.add(new BarEntry(7, 40));
+//
+//                        ArrayList<BarEntry> group3 = new ArrayList<>();
+//                        group3.add(new BarEntry(2, 28)); // Adjust the x-position to group the bars
+//                        group3.add(new BarEntry(5, 30)); // Note the difference in x-position
+//                        group3.add(new BarEntry(8, 35));
+//
+//                        BarDataSet barDataSet1 = new BarDataSet(group1, "Academic");
+//                        barDataSet1.setColor(Color.rgb(0, 155, 0));
+//
+//                        BarDataSet barDataSet2 = new BarDataSet(group2, "Project");
+//                        barDataSet2.setColor(Color.rgb(155, 0, 0));
+//
+//                        BarDataSet barDataSet3 = new BarDataSet(group3, "Punctuality");
+//                        barDataSet3.setColor(Color.rgb(0, 0, 155));
+//
+//// Adjust the bar width and spacing
+//                        float groupSpace = 0.2f; // space between groups of bars
+//                        float barSpace = 0.02f; // space between individual bars within a group
+//                        float barWidth = 0.15f; // width of each bar
+//
+//                        BarData barData = new BarData(barDataSet1, barDataSet2, barDataSet3);
+//                        barData.setBarWidth(barWidth);
+//
+//                        // Group the bars
+//                        barChart.setData(barData);
+//                        barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
+//                        barChart.invalidate();
                         break;
                 }
             }

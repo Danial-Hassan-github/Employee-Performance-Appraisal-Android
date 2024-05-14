@@ -41,7 +41,7 @@ public class EmployeeKpiScoreService {
     }
 
     public void getEmployeeKpiScoreMultiSession(int employeeID, int startingSessionID, int endingSessionID, final Consumer<List<EmployeeKpiScoreMultiSession>> onSuccess, final Consumer<String> onFailure){
-        Call<List<EmployeeKpiScoreMultiSession>> employeeKpiScoresCall = employeeKpiScoreServiceListener.getEmployeeKpiScoreMultiSession(employeeID, endingSessionID, startingSessionID);
+        Call<List<EmployeeKpiScoreMultiSession>> employeeKpiScoresCall = employeeKpiScoreServiceListener.getEmployeeKpiScoreMultiSession(employeeID, startingSessionID, endingSessionID);
         employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScoreMultiSession>>() {
             @Override
             public void onResponse(Call<List<EmployeeKpiScoreMultiSession>> call, Response<List<EmployeeKpiScoreMultiSession>> response) {
