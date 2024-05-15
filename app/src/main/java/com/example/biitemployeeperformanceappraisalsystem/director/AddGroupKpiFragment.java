@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -15,6 +16,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.Department;
 import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.DepartmentService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.DesignationService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
@@ -32,7 +34,7 @@ public class AddGroupKpiFragment extends Fragment {
     List<Designation> designationList;
     List<Department> departmentList;
     List<EmployeeType> employeeTypeList;
-    Spinner designationSpinner,departmentSpinner,employeeTypeSpinner;
+    Spinner designationSpinner,departmentSpinner,employeeTypeSpinner,subKpiSpinner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -41,6 +43,7 @@ public class AddGroupKpiFragment extends Fragment {
         designationSpinner=view.findViewById(R.id.spinner_designation);
         departmentSpinner=view.findViewById(R.id.spinner_department);
         employeeTypeSpinner=view.findViewById(R.id.spinner_employee_type);
+        subKpiSpinner = view.findViewById(R.id.spinner_sub_kpi);
 
         DesignationService designationService=new DesignationService(view.getContext());
         DepartmentService departmentService=new DepartmentService(view.getContext());
@@ -84,6 +87,11 @@ public class AddGroupKpiFragment extends Fragment {
                     Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
                 }
         );
+
+        CommonData data = new CommonData(getContext());
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subKpiSpinner.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return view;

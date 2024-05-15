@@ -9,13 +9,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CustomSpinnerAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 
 import java.util.ArrayList;
@@ -27,62 +31,49 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class EvaluatorFragment extends Fragment {
-    List<Session> sessionList;
-    Spinner sessionSpinner,evaluatorSpinner,evaluateeSpinner;
+    SharedPreferencesManager sharedPreferencesManager;
+    List<Employee> employeeList;
+    int sessionID;
+    Spinner evaluatorSpinner,evaluateeSpinner;
+    Button btnSave;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_evaluator, container, false);
-        sessionSpinner = view.findViewById(R.id.spinner_session);
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        sessionID = sharedPreferencesManager.getSessionId();
         evaluatorSpinner = view.findViewById(R.id.spinner_evaluator);
         evaluateeSpinner = view.findViewById(R.id.spinner_evaluatee);
+        btnSave = view.findViewById(R.id.evaluator_save_button);
 
-        CommonData data=new CommonData(getContext());
+        EmployeeService employeeService = new EmployeeService(getContext());
+        employeeService.getEmployees(
+                employees -> {
+                    employeeList = employees;
+                    employeeService.populateEmployeesSpinner(employeeList,evaluatorSpinner);
+                    List<String> evaluateeList=new ArrayList<>();
+                    evaluateeList.add("Select All");
+                    evaluateeList.addAll(employeeService.getEmployeeNames(employeeList));
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateNames());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        evaluatorSpinner.setAdapter(adapter);
+                    CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getContext(), R.layout.custom_spinner_item_layout, evaluateeList);
+                    evaluateeSpinner.setAdapter(customSpinnerAdapter);
 
-        List<String> evaluateeList=new ArrayList<>();
-        evaluateeList.add("Select All");
-        evaluateeList.addAll(data.generateNames());
-
-        CustomSpinnerAdapter customSpinnerAdapter = new CustomSpinnerAdapter(getContext(), R.layout.custom_spinner_item_layout, evaluateeList);
-        evaluateeSpinner.setAdapter(customSpinnerAdapter);
-
-        SessionService sessionService = new SessionService(view.getContext());
-        sessionService.getSessions(sessions -> {
-                    // Handle the list of sessions here
-                    sessionList = sessions;
-                    // Populate the spinner with session titles
-                    sessionService.populateSpinner(sessions,sessionSpinner);
+                    ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, employeeService.getEmployeeNames(employeeList));
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                    evaluatorSpinner.setAdapter(adapter);
                 },
-                // onFailure callback
                 errorMessage -> {
-                    // Handle failure
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-                });
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
 
-        // Set an item selected listener for the session spinner
-        sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                // Get the selected session
-                Session selectedSession = sessionList.get(position);
-                // Use the ID of the selected session
-                int sessionId = selectedSession.getId();
-                // Perform actions with the session ID
-                Toast.makeText(getContext(), sessionId+"", Toast.LENGTH_LONG).show();
-            }
+            public void onClick(View v) {
 
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                // Handle case where nothing is selected
             }
         });
-
-        // Inflate the layout for this fragment
         return view;
     }
 }

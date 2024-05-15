@@ -86,7 +86,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                 questions -> {
                     questionsList = questions;
                     // Create ArrayAdapter and set it to the ListView
-                    EvaluationQuestionnaireAdapter adapter =  new EvaluationQuestionnaireAdapter(view.getContext(),R.layout.evaluation_questionnaire_list_item_layout,questions);
+                    EvaluationQuestionnaireAdapter adapter =  new EvaluationQuestionnaireAdapter(view.getContext(),R.layout.evaluation_questionnaire_list_item_layout,questions, view);
                     questionnaireListView.setAdapter(adapter);
                 },
                 // onFailure callback

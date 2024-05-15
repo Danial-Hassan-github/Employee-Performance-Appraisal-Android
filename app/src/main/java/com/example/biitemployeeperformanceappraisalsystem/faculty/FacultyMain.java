@@ -40,7 +40,7 @@ public class FacultyMain extends AppCompatActivity {
         fragmentContainer = findViewById(R.id.fragment_container);
 
         sharedPreferencesManager = new SharedPreferencesManager(getApplicationContext());
-        int employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getEmployeeTypeId();
+        int employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
         replaceFragment(new PerformanceFragment(employeeID));
 
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {

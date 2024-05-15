@@ -14,6 +14,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.OptionsWeightage;
@@ -29,13 +30,17 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
     private LayoutInflater inflater;
     QuestionnaireService questionnaireService;
     private int resourceId;
-    Button btnSubmit;
+    View btnSubmit;
     List<OptionsWeightage> optionsWeightageList;
+    View parentView;
+    // AppCompatButton btnSubmit;
+    private boolean allQuestionsAnswered = false;
     private HashMap<Integer, Integer> selectedOptions = new HashMap<>();
-    public EvaluationQuestionnaireAdapter(Context context, int resourceId, List<Question> questions) {
+    public EvaluationQuestionnaireAdapter(Context context, int resourceId, List<Question> questions, View parentView) {
         super(context, resourceId, questions);
         this.inflater = LayoutInflater.from(context);
         this.resourceId = resourceId;
+        this.parentView = parentView;
     }
 
     @NonNull
@@ -48,12 +53,16 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.evaluation_questionnaire_list_item_layout, parent, false);
+            btnSubmit = parentView.findViewById(R.id.btn_submit);
         }
 
         // Lookup view for data population
         TextView questionTextView = convertView.findViewById(R.id.text_question);
         RadioGroup optionsRadioGroup = convertView.findViewById(R.id.options_radio_group);
-        btnSubmit = convertView.findViewById(R.id.btn_submit);
+        // convertView.getRootView().findViewById(R.id.btn_submit);
+        // View parentView = inflater.inflate(R.layout.fragment_evaluation_questionnaire,null,false);
+        // btnSubmit = parentView.findViewById(R.id.btn_submit);
+        // AppCompatButton btnSubmit = convertView.getRootView().findViewById(R.id.btn_submit);
 
         questionTextView.setText(question.getQuestion());
 
@@ -76,13 +85,22 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
 
         optionsRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int selectedOptionIndex = group.indexOfChild(group.findViewById(checkedId));
-            selectedOptions.put(position, selectedOptionIndex);
+            selectedOptions.put(position, optionsWeightageList.get(selectedOptionIndex).getWeightage());
             Toast.makeText(getContext(), selectedOptionIndex+"", Toast.LENGTH_SHORT).show();
+            // int count = getCount();
+            if (selectedOptions.size() == getCount()){
+                btnSubmit.setEnabled(true);
+            }
         });
 
         // Return the completed view to render on screen
         return convertView;
     }
+
+//    private void checkAllQuestionsAnswered() {
+//        allQuestionsAnswered = selectedOptions.size() == getCount();
+//        btnSubmit.setEnabled(allQuestionsAnswered);
+//    }
 
     public List<Pair<Integer, Integer>> getSelectedAnswers() {
         List<Pair<Integer, Integer>> selectedAnswers = new ArrayList<>();

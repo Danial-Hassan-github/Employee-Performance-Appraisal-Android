@@ -8,25 +8,6 @@
     android:paddingRight="10dp"
     tools:context=".director.EvaluatorFragment">
 
-
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Session" />
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white"
-        android:layout_marginBottom="5dp">
-
-        <Spinner
-            android:id="@+id/spinner_session"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"/>
-
-    </LinearLayout>
-
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -64,7 +45,16 @@
 
     </LinearLayout>
 
+    <androidx.appcompat.widget.AppCompatButton
+        android:id="@+id/evaluator_save_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/lightGreen"
+        android:text="Save"
+        android:layout_gravity="center"/>
+
     <ListView
+        android:id="@+id/evaluatees_list_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
 

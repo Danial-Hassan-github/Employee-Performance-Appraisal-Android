@@ -14,6 +14,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeServiceListener;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -25,7 +26,7 @@ public class EmployeeService {
     EmployeeServiceListener employeeServiceListener;
     Context context;
     public EmployeeService(Context context){
-        employeeServiceListener= RetrofitClient.getRetrofitInstance().create(EmployeeServiceListener.class);
+        employeeServiceListener = RetrofitClient.getRetrofitInstance().create(EmployeeServiceListener.class);
         this.context=context;
     }
 
@@ -115,10 +116,10 @@ public class EmployeeService {
         }
     }
 
-    public String[] getEmployeeNames(List<Employee> employeeList) {
-        String[] names = new String[employeeList.size()];
+    public List<String> getEmployeeNames(List<Employee> employeeList) {
+        List<String> names = new ArrayList<>(employeeList.size());
         for (int i = 0; i < employeeList.size(); i++) {
-            names[i] = employeeList.get(i).getName();
+            names.add(employeeList.get(i).getName());
         }
         return names;
     }

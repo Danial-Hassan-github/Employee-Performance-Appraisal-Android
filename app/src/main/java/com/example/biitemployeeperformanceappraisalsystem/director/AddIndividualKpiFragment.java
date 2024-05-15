@@ -19,12 +19,13 @@ import com.example.biitemployeeperformanceappraisalsystem.network.services.Commo
  * create an instance of this fragment.
  */
 public class AddIndividualKpiFragment extends Fragment {
-    Spinner employeeSpinner;
+    Spinner employeeSpinner,kpiSpinner;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_add_individual_kpi, container, false);
         employeeSpinner = view.findViewById(R.id.spinner_employee);
+        kpiSpinner = view.findViewById(R.id.spinner_kpi);
 
         CommonData commonData = new CommonData(getContext());
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, commonData.generateNames());

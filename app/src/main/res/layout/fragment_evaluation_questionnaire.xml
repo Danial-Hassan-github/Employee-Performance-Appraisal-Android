@@ -19,6 +19,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:backgroundTint="#8667AF"
+        android:enabled="false"
         android:text="Submit" />
 
 </RelativeLayout>

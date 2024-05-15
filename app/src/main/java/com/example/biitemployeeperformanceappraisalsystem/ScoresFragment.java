@@ -138,29 +138,43 @@ public class ScoresFragment extends Fragment {
     }
 
     private void handleSpinnerSelectionChange() {
-        employeeScoreListView.setAdapter(null);
-        int sessionId = sessionList.get(sessionSpinner.getSelectedItemPosition()).getId();
-        int employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
-        int evaluationTypeId = 2;
-        EmployeeQuestionScoreService employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
-        employeeQuestionScoreService.getEmployeeQuestionScore(
-                employeeId,
-                sessionId,
-                evaluationTypeId,
-                employeeQuestionScores -> {
-                    employeeQuestionScoreList = employeeQuestionScores;
-                    String[] scoresData = new String[employeeQuestionScoreList.size()];
-                    // Populate the array with the data from employeeScoreList
-                    for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
-                        EmployeeQuestionScore score = employeeQuestionScoreList.get(i);
-                        // Assuming you have some method to format EmployeeQuestionScore to String
-                        String scoreString = score != null ? score.getQuestion().getQuestion().toString()+"\n"+score.getObtainedScore()+"/"+score.getTotalScore() : ""; // Handle null case
-                        scoresData[i] = scoreString;
-                    }
-                    employeeScoreListView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, scoresData));
-                },
-                errorMessage -> {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                });
+        if (employeeSpinner != null && sessionSpinner != null) { // Check if both spinners are not null
+            // Retrieve the selected session and employee IDs
+            int sessionId = sessionList.get(sessionSpinner.getSelectedItemPosition()).getId();
+            int employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
+
+            // Set the evaluation type ID (you might want to change this according to your logic)
+            int evaluationTypeId = 2;
+
+            // Call the service to get employee question scores based on the selected session, employee, and evaluation type
+            EmployeeQuestionScoreService employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
+            employeeQuestionScoreService.getEmployeeQuestionScore(
+                    employeeId,
+                    sessionId,
+                    evaluationTypeId,
+                    employeeQuestionScores -> {
+                        // Handle the retrieved employee question scores
+                        employeeQuestionScoreList = employeeQuestionScores;
+                        String[] scoresData = new String[employeeQuestionScoreList.size()];
+
+                        // Populate the array with the data from employeeScoreList
+                        for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
+                            EmployeeQuestionScore score = employeeQuestionScoreList.get(i);
+                            // Assuming you have some method to format EmployeeQuestionScore to String
+                            String scoreString = score != null ? score.getQuestion().getQuestion().toString() + "\n" + score.getObtainedScore() + "/" + score.getTotalScore() : ""; // Handle null case
+                            scoresData[i] = scoreString;
+                        }
+                        // Set the adapter for the ListView
+                        employeeScoreListView.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_list_item_1, scoresData));
+                    },
+                    errorMessage -> {
+                        // Handle the error message
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    });
+        } else {
+            // Handle the case where either spinner is null
+            Toast.makeText(getContext(), "Spinners are not initialized", Toast.LENGTH_SHORT).show();
+        }
     }
+
 }

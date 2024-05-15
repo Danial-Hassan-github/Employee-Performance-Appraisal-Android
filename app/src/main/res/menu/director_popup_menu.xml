@@ -31,4 +31,9 @@
         android:title="Employee Question Scores"
         android:icon="@drawable/ic_launcher_foreground"
         />
+    <item
+        android:id="@+id/navigation_session"
+        android:title="Session"
+        android:icon="@drawable/ic_launcher_foreground"
+        />
 </menu>

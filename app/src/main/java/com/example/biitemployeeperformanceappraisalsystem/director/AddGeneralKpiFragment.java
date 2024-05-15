@@ -59,7 +59,7 @@ public class AddGeneralKpiFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_add_general_kpi, container, false);
-        sessionSpinner = view.findViewById(R.id.spinner_session);
+        // sessionSpinner = view.findViewById(R.id.spinner_session);
         //employeeTypeSpinner = view.findViewById(R.id.spinner_employee_type);
         //designationSpinner = view.findViewById(R.id.spinner_designation);
         //departmentSpinner = view.findViewById(R.id.spinner_department);
@@ -71,6 +71,7 @@ public class AddGeneralKpiFragment extends Fragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        subKpiSpinner.setAdapter(adapter);
 //        employeeTypeSpinner.setAdapter(adapter);
 //
 //        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDepartments());
@@ -80,7 +81,6 @@ public class AddGeneralKpiFragment extends Fragment {
 //        designationSpinner.setAdapter(adapter);
 //
 //        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
-        subKpiSpinner.setAdapter(adapter);
 
 
 
