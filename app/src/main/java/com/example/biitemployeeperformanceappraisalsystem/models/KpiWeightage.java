@@ -1,9 +1,27 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class KpiWeightage {
+    private int id;
+    private Integer group_kpi_id;
     private int kpi_id;
     private int session_id;
     private int weightage;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public Integer getGroup_kpi_id() {
+        return group_kpi_id;
+    }
+
+    public void setGroup_kpi_id(int group_kpi_id) {
+        this.group_kpi_id = group_kpi_id;
+    }
 
     public int getKpi_id() {
         return kpi_id;

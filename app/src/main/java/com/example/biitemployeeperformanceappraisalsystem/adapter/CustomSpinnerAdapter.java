@@ -20,6 +20,7 @@ import java.util.List;
 public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
     private List<String> items;
+    private List<Integer> evaluatee_ids;
     private List<Boolean> itemChecked;
     private LayoutInflater inflater;
     private boolean selectAllChecked = false;
@@ -32,6 +33,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
             itemChecked.add(false);
         }
         inflater = LayoutInflater.from(context);
+        evaluatee_ids = new ArrayList<>();
     }
 
     @NonNull
@@ -81,6 +83,13 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
                     notifyDataSetChanged();
                 } else {
                     itemChecked.set(position, isChecked);
+                    if (isChecked) {
+                        // If checked, add the corresponding employee ID to evaluatee_ids list
+                        evaluatee_ids.add(position - 1); // Subtract 1 because 0th position is for select all
+                    } else {
+                        // If unchecked, remove the corresponding employee ID from evaluatee_ids list
+                        evaluatee_ids.remove((Integer) (position - 1));
+                    }
                 }
             }
         });
@@ -91,5 +100,10 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
     private static class ViewHolder {
         CheckBox checkbox;
         TextView text;
+    }
+
+    // Method to get the list of selected employee IDs
+    public List<Integer> getSelectedEmployeeIds() {
+        return evaluatee_ids;
     }
 }

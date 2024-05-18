@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -14,11 +13,11 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.AppCompatButton;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.models.OptionsWeightage;
+import com.example.biitemployeeperformanceappraisalsystem.models.OptionWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.OptionWeightageService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 
 import java.util.ArrayList;
@@ -29,9 +28,10 @@ import java.util.Map;
 public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
     private LayoutInflater inflater;
     QuestionnaireService questionnaireService;
+    OptionWeightageService optionWeightageService;
     private int resourceId;
     View btnSubmit;
-    List<OptionsWeightage> optionsWeightageList;
+    List<OptionWeightage> optionWeightageList;
     View parentView;
     // AppCompatButton btnSubmit;
     private boolean allQuestionsAnswered = false;
@@ -49,6 +49,7 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
         // Get the data item for this position
         Question question = getItem(position);
         questionnaireService = new QuestionnaireService(getContext());
+        optionWeightageService = new OptionWeightageService(getContext());
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
@@ -66,12 +67,12 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
 
         questionTextView.setText(question.getQuestion());
 
-        if (optionsWeightageList == null) {
-            questionnaireService.getOptionsWeightages(
+        if (optionWeightageList == null) {
+            optionWeightageService.getOptionsWeightage(
                     optionsWeightages -> {
-                        optionsWeightageList = optionsWeightages;
+                        optionWeightageList = optionsWeightages;
                         // Dynamically create and add radio buttons
-                        for (OptionsWeightage option : optionsWeightageList) {
+                        for (OptionWeightage option : optionWeightageList) {
                             RadioButton radioButton = new RadioButton(getContext());
                             radioButton.setText(option.getName());
                             optionsRadioGroup.addView(radioButton);
@@ -85,7 +86,7 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
 
         optionsRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int selectedOptionIndex = group.indexOfChild(group.findViewById(checkedId));
-            selectedOptions.put(position, optionsWeightageList.get(selectedOptionIndex).getWeightage());
+            selectedOptions.put(position, optionWeightageList.get(selectedOptionIndex).getWeightage());
             Toast.makeText(getContext(), selectedOptionIndex+"", Toast.LENGTH_SHORT).show();
             // int count = getCount();
             if (selectedOptions.size() == getCount()){

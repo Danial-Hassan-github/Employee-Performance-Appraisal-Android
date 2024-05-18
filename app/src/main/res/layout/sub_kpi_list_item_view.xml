@@ -17,15 +17,17 @@
         android:textColor="@android:color/black" />
 
     <EditText
+        android:id="@+id/edit_text_subKpi_weightage"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:text="30"/>
 
-    <ImageView
+    <ImageButton
+        android:id="@+id/btn_remove_subKpi"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:src="@drawable/minus_icon"/>
+        android:src="@drawable/delete_outline_icon"/>
 
 </LinearLayout>

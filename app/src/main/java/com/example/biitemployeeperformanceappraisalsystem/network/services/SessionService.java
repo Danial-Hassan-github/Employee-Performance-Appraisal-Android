@@ -56,13 +56,34 @@ public class SessionService {
                     SharedPreferencesManager sharedPreferencesManager =new SharedPreferencesManager(context.getApplicationContext());
                     sharedPreferencesManager.saveSessionId(session.getId());
                 } else {
-                    // onFailure.accept(response.message());
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
                 }
             }
 
             @Override
             public void onFailure(Call<Session> call, Throwable t) {
-                // onFailure.accept("Something went wrong while fetching current session");
+                Toast.makeText(context, "Something went wrong while fetching current session", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postSession(Session session){
+        Call<Session> sessionCall = sessionServiceListener.postSession(session);
+        sessionCall.enqueue(new Callback<Session>() {
+            @Override
+            public void onResponse(Call<Session> call, Response<Session> response) {
+                if (response.isSuccessful()){
+                    Session session = response.body();
+                    SharedPreferencesManager sharedPreferencesManager =new SharedPreferencesManager(context.getApplicationContext());
+                    sharedPreferencesManager.saveSessionId(session.getId());
+                } else {
+                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Session> call, Throwable t) {
+                Toast.makeText(context, "Something went wrong while Adding new session", Toast.LENGTH_SHORT).show();
             }
         });
     }

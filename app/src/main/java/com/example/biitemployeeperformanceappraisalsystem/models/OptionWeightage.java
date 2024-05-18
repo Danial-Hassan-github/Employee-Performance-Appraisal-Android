@@ -1,8 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
-import java.util.Objects;
-
-public class OptionsWeightage {
+public class OptionWeightage {
     private int id;
     private String name;
     private int weightage;

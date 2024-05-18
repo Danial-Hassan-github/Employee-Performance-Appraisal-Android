@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
+import com.example.biitemployeeperformanceappraisalsystem.AddSessionFragment;
 import com.example.biitemployeeperformanceappraisalsystem.EvaluateeListFragment;
 import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
@@ -98,6 +99,10 @@ public class DirectorMainActivity extends AppCompatActivity {
                 } else if (R.id.employee_questions_scores == item.getItemId()) {
                     replaceFragment(new ScoresFragment());
                     topText.setText("Scores");
+                    return true;
+                } else if (R.id.navigation_session == item.getItemId()) {
+                    replaceFragment(new AddSessionFragment());
+                    topText.setText("Session");
                     return true;
                 }
                 return false;

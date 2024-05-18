@@ -7,100 +7,16 @@
     android:gravity="center"
     android:background="@color/white"
     tools:context=".director.OptionsWeightageFragment">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="Poor"/>
-
     <LinearLayout
+        android:id="@+id/options_weightage_adjustment_form"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:weightSum="10">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/plus_icon"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="Average"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:weightSum="10">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/plus_icon"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="Good"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:weightSum="10">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/plus_icon"
-            android:layout_weight="1"/>
-
-    </LinearLayout>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="start"
-        android:text="Excellent"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:weightSum="10">
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="9"/>
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:src="@drawable/plus_icon"
-            android:layout_weight="1"/>
+        android:orientation="vertical">
 
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_save"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@color/bottomBar"

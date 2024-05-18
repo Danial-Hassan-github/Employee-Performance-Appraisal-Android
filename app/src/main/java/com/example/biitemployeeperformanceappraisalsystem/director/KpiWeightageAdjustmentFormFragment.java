@@ -25,25 +25,16 @@ import java.util.ArrayList;
  * create an instance of this fragment.
  */
 public class KpiWeightageAdjustmentFormFragment extends Fragment {
+    ArrayList<Float> pieChartValues = new ArrayList<>();
+    ArrayList<String> pieChartTitles;
 
-    public static KpiWeightageAdjustmentFormFragment newInstance(String kpiName, float kpiValue, float[] pieChartValues, ArrayList<String> pieChartTitles) {
-        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment();
-        Bundle args = new Bundle();
-        args.putString("kpiName", kpiName);
-        args.putFloat("kpiValue", kpiValue);
-        args.putFloatArray("pieChartValues", pieChartValues);
-        args.putStringArrayList("pieChartTitles", pieChartTitles);
-        fragment.setArguments(args);
-        return fragment;
+    public KpiWeightageAdjustmentFormFragment(ArrayList<Float> pieChartValues, ArrayList<String> pieChartTitles){
+        this.pieChartValues = pieChartValues;
+        this.pieChartTitles = pieChartTitles;
     }
 
-    // Helper method to convert ArrayList<Float> to float[]
-    private static float[] convertFloatArrayListToArray(ArrayList<Float> list) {
-        float[] array = new float[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
+    public KpiWeightageAdjustmentFormFragment(){
+
     }
 
     @Override
@@ -53,22 +44,22 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
 
         // Retrieve pie chart values and titles from the arguments bundle
         Bundle args = getArguments();
-        float[] pieChartValues = args.getFloatArray("pieChartValues");
-        ArrayList<String> pieChartTitles = args.getStringArrayList("pieChartTitles");
+        //float[] pieChartValues = args.getFloatArray("pieChartValues");
+        //ArrayList<String> pieChartTitles = args.getStringArrayList("pieChartTitles");
 
         // Get the layout where you want to add the dynamic input fields
         LinearLayout layout = view.findViewById(R.id.kpi_weightage_adjustment_form_layout);
 
         // Create and add input fields dynamically based on pie chart values and titles
-        EditText[] editTexts = new EditText[pieChartValues.length];
+        EditText[] editTexts = new EditText[pieChartValues.size()];
         float totalSum = 0;
 
-        for (int i = 0; i < pieChartValues.length; i++) {
+        for (int i = 0; i < pieChartValues.size(); i++) {
             TextView titleTextView = new TextView(requireContext());
             titleTextView.setText(pieChartTitles.get(i));
 
             EditText valueEditText = new EditText(requireContext());
-            valueEditText.setText(Float.toString(pieChartValues[i]));
+            valueEditText.setText(Float.toString(pieChartValues.get(i)));
 
             // Add input fields to the layout
             layout.addView(titleTextView);
@@ -105,7 +96,7 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
             });
 
             // Update the total sum
-            totalSum += pieChartValues[i];
+            totalSum += pieChartValues.get(i);
         }
 
         // Implement functionality to save modified values when save button is clicked

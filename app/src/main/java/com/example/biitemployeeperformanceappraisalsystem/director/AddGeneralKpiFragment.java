@@ -17,10 +17,18 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.adapter.SubKpiListAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SubKpiService;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,105 +38,96 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddGeneralKpiFragment extends Fragment {
+    GroupKpiDetails groupKpiDetails;
+    KPI kpi;
     List<Session> sessionList;
     ListView subKpiListView;
     Spinner sessionSpinner,employeeTypeSpinner,designationSpinner,departmentSpinner,subKpiSpinner;
     Button btnSave;
+    List<SubKpi> subKpiList;
+    List<SubKpi> subKpiAdapterList;
+    SubKpiListAdapter subKpiListAdapter;
+    SubKpiService subKpiService;
 
-    public static AddGeneralKpiFragment newInstance(String kpiName, float kpiValue, ArrayList<Float> pieChartValues, ArrayList<String> pieChartTitles) {
-        AddGeneralKpiFragment fragment = new AddGeneralKpiFragment();
-        Bundle args = new Bundle();
-        args.putString("kpiName", kpiName);
-        args.putFloat("kpiValue", kpiValue);
-        args.putFloatArray("pieChartValues", convertFloatArrayListToArray(pieChartValues));
-        args.putStringArrayList("pieChartTitles", pieChartTitles);
-        fragment.setArguments(args);
-        return fragment;
+    public AddGeneralKpiFragment(){
+
     }
 
-    // Helper method to convert ArrayList<Float> to float[]
-    private static float[] convertFloatArrayListToArray(ArrayList<Float> list) {
-        float[] array = new float[list.size()];
-        for (int i = 0; i < list.size(); i++) {
-            array[i] = list.get(i);
-        }
-        return array;
+    public AddGeneralKpiFragment(GroupKpiDetails groupKpiDetails, KPI kpi){
+        this.groupKpiDetails = groupKpiDetails;
+        this.kpi = kpi;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view =  inflater.inflate(R.layout.fragment_add_general_kpi, container, false);
-        // sessionSpinner = view.findViewById(R.id.spinner_session);
-        //employeeTypeSpinner = view.findViewById(R.id.spinner_employee_type);
-        //designationSpinner = view.findViewById(R.id.spinner_designation);
-        //departmentSpinner = view.findViewById(R.id.spinner_department);
+
         subKpiSpinner =  view.findViewById(R.id.spinner_sub_kpi);
-        //subKpiListView = view.findViewById(R.id.list_view_subKpi);
+        subKpiListView = view.findViewById(R.id.list_view_subKpi);
         btnSave = view.findViewById(R.id.btn_save_kpi);
+        subKpiService = new SubKpiService(getContext());
 
-        CommonData data=new CommonData(getContext());
+        subKpiList = new ArrayList<>();
+        subKpiAdapterList = new ArrayList<>();
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subKpiSpinner.setAdapter(adapter);
-//        employeeTypeSpinner.setAdapter(adapter);
+//        CommonData data=new CommonData(getContext());
 //
-//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDepartments());
-//        departmentSpinner.setAdapter(adapter);
-//
-//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.generateDesignations());
-//        designationSpinner.setAdapter(adapter);
-//
-//        adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        subKpiSpinner.setAdapter(adapter);
+        subKpiService.getSubKPIs(
+                10,
+                subKpiList1 -> {
+                    if (subKpiList1 != null) {
+                        subKpiList = subKpiList1;
+                        String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
+                        if (subKpiTitles != null) {
+                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, subKpiTitles);
+                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                            subKpiSpinner.setAdapter(adapter);
+                        } else {
+                            Toast.makeText(getContext(), "No SubKPI titles available", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Failed to fetch SubKPIs", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
 
+        // Initialize the subKpiList and the adapter
+        subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
+        subKpiListView.setAdapter(subKpiListAdapter);
 
+        // Set the spinner item selected listener
+        subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String selectedSubKpiName = parent.getItemAtPosition(position).toString();
+                // Create a new SubKpi object with the selected name
+                SubKpi selectedSubKpi = new SubKpi();
+                // Add the selected SubKpi to the list
+                subKpiAdapterList.add(subKpiList.get(position));
+                // Notify the adapter to refresh the ListView
+                subKpiListAdapter.notifyDataSetChanged();
+            }
 
-        // Inside onCreateView method
-//        Bundle args = getArguments();
-//        if (args != null) {
-//            // Retrieve pie chart values and titles
-//            float[] pieChartValues = args.getFloatArray("pieChartValues");
-//            ArrayList<String> pieChartTitles = args.getStringArrayList("pieChartTitles");
-
-//            EditText kpiName = view.findViewById(R.id.text_kpi_title);// Get KpiName from input field
-//            EditText kpiValue = view.findViewById(R.id.text_kpi_weightage);// Get KpiValue from input field
-//
-//            // Pass these values to the KpiWeightageAdjustmentFormFragment
-//            btnSave.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View v) {
-//                    // Retrieve the entered KpiName and KpiValue
-//                    String kpiNameArg = args.getString("kpiName");
-//                    float kpiValueArg = args.getFloat("kpiValue");
-//
-//                    kpiName.setText(kpiNameArg);
-//                    kpiValue.setText(String.valueOf(kpiValueArg));
-//
-//                    // Navigate to the KpiWeightageAdjustmentFormFragment and pass the KpiName, KpiValue, pie chart values, and titles
-//                    KpiWeightageAdjustmentFormFragment fragment = KpiWeightageAdjustmentFormFragment.newInstance(kpiName.getText().toString(), Float.parseFloat(kpiValue.getText().toString()), pieChartValues, pieChartTitles);
-//                    FragmentTransaction transaction = getParentFragment().getChildFragmentManager().beginTransaction();
-//                    transaction.replace(R.id.fragment_container, fragment);
-//                    transaction.addToBackStack(null);
-//                    transaction.commit();
-//                }
-//            });
-//        }
-
-
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                // Do nothing
+            }
+        });
 
         // Find your text boxes by their IDs
          EditText kpiNameEditText = view.findViewById(R.id.text_kpi_title);
          EditText kpiValueEditText = view.findViewById(R.id.text_kpi_weightage);
 
-        // Retrieve the passed data from the arguments bundle
-        Bundle args = getArguments();
-        if (args != null) {
-            String kpiName = args.getString("kpiName");
-            float kpiValue = args.getFloat("kpiValue");
-            // Retrieve pie chart values and titles
-            float[] pieChartValues = args.getFloatArray("pieChartValues");
-            ArrayList<String> pieChartTitles = args.getStringArrayList("pieChartTitles");
+        if (kpi != null) {
+            String kpiName = kpi.getName();
+            float kpiValue = kpi.getKpiWeightage().getWeightage();
 
             // Set the values in your text boxes
             kpiNameEditText.setText(kpiName);
@@ -138,50 +137,39 @@ public class AddGeneralKpiFragment extends Fragment {
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    int sum = Integer.parseInt(kpiValueEditText.getText().toString());
+                    for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
+                        if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
+                            KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
+                            kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
+                            groupKpiDetails.getKpiList().get(i).setKpiWeightage(kpiWeightage);
+                        }else {
+                            sum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
+                        }
+                    }
 
-                    // Navigate to the KpiWeightageAdjustmentFormFragment and pass the KpiName, KpiValue, pie chart values, and titles
-                    KpiWeightageAdjustmentFormFragment fragment = KpiWeightageAdjustmentFormFragment.newInstance(kpiName, kpiValue, pieChartValues, pieChartTitles);
-                    FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, fragment);
-                    transaction.addToBackStack(null);
-                    transaction.commit();
+                    ArrayList<Float> pieChartValues = new ArrayList<>();
+                    ArrayList<String> pieChartTitles = new ArrayList<>();
+                    for (KPI item: groupKpiDetails.getKpiList()) {
+                        pieChartTitles.add(item.getName());
+                        pieChartValues.add((float)item.getKpiWeightage().getWeightage());
+                    }
+
+                    Toast.makeText(getContext(), sum+"", Toast.LENGTH_SHORT).show();
+                    // Navigate to the KpiWeightageAdjustmentFormFragment and pass the pie chart values and titles
+                    if (sum > 100){
+                        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(pieChartValues, pieChartTitles);
+                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+                        transaction.replace(R.id.fragment_container, fragment);
+                        transaction.addToBackStack(null);
+                        transaction.commit();
+                    }
                 }
             });
         }
 
         CommonData commonData = new CommonData(getContext());
         List<String> subKpiNames = commonData.getSubKPITypes();
-
-//        SessionService sessionService=new SessionService(getContext());
-//        sessionService.getSessions(sessions -> {
-//                    // Handle the list of sessions here
-//                    sessionList = sessions;
-//                    // Populate the spinner with session titles
-//                    sessionService.populateSpinner(sessions,sessionSpinner);
-//                },
-//                // onFailure callback
-//                errorMessage -> {
-//                    // Handle failure
-//                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
-//                });
-
-        // Set an item selected listener for the session spinner
-//        sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-//            @Override
-//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-//                // Get the selected session
-//                Session selectedSession = sessionList.get(position);
-//                // Use the ID of the selected session
-//                int sessionId = selectedSession.getId();
-//                // Perform actions with the session ID
-//                Toast.makeText(getContext(), sessionId+"", Toast.LENGTH_LONG).show();
-//            }
-//
-//            @Override
-//            public void onNothingSelected(AdapterView<?> parent) {
-//                // Handle case where nothing is selected
-//            }
-//        });
 
         // Inflate the layout for this fragment
         return view;

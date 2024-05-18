@@ -27,26 +27,6 @@
 
     </LinearLayout>
 
-<!--    <LinearLayout-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:orientation="vertical">-->
-
-<!--        <TextView-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:textSize="20sp"-->
-<!--            android:textStyle="bold"-->
-<!--            android:text="Session"/>-->
-<!--        <Spinner-->
-<!--            android:id="@+id/spinner_session"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="40dp"/>-->
-
-<!--    </LinearLayout>-->
-
-
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -100,43 +80,11 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <ListView
+        android:id="@+id/list_view_subKpi"
+        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:background="@color/grey"
-        android:weightSum="3">
-
-        <TextView
-            android:id="@+id/text_subKpiName"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:layout_weight="1"
-            android:text="Peer Evaluation"
-            android:textColor="@android:color/black" />
-
-        <EditText
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1.5"
-            android:text="30"/>
-
-        <ImageView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/white"
-            android:layout_weight=".5"
-            android:src="@drawable/minus_icon"/>
-
-    </LinearLayout>
-
-<!--    <ListView-->
-<!--        android:id="@+id/list_view_subKpi"-->
-<!--        android:layout_marginTop="10dp"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        tools:listitem="@layout/sub_kpi_list_item_view"/>-->
+        tools:listitem="@layout/sub_kpi_list_item_view"/>
 
 </LinearLayout>

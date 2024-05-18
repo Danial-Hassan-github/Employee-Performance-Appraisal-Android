@@ -5,7 +5,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.OptionsWeightage;
+import com.example.biitemployeeperformanceappraisalsystem.models.OptionWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
@@ -102,11 +102,11 @@ public class QuestionnaireService {
         });
     }
 
-    public void getOptionsWeightages(final Consumer<List<OptionsWeightage>> onSuccess, final Consumer<String> onFailure){
-        Call<List<OptionsWeightage>> optionsWeightage = questionnaireServiceListener.getOptionsWeightage();
-        optionsWeightage.enqueue(new Callback<List<OptionsWeightage>>() {
+    public void getOptionsWeightage(final Consumer<List<OptionWeightage>> onSuccess, final Consumer<String> onFailure){
+        Call<List<OptionWeightage>> optionsWeightage = questionnaireServiceListener.getOptionsWeightage();
+        optionsWeightage.enqueue(new Callback<List<OptionWeightage>>() {
             @Override
-            public void onResponse(Call<List<OptionsWeightage>> call, Response<List<OptionsWeightage>> response) {
+            public void onResponse(Call<List<OptionWeightage>> call, Response<List<OptionWeightage>> response) {
                 if (response.isSuccessful()) {
                     onSuccess.accept(response.body());
                 } else {
@@ -115,8 +115,8 @@ public class QuestionnaireService {
             }
 
             @Override
-            public void onFailure(Call<List<OptionsWeightage>> call, Throwable t) {
-                onFailure.accept("Something went wrong while fetching employees");
+            public void onFailure(Call<List<OptionWeightage>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching options weightage");
             }
         });
     }
