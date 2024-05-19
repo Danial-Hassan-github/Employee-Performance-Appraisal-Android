@@ -17,6 +17,7 @@ import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferenc
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationTimeService;
 
 import java.util.List;
 
@@ -32,6 +33,7 @@ public class CourseTeacherFragment extends Fragment {
     SharedPreferencesManager sharedPreferencesManager;
     List<Employee> teacherList;
     EvaluationService evaluationService;
+    EvaluationTimeService evaluationTimeService;
     View fragmentContainer;
     RadioGroup evaluationTypeRadioGroup;
 
@@ -67,6 +69,7 @@ public class CourseTeacherFragment extends Fragment {
         TextView txt_teacher2=view.findViewById(R.id.text_teacher2);
         sharedPreferencesManager=new SharedPreferencesManager(getContext());
         evaluationService = new EvaluationService(getContext());
+        evaluationTimeService = new EvaluationTimeService(getContext());
         studentID = sharedPreferencesManager.getStudentUserObject().getId();
         sessionID = sharedPreferencesManager.getSessionId();
 
@@ -125,7 +128,22 @@ public class CourseTeacherFragment extends Fragment {
                             if (check){
                                 Toast.makeText(getContext(), "You have already Evaluated this teacher", Toast.LENGTH_SHORT).show();
                             }else {
-                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, isConfidential?"Confidential":"Student", fragmentContainer.getId()));
+                                String evaluationType = isConfidential ? "Confidential" : "Student";
+                                evaluationTimeService.isEvaluationTime(
+                                        sessionID,
+                                        evaluationType,
+                                        isTime -> {
+                                            boolean flag = isTime;
+                                            if (flag){
+                                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, isConfidential?"Confidential":"Student", fragmentContainer.getId()));
+                                            }else {
+                                                Toast.makeText(getContext(), "Evaluation not opened", Toast.LENGTH_SHORT).show();
+                                            }
+                                        },
+                                        errorMessage -> {
+                                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                        }
+                                        );
                             }
                         },
                         errorMessage -> {
