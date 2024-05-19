@@ -5,8 +5,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.OptionWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
@@ -42,6 +44,25 @@ public class KpiService {
 
             @Override
             public void onFailure(Call<List<GroupKpiDetails>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getGroupKpi(int groupID, final Consumer<List<KPI>> onSuccess, final Consumer<String> onFailure){
+        Call<List<KPI>> call = kpiServiceListener.getKpiGroup(groupID);
+        call.enqueue(new Callback<List<KPI>>() {
+            @Override
+            public void onResponse(Call<List<KPI>> call, Response<List<KPI>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<KPI>> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });

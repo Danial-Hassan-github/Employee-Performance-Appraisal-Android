@@ -1,5 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.director;
 
+import android.content.Context;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -25,6 +26,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.KpiService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SubKpiService;
 
@@ -48,6 +50,7 @@ public class AddGeneralKpiFragment extends Fragment {
     List<SubKpi> subKpiAdapterList;
     SubKpiListAdapter subKpiListAdapter;
     SubKpiService subKpiService;
+    KpiService kpiService;
 
     public AddGeneralKpiFragment(){
 
@@ -67,15 +70,11 @@ public class AddGeneralKpiFragment extends Fragment {
         subKpiListView = view.findViewById(R.id.list_view_subKpi);
         btnSave = view.findViewById(R.id.btn_save_kpi);
         subKpiService = new SubKpiService(getContext());
+        kpiService = new KpiService(getContext());
 
         subKpiList = new ArrayList<>();
         subKpiAdapterList = new ArrayList<>();
 
-//        CommonData data=new CommonData(getContext());
-//
-//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
-//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        subKpiSpinner.setAdapter(adapter);
         subKpiService.getSubKPIs(
                 10,
                 subKpiList1 -> {
@@ -83,9 +82,7 @@ public class AddGeneralKpiFragment extends Fragment {
                         subKpiList = subKpiList1;
                         String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
                         if (subKpiTitles != null) {
-                            ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, subKpiTitles);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            subKpiSpinner.setAdapter(adapter);
+                            subKpiService.populateSpinner(subKpiList, subKpiSpinner);
                         } else {
                             Toast.makeText(getContext(), "No SubKPI titles available", Toast.LENGTH_SHORT).show();
                         }
@@ -106,10 +103,6 @@ public class AddGeneralKpiFragment extends Fragment {
         subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String selectedSubKpiName = parent.getItemAtPosition(position).toString();
-                // Create a new SubKpi object with the selected name
-                SubKpi selectedSubKpi = new SubKpi();
-                // Add the selected SubKpi to the list
                 subKpiAdapterList.add(subKpiList.get(position));
                 // Notify the adapter to refresh the ListView
                 subKpiListAdapter.notifyDataSetChanged();
@@ -134,44 +127,76 @@ public class AddGeneralKpiFragment extends Fragment {
             kpiValueEditText.setText(String.valueOf(kpiValue));
 
             // Pass these values to the KpiWeightageAdjustmentFormFragment
+        }
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     int sum = Integer.parseInt(kpiValueEditText.getText().toString());
-                    for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
-                        if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
-                            KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
-                            kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
-                            groupKpiDetails.getKpiList().get(i).setKpiWeightage(kpiWeightage);
-                        }else {
-                            sum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
+                    ArrayList<Float> pieChartValues = new ArrayList<>();
+                    ArrayList<String> pieChartTitles = new ArrayList<>();
+                    if (kpi == null){
+                        // TODO
+                        kpiService.getGroupKpi(
+                                0,
+                                kpis -> {
+                                    int weightageSum = Integer.parseInt(kpiValueEditText.getText().toString());
+                                    groupKpiDetails = new GroupKpiDetails();
+                                    groupKpiDetails.setKpiList(kpis);
+                                    for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
+//                                        if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
+//                                            KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
+//                                            kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
+//                                            groupKpiDetails.getKpiList().get(i).setKpiWeightage(kpiWeightage);
+//                                        }else {
+                                            weightageSum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
+                                        // }
+                                    }
+                                    if (weightageSum > 100){
+                                        navigateToWeightageAdjustmentForm();
+                                    }
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                        );
+                        // Toast.makeText(getContext(), sum+"", Toast.LENGTH_SHORT).show();
+                    }else {
+                        for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
+                            if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
+                                KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
+                                kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
+                                groupKpiDetails.getKpiList().get(i).setKpiWeightage(kpiWeightage);
+                            }else {
+                                sum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
+                            }
+                        }
+
+                        for (KPI item: groupKpiDetails.getKpiList()) {
+                            pieChartTitles.add(item.getName());
+                            pieChartValues.add((float)item.getKpiWeightage().getWeightage());
+                        }
+                        // Navigate to the KpiWeightageAdjustmentFormFragment and pass values
+                        if (sum > 100){
+                            navigateToWeightageAdjustmentForm();
                         }
                     }
 
-                    ArrayList<Float> pieChartValues = new ArrayList<>();
-                    ArrayList<String> pieChartTitles = new ArrayList<>();
-                    for (KPI item: groupKpiDetails.getKpiList()) {
-                        pieChartTitles.add(item.getName());
-                        pieChartValues.add((float)item.getKpiWeightage().getWeightage());
-                    }
 
-                    Toast.makeText(getContext(), sum+"", Toast.LENGTH_SHORT).show();
-                    // Navigate to the KpiWeightageAdjustmentFormFragment and pass the pie chart values and titles
-                    if (sum > 100){
-                        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(pieChartValues, pieChartTitles);
-                        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
-                        transaction.replace(R.id.fragment_container, fragment);
-                        transaction.addToBackStack(null);
-                        transaction.commit();
-                    }
                 }
             });
-        }
 
         CommonData commonData = new CommonData(getContext());
         List<String> subKpiNames = commonData.getSubKPITypes();
 
         // Inflate the layout for this fragment
         return view;
+    }
+
+    public void navigateToWeightageAdjustmentForm() {
+        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(groupKpiDetails);
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
