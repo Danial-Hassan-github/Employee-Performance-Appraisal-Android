@@ -7,42 +7,63 @@
     android:orientation="vertical"
     tools:context=".student.StudentMainActivity">
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/txt_top"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/colorPrimary">
+        android:gravity="center"
+        android:text="Courses"
+        android:textSize="30dp"
+        android:textStyle="bold"
+        android:textColor="@color/white"
+        android:background="@color/bottomBar" />
 
-        <TextView
-            android:id="@+id/txt_top"
-            android:layout_width="match_parent"
+    <TextView
+        android:id="@+id/txt_student_details"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/brown"
+        android:text="Name: Asad\n2020-ARID-3999\nBSCS-6D"
+        android:textColor="@color/white"
+        android:textSize="20dp"
+        android:textStyle="bold" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout_student"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_student_evaluation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="Courses"
-            android:textSize="30dp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@color/bottomBar" />
+            android:text="Student" />
 
-        <TextView
-            android:id="@+id/txt_student_details"
-            android:layout_width="match_parent"
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_degree_exit_evaluation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name: Asad\n2020-ARID-3999\nBSCS-6D"
-            android:textSize="20dp"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:background="@color/brown" />
+            android:text="Degree Exit" />
+    </com.google.android.material.tabs.TabLayout>
 
-    </LinearLayout>
+    <EditText
+        android:id="@+id/editText_pin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Confidential Pin "/>
+
+    <Button
+        android:id="@+id/btn_pin_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="submit"
+        android:layout_gravity="center"/>
 
     <!-- Your main content layout -->
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-        <!-- Add your main content here -->
-    </FrameLayout>
+        android:layout_weight="1"/>
 
 </LinearLayout>

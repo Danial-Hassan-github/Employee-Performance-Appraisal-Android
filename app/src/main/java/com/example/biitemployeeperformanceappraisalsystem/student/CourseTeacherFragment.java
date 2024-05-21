@@ -135,7 +135,16 @@ public class CourseTeacherFragment extends Fragment {
                                         isTime -> {
                                             boolean flag = isTime;
                                             if (flag){
-                                                studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, isConfidential?"Confidential":"Student", fragmentContainer.getId()));
+                                                // TODO
+                                                if (isConfidential){
+                                                    if (sharedPreferencesManager.isConfidential()){
+                                                        studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, "Confidential", fragmentContainer.getId()));
+                                                    }else {
+                                                        Toast.makeText(getContext(), "Enter correct pin", Toast.LENGTH_SHORT).show();
+                                                    }
+                                                }else {
+                                                    studentMainActivity.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, "Student", fragmentContainer.getId()));
+                                                }
                                             }else {
                                                 Toast.makeText(getContext(), "Evaluation not opened", Toast.LENGTH_SHORT).show();
                                             }

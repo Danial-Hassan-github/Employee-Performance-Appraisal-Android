@@ -56,6 +56,12 @@ public class EvaluationQuestionnaireFragment extends Fragment {
         this.fragmentContainerId = fragmentContainerId;
     }
 
+    public EvaluationQuestionnaireFragment(int evaluateeID, String evaluationType, int fragmentContainerId){
+        this.evaluateeID = evaluateeID;
+        this.evaluationType = evaluationType;
+        this.fragmentContainerId = fragmentContainerId;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

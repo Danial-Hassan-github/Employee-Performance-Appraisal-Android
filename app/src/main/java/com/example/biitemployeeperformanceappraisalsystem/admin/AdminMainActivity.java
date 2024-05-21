@@ -9,9 +9,8 @@ import android.view.MenuItem;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.biitemployeeperformanceappraisalsystem.MyTasksFragment;
+import com.example.biitemployeeperformanceappraisalsystem.EmployeeListFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.director.EvaluatorFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AdminMainActivity extends AppCompatActivity {

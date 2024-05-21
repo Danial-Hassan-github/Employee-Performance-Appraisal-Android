@@ -15,13 +15,16 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.ChrService;
 
 public class UploadExcelFileFragment extends Fragment {
-
+    ChrService chrService;
     View view;
     TextView textFileName;
-    Button btnChooseFile;
+    Button btnChooseFile, btnUploadFile;
     private static final int PICK_EXCEL_REQUEST = 1000;
+    private Uri fileUri;
+    private String filePath;
 
     public UploadExcelFileFragment() {
         // Required empty public constructor
@@ -29,23 +32,34 @@ public class UploadExcelFileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        view=inflater.inflate(R.layout.fragment_upload_excel_file, container, false);
-        textFileName=view.findViewById(R.id.text_file_name);
+        view = inflater.inflate(R.layout.fragment_upload_excel_file, container, false);
+        chrService = new ChrService(getContext());
+        textFileName = view.findViewById(R.id.text_file_name);
         btnChooseFile = view.findViewById(R.id.btn_choose_file);
+        btnUploadFile = view.findViewById(R.id.btn_upload_file);
 
-        // Inflate the layout for this fragment
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
         btnChooseFile.setOnClickListener(v -> openFileChooser());
+        btnUploadFile.setOnClickListener(v -> {
+            if (fileUri != null) {
+                chrService.uploadChr(filePath);
+            } else {
+                Toast.makeText(getContext(), "Please choose a file first", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("application/vnd.ms-excel"); // Filter to only show Excel files
+        intent.setType("*/*");
+        String[] mimeTypes = {"application/vnd.ms-excel", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"};
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         startActivityForResult(Intent.createChooser(intent, "Select Excel File"), PICK_EXCEL_REQUEST);
     }
@@ -56,11 +70,10 @@ public class UploadExcelFileFragment extends Fragment {
 
         if (requestCode == PICK_EXCEL_REQUEST && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                Uri uri = data.getData();
-                if (uri != null) {
-                    // Handle the selected Excel file URI here
-                    textFileName.setText(uri.getPath().toString());
-                    // Toast.makeText(getContext(), "Selected Excel File: " + uri.toString(), Toast.LENGTH_LONG).show();
+                fileUri = data.getData();
+                if (fileUri != null) {
+                    filePath = fileUri.getPath();
+                    textFileName.setText(fileUri.getPath());
                 }
             }
         }

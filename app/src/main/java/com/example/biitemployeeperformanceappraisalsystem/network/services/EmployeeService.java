@@ -87,6 +87,44 @@ public class EmployeeService {
         });
     }
 
+    public void postEmployee(Employee employee, final Consumer<Employee> onSuccess, final Consumer<String> onFailure){
+        Call<Employee> call = employeeServiceListener.postEmployee(employee);
+        call.enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void putEmployee(Employee employee, final Consumer<Employee> onSuccess, final Consumer<String> onFailure){
+        Call<Employee> call = employeeServiceListener.putEmployee(employee);
+        call.enqueue(new Callback<Employee>() {
+            @Override
+            public void onResponse(Call<Employee> call, Response<Employee> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Employee> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
     public void getEmployeeTypes(final Consumer<List<EmployeeType>> onSuccess, final Consumer<String> onFailure) {
         Call<List<EmployeeType>> employeeTypes = employeeServiceListener.getEmployeeTypes();
         employeeTypes.enqueue(new Callback<List<EmployeeType>>() {

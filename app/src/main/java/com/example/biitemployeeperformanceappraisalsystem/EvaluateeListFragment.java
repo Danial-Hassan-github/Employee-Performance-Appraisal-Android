@@ -91,7 +91,7 @@ public class EvaluateeListFragment extends Fragment {
                 Employee selectedEmployee = evaluateeList.get(position);
                 int evaluateeID = selectedEmployee.getId();
 
-                EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment(evaluateeID,0, "Peer", fragmentContainer.getId());
+                EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment(evaluateeID,"Peer", fragmentContainer.getId());
 
                 replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
 

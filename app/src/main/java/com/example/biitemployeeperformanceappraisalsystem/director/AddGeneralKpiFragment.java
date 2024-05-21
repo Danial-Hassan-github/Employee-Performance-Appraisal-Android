@@ -140,6 +140,12 @@ public class AddGeneralKpiFragment extends Fragment {
                                 0,
                                 kpis -> {
                                     int weightageSum = Integer.parseInt(kpiValueEditText.getText().toString());
+                                    KPI newKpi = new KPI();
+                                    newKpi.setName(kpiNameEditText.getText().toString());
+                                    KpiWeightage newKpiWeightage = new KpiWeightage();
+                                    newKpiWeightage.setWeightage(weightageSum);
+                                    newKpi.setKpiWeightage(newKpiWeightage);
+                                    kpis.add(newKpi);
                                     groupKpiDetails = new GroupKpiDetails();
                                     groupKpiDetails.setKpiList(kpis);
                                     for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){

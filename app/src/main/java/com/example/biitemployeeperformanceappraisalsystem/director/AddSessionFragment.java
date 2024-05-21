@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem;
+package com.example.biitemployeeperformanceappraisalsystem.director;
 
 import android.os.Bundle;
 
@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 

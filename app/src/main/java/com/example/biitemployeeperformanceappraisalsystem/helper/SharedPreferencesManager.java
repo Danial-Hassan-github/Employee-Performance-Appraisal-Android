@@ -17,6 +17,7 @@ public class SharedPreferencesManager {
     private static final String KEY_USER_ID = "userId";
     private static final String KEY_USER_TYPE = "userType";
     private static final String KEY_USER_OBJECT = "userObject";
+    private static final String KEY_IS_CONFIDENTIAL = "isConfidential";
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
     private Context context;
@@ -28,6 +29,15 @@ public class SharedPreferencesManager {
         pref = context.getSharedPreferences(PREF_NAME, Context.MODE_PRIVATE);
         editor = pref.edit();
         gson = new Gson();
+    }
+
+    public void setKeyIsConfidential(Boolean isConfidential){
+        editor.putBoolean(KEY_IS_CONFIDENTIAL, isConfidential);
+        editor.apply();
+    }
+
+    public Boolean isConfidential(){
+        return pref.getBoolean(KEY_IS_CONFIDENTIAL, false);
     }
 
     // Save student user details

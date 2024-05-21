@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.EvaluationTime;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.models.StudentSupervisor;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EvaluationTimeServiceListener;
 
@@ -24,6 +25,44 @@ public class EvaluationTimeService {
 
     public void isEvaluationTime(int sessionID, String evaluationType, final Consumer<Boolean> onSuccess, final Consumer<String> onFailure){
         Call<Boolean> call = evaluationTimeServiceListener.isEvaluationTime(sessionID, evaluationType);
+        call.enqueue(new Callback<Boolean>() {
+            @Override
+            public void onResponse(Call<Boolean> call, Response<Boolean> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Boolean> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void checkDegreeExitEligibility(int studentID, final Consumer<StudentSupervisor> onSuccess, final Consumer<String> onFailure){
+        Call<StudentSupervisor> call = evaluationTimeServiceListener.checkDegreeExitEligibility(studentID);
+        call.enqueue(new Callback<StudentSupervisor>() {
+            @Override
+            public void onResponse(Call<StudentSupervisor> call, Response<StudentSupervisor> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<StudentSupervisor> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void checkConfidentialPin(int sessionID, String pin, final Consumer<Boolean> onSuccess, final Consumer<String> onFailure){
+        Call<Boolean> call = evaluationTimeServiceListener.checkConfidentialPin(sessionID, pin);
         call.enqueue(new Callback<Boolean>() {
             @Override
             public void onResponse(Call<Boolean> call, Response<Boolean> response) {

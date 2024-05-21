@@ -12,14 +12,11 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-import com.example.biitemployeeperformanceappraisalsystem.AddSessionFragment;
-import com.example.biitemployeeperformanceappraisalsystem.EvaluateeListFragment;
-import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.QuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
-import com.example.biitemployeeperformanceappraisalsystem.admin.EmployeeListFragment;
+import com.example.biitemployeeperformanceappraisalsystem.EmployeeListFragment;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DirectorMainActivity extends AppCompatActivity {

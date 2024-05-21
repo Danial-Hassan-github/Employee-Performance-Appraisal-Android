@@ -9,12 +9,12 @@ public class Employee{
     private String name;
     private String email;
     private String password;
-    private Integer employeeTypeId; // Use Integer instead of int for nullable types
+    private Integer employee_type_id; // Use Integer instead of int for nullable types
     private Double salary; // Use Double instead of decimal for compatibility
     private Date doj; // Use java.util.Date for DateTime
     private Boolean deleted; // Use Boolean instead of bool for nullable types
-    private Integer departmentId; // Use Integer instead of int for nullable types
-    private Integer designationId; // Use Integer instead of int for nullable types
+    private Integer department_id; // Use Integer instead of int for nullable types
+    private Integer designation_id; // Use Integer instead of int for nullable types
 
     // Constructor
     public Employee() {
@@ -54,11 +54,11 @@ public class Employee{
     }
 
     public Integer getEmployeeTypeId() {
-        return employeeTypeId;
+        return employee_type_id;
     }
 
     public void setEmployeeTypeId(Integer employeeTypeId) {
-        this.employeeTypeId = employeeTypeId;
+        this.employee_type_id = employeeTypeId;
     }
 
     public Double getSalary() {
@@ -86,19 +86,19 @@ public class Employee{
     }
 
     public Integer getDepartmentId() {
-        return departmentId;
+        return department_id;
     }
 
     public void setDepartmentId(Integer departmentId) {
-        this.departmentId = departmentId;
+        this.department_id = departmentId;
     }
 
     public Integer getDesignationId() {
-        return designationId;
+        return designation_id;
     }
 
     public void setDesignationId(Integer designationId) {
-        this.designationId = designationId;
+        this.designation_id = designationId;
     }
 }
 
