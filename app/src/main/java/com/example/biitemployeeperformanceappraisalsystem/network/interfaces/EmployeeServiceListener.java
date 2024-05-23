@@ -24,7 +24,7 @@ public interface EmployeeServiceListener {
     Call<List<EmployeeDetails>> getEmployeesWithDetails();
 
     @GET("Employee/GetEmployeesWithKpiScores")
-    Call<List<EmployeeDetailsScore>> getEmployeesWithKpiScores();
+    Call<List<EmployeeDetailsScore>> getEmployeesWithKpiScores(@Query("sessionID") int sessionID);
 
     @GET("Employee/GetEmployeeTypes")
     Call<List<EmployeeType>> getEmployeeTypes();

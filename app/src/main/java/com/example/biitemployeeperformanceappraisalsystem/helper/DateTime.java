@@ -3,11 +3,14 @@ package com.example.biitemployeeperformanceappraisalsystem.helper;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.os.Build;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Locale;
 
@@ -40,7 +43,7 @@ public class DateTime {
                                         calendar.set(Calendar.MINUTE, minute);
 
                                         // Format time
-                                        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm a", Locale.getDefault());
+                                        SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm", Locale.getDefault());
                                         String formattedTime = timeFormat.format(calendar.getTime());
 
                                         editText.setText(formattedDate + " " + formattedTime);
@@ -50,5 +53,40 @@ public class DateTime {
                     }
                 }, year, month, day);
         datePickerDialog.show();
+    }
+
+    public static String formatLocalDateTimeToString(LocalDateTime dateTime) {
+        // Define the desired format pattern
+        String pattern = "dd/MM/yyyy hh:mm";
+
+        // Create a formatter with the specified pattern
+        DateTimeFormatter formatter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern(pattern);
+        }
+
+        // Format the LocalDateTime object using the formatter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return dateTime.format(formatter);
+        }
+        return null;
+    }
+
+    // Parse String to LocalDateTime
+    public static LocalDateTime parseStringToLocalDateTime(String dateTimeString) {
+        // Define the format pattern for the input string
+        String pattern = "dd/MM/yyyy hh:mm";
+
+        // Create a formatter with the specified pattern
+        DateTimeFormatter formatter = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            formatter = DateTimeFormatter.ofPattern(pattern);
+        }
+
+        // Parse the string into a LocalDateTime object using the formatter
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            return LocalDateTime.parse(dateTimeString, formatter);
+        }
+        return null;
     }
 }

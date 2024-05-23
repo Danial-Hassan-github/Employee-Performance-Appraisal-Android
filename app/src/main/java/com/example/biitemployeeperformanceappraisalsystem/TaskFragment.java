@@ -242,7 +242,7 @@ public class TaskFragment extends Fragment {
                         Date date = new Date();
                         task.setAssigned_date(date);
                         try {
-                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy hh:mm a", Locale.getDefault());
+                            SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
                             Date parsedDate = dateFormat.parse(dueDateEditText.getText().toString());
                             task.setDue_date(parsedDate);
                         } catch (ParseException e) {

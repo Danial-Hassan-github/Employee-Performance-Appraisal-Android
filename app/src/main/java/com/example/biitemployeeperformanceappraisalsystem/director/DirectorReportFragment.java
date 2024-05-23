@@ -14,13 +14,14 @@ import android.widget.Toast;
 import com.example.biitemployeeperformanceappraisalsystem.PerformanceFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EmployeeDetailsScoreAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetailsScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 
 import java.util.List;
 
 public class DirectorReportFragment extends Fragment {
-
+    SharedPreferencesManager sharedPreferencesManager;
     List<EmployeeDetailsScore> employeeDetailsScoreList;
     EmployeeDetailsScoreAdapter adapter;
     ListView listView;
@@ -35,8 +36,11 @@ public class DirectorReportFragment extends Fragment {
         searchView = view.findViewById(R.id.search_view);
 
         EmployeeService data = new EmployeeService(view.getContext());
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        int session_id = sharedPreferencesManager.getSessionId();
 
         data.getEmployeesWithKpiScores(
+                session_id,
                 // onSuccess callback
                 employeeDetails -> {
                     employeeDetailsScoreList = employeeDetails;

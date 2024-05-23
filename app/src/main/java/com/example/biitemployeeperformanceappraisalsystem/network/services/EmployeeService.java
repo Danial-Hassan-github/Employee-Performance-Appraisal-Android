@@ -68,8 +68,8 @@ public class EmployeeService {
         });
     }
 
-    public void getEmployeesWithKpiScores(final Consumer<List<EmployeeDetailsScore>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<EmployeeDetailsScore>> employeeDetailsScoreList = employeeServiceListener.getEmployeesWithKpiScores();
+    public void getEmployeesWithKpiScores(int sessionID, final Consumer<List<EmployeeDetailsScore>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<EmployeeDetailsScore>> employeeDetailsScoreList = employeeServiceListener.getEmployeesWithKpiScores(sessionID);
         employeeDetailsScoreList.enqueue(new Callback<List<EmployeeDetailsScore>>() {
             @Override
             public void onResponse(Call<List<EmployeeDetailsScore>> call, Response<List<EmployeeDetailsScore>> response) {

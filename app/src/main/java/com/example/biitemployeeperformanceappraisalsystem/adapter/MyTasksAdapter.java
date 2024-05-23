@@ -43,7 +43,7 @@ public class MyTasksAdapter extends ArrayAdapter<TaskWithEmployees> {
 
         // Populate the data into the template view using the data object
         taskDescriptionTextView.setText(task.getTask().getTask_description().toString());
-        dueDateTextView.setText("Due: "+task.getTask().getDue_date().toGMTString()); // You may need to format the date properly
+        dueDateTextView.setText("Due: "+task.getTask().getDue_date().toString()); // You may need to format the date properly
         assignedByTextView.setText("By: "+String.valueOf(task.getAssigned_by().getName()));
 
         TaskService taskService = new TaskService(getContext());

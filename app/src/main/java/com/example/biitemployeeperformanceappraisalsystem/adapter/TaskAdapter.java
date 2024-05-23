@@ -44,8 +44,8 @@ public class TaskAdapter extends ArrayAdapter<TaskWithEmployees> {
         EditText scoreEditText = convertView.findViewById(R.id.text_score);
 
         // Populate the data into the template view using the data object
-        taskDescriptionTextView.setText(task.getTask().getTask_description().toString());
-        dueDateTextView.setText(task.getTask().getDue_date().toGMTString()); // You may need to format the date properly
+        taskDescriptionTextView.setText(task.getTask().getTask_description());
+        dueDateTextView.setText(task.getTask().getDue_date().toLocaleString()); // You may need to format the date properly
         assignedToTextView.setText(String.valueOf(task.getAssigned_to().getName()));
         weightageTextView.setText(String.valueOf(task.getTask().getWeightage()));
         assignedByTextView.setText(String.valueOf(task.getAssigned_by().getName()));
