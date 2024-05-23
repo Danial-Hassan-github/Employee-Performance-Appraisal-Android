@@ -1,6 +1,8 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.DegreeExitEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.PeerEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.SeniorTeacherEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluation;
 
 import java.util.List;
@@ -16,6 +18,10 @@ public interface EvaluationServiceListener {
     Call<String> postStudentEvaluation(@Body List<StudentEvaluation> studentEvaluation);
     @POST("Evaluation/PostPeerEvaluation")
     Call<String> postPeerEvaluation(@Body List<PeerEvaluation> peerEvaluation);
+    @POST("Evaluation/PostSeniorTeacherEvaluation")
+    Call<String> postSeniorTeacherEvaluation(@Body List<SeniorTeacherEvaluation> seniorTeacherEvaluations);
+    @POST("Evaluation/PostDegreeExitEvaluation")
+    Call<String> postDegreeExitEvaluation(@Body List<DegreeExitEvaluation> degreeExitEvaluations);
     @GET("Evaluation/IsEvaluated")
     Call<String> isEvaluated(@Query("studentId") int studentId, @Query("teacherId") int teacherId, @Query("courseId") int courseId, @Query("sessionId") int sessionId, @Query("evaluationType") String evaluationType);
 }

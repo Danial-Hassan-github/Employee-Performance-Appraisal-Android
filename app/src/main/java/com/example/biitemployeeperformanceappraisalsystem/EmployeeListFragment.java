@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.SearchView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -33,6 +34,8 @@ public class EmployeeListFragment extends Fragment {
     AppCompatButton btnAddEmployee;
     List<EmployeeDetails> employeeDetailsList;
     ListView listView;
+    SearchView searchView;
+    EmployeeDetailsListAdapter adapter;
     private FragmentActivity parentActivity;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,6 +43,7 @@ public class EmployeeListFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_employee_list, container, false);
         parentActivity = getActivity();
         listView = view.findViewById(R.id.list_view);
+        searchView = view.findViewById(R.id.search_view);
         btnAddEmployee = view.findViewById(R.id.btn_add_employee);
         // employeeDetailsList = view.findViewById(R.id.list_view);
 
@@ -52,7 +56,7 @@ public class EmployeeListFragment extends Fragment {
         data.getEmployeesWithDetails(
                 employeeDetails -> {
                     employeeDetailsList = employeeDetails;
-                    EmployeeDetailsListAdapter adapter = new EmployeeDetailsListAdapter(getContext(), R.layout.employee_list_item_layout, employeeDetails, parentActivity);
+                    adapter = new EmployeeDetailsListAdapter(getContext(), R.layout.employee_list_item_layout, employeeDetails, parentActivity);
                     listView.setAdapter(adapter);
                 },
                 errorMessage -> {
@@ -66,6 +70,19 @@ public class EmployeeListFragment extends Fragment {
                 AdminMainActivity adminMainActivity=(AdminMainActivity) getActivity();
                 AddEmployeeFragment fragment = new AddEmployeeFragment();
                 adminMainActivity.replaceFragment(fragment);
+            }
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.getFilter().filter(newText);
+                return false;
             }
         });
 

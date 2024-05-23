@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.MyTasksAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.TaskWithEmployees;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.TaskService;
 
@@ -24,6 +25,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class MyTasksFragment extends Fragment {
+    SharedPreferencesManager sharedPreferencesManager;
     private ListView taskListView;
     private List<TaskWithEmployees> taskWithEmployeesList;
     private Spinner spinner;
@@ -32,7 +34,8 @@ public class MyTasksFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view=inflater.inflate(R.layout.fragment_my_tasks, container, false);
 
-        int employeeID=1;
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        int employeeID=sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
 
         //spinner=view.findViewById(R.id.spinner);
         taskListView=view.findViewById(R.id.my_tasks_list_view);

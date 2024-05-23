@@ -204,6 +204,7 @@ public class AddEmployeeFragment extends Fragment {
                 editTextEmployeeName.setText(employee.getName());
                 editTextEmployeeEmail.setText(employee.getEmail());
                 editTextEmployeePassword.setText(employee.getPassword());
+                editTextEmployeeSalary.setText(employee.getSalary().toString());
                 Department dep = employeeDetails.getDepartment();
                 departmentPosition = departmentList.indexOf(dep);
                 designationPosition = designationList.indexOf(employeeDetails.getDesignation());

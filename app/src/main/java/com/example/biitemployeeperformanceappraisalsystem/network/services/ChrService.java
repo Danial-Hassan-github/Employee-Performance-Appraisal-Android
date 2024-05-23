@@ -2,9 +2,10 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 import android.net.Uri;
+import android.util.Log;
 import android.widget.Toast;
 
-import com.example.biitemployeeperformanceappraisalsystem.helper.FileUtils;
+import com.example.biitemployeeperformanceappraisalsystem.helper.RealPathUtil;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.ChrServiceListener;
 
@@ -26,12 +27,13 @@ public class ChrService {
         this.context = context;
     }
 
-    public void uploadChr(String filePath) {
-        if (filePath != null) {
-            // String filePath = FileUtils.getPath(context, fileUri);
+    public void uploadChr(Uri fileUri) {
+        if (fileUri != null) {
+            String filePath = RealPathUtil.getRealPath(context, fileUri);
             if (filePath != null) {
                 File file = new File(filePath);
                 if (file.exists()) {
+
                     // Create RequestBody instance from file
                     RequestBody requestFile = RequestBody.create(MediaType.parse("application/vnd.ms-excel"), file);
 
@@ -50,7 +52,8 @@ public class ChrService {
 
                         @Override
                         public void onFailure(Call<ResponseBody> call, Throwable t) {
-                            Toast.makeText(context.getApplicationContext(), "Error uploading file: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                            Log.e("upload error", "error uploading file", t);
+                            Toast.makeText(context.getApplicationContext(), "Error uploading file: " + t, Toast.LENGTH_SHORT).show();
                         }
                     });
                 } else {

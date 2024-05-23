@@ -2,17 +2,17 @@ package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class StudentSupervisor {
     private int id;
-    private int studentId;
-    private int supervisorId;
+    private int student_id;
+    private int supervisor_id;
 
     public StudentSupervisor() {
 
     }
 
-    public StudentSupervisor(int id, int studentId, int supervisorId) {
+    public StudentSupervisor(int id, int student_id, int supervisor_id) {
         this.id = id;
-        this.studentId = studentId;
-        this.supervisorId = supervisorId;
+        this.student_id = student_id;
+        this.supervisor_id = supervisor_id;
     }
 
     // Getters
@@ -21,11 +21,11 @@ public class StudentSupervisor {
     }
 
     public int getStudentId() {
-        return studentId;
+        return student_id;
     }
 
     public int getSupervisorId() {
-        return supervisorId;
+        return supervisor_id;
     }
 
     // Setters
@@ -34,11 +34,11 @@ public class StudentSupervisor {
     }
 
     public void setStudentId(int studentId) {
-        this.studentId = studentId;
+        this.student_id = studentId;
     }
 
     public void setSupervisorId(int supervisorId) {
-        this.supervisorId = supervisorId;
+        this.supervisor_id = supervisorId;
     }
 }
 

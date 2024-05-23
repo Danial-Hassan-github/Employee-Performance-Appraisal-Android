@@ -10,9 +10,11 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Query;
 
 public interface EmployeeServiceListener {
     @GET("Employee/GetEmployees")
@@ -30,4 +32,6 @@ public interface EmployeeServiceListener {
     Call<Employee> postEmployee(@Body Employee employee);
     @PUT("Employee/PutEmployee")
     Call<Employee> putEmployee(@Body Employee employee);
+    @DELETE("Employee/DeleteEmployee")
+    Call<Employee> deleteEmployee(@Query("id") int id);
 }

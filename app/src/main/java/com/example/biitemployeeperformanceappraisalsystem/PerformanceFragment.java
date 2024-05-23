@@ -248,6 +248,7 @@ public class PerformanceFragment extends Fragment {
 //                                    entries.add(new PieEntry(30, "Project"));
 
                     PieDataSet dataSet = new PieDataSet(entries, "");
+                    dataSet.setValueTextSize(20f);
 
                     // Generate colors dynamically
                     CommonMethods commonMethods = new CommonMethods();
@@ -284,51 +285,48 @@ public class PerformanceFragment extends Fragment {
                     BarData barData = new BarData();
                     employeeKpiScoreMultiSessionList = employeeKpiScoreMultiSessions;
                     List<ArrayList<BarEntry>> groups = new ArrayList<>(employeeKpiScoreMultiSessionList.size());
-                    if (employeeKpiScoreMultiSessionList.size()>0){
+                    if (employeeKpiScoreMultiSessionList.size() > 0) {
                         int xCounter = 0;
                         int xInitialCounter = 1;
-                        // employeeKpiScoreMultiSessionList.get(0).getScores().size();
-                        for (int i = 0; i < 2; i++){
+                        for (int i = 0; i < employeeKpiScoreMultiSessionList.size(); i++) {
                             EmployeeKpiScoreMultiSession employeeKpiScoreMultiSession = employeeKpiScoreMultiSessionList.get(i);
                             ArrayList<BarEntry> group = new ArrayList<>();
                             List<EmployeeKpiScore> scores = employeeKpiScoreMultiSession.getScores();
                             groupLabels.add(employeeKpiScoreMultiSession.getSession().getTitle());
                             String kpiTitle = null;
-                            for (int k = 0; k < employeeKpiScoreMultiSessions.size(); k++){
-                                group.add(new BarEntry(xCounter, employeeKpiScoreMultiSessionList.get(k).getScores().get(i).getScore()));
-                                xCounter = xCounter+3;
-                                kpiTitle = scores.get(i).getKpi_title();
+                            for (int k = 0; k < scores.size(); k++) {
+                                group.add(new BarEntry(xCounter, scores.get(k).getScore()));
+                                xCounter = xCounter + 3;
+                                kpiTitle = scores.get(k).getKpi_title();
                             }
-                            // count++;
-//                                            for (int j=0;j<scores.size();j++){
-//                                                group.add(new BarEntry(xCounter, scores.get(j).getScore()));
-//                                                groups.set(j, group);
-//                                                xCounter = xCounter+3;
-//                                                kpiTitle = scores.get(j).getKpi_title();
-//                                            }
                             xCounter = xInitialCounter;
                             xInitialCounter++;
                             BarDataSet barDataSet = new BarDataSet(group, kpiTitle);
-                            CommonMethods commonMethods =new CommonMethods();
-                            // Generate colors dynamically
+                            CommonMethods commonMethods = new CommonMethods();
                             ArrayList<Integer> colors = commonMethods.generateRandomColors(employeeKpiScoreMultiSessionList.size());
-                            // dataSet.setColors(colors);
                             barDataSet.setColor(colors.get(i));
                             barData.addDataSet(barDataSet);
-                            barChart.setData(barData);
                         }
+
+                        // Ensure there are at least 2 BarDataSets
+                        if (barData.getDataSetCount() < 2) {
+                            barData.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
+                        }
+
                         float groupSpace = 0.2f; // space between groups of bars
                         float barSpace = 0.02f; // space between individual bars within a group
                         float barWidth = 0.15f; // width of each bar
-                        // barChart.setData(barData);
+
                         barData.setBarWidth(barWidth);
+                        barChart.setData(barData);
+
                         barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
                         barChart.invalidate();
 
                         // Set custom labels for the x-axis
                         XAxis xAxis = barChart.getXAxis();
                         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                        xAxis.setLabelCount(groupLabels.size()); // Set the number of labels
+                        xAxis.setLabelCount(groupLabels.size());
                         xAxis.setValueFormatter(new ValueFormatter() {
                             @Override
                             public String getFormattedValue(float value) {
@@ -343,7 +341,8 @@ public class PerformanceFragment extends Fragment {
                     }
                 },
                 errorMessage -> {
-                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 });
     }
+
 }

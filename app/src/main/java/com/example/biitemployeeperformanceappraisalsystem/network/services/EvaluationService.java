@@ -3,8 +3,10 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.DegreeExitEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.PeerEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.SeniorTeacherEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EvaluationServiceListener;
@@ -88,7 +90,45 @@ public class EvaluationService {
             @Override
             public void onFailure(Call<String> call, Throwable t) {
                 // Handle failure if needed
-                Toast.makeText(context.getApplicationContext(), call.toString(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postSeniorTeacherEvaluations(List<SeniorTeacherEvaluation> seniorTeacherEvaluations) {
+        Call<String> call = evaluationServiceListener.postSeniorTeacherEvaluation(seniorTeacherEvaluations);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting senior teacher evaluation", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postDegreeExitEvaluations(List<DegreeExitEvaluation> degreeExitEvaluations) {
+        Call<String> call = evaluationServiceListener.postDegreeExitEvaluation(degreeExitEvaluations);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }

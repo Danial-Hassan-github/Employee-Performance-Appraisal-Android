@@ -1,9 +1,12 @@
 package com.example.biitemployeeperformanceappraisalsystem.admin;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,19 +15,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.ChrService;
 
 public class UploadExcelFileFragment extends Fragment {
-    ChrService chrService;
-    View view;
-    TextView textFileName;
-    Button btnChooseFile, btnUploadFile;
-    private static final int PICK_EXCEL_REQUEST = 1000;
+    private static final int REQUEST_CODE_PERMISSIONS = 1000;
+    private static final int PICK_EXCEL_REQUEST = 1001;
+    private static final String TAG = "UploadExcelFileFragment";
+
+    private ChrService chrService;
+    private View view;
+    private TextView textFileName;
+    private Button btnChooseFile, btnUploadFile;
     private Uri fileUri;
-    private String filePath;
 
     public UploadExcelFileFragment() {
         // Required empty public constructor
@@ -48,7 +55,12 @@ public class UploadExcelFileFragment extends Fragment {
         btnChooseFile.setOnClickListener(v -> openFileChooser());
         btnUploadFile.setOnClickListener(v -> {
             if (fileUri != null) {
-                chrService.uploadChr(filePath);
+                if (hasPermissions()) {
+                    uploadFile();
+                } else {
+                    requestPermissions();
+                    uploadFile();
+                }
             } else {
                 Toast.makeText(getContext(), "Please choose a file first", Toast.LENGTH_SHORT).show();
             }
@@ -72,10 +84,47 @@ public class UploadExcelFileFragment extends Fragment {
             if (data != null) {
                 fileUri = data.getData();
                 if (fileUri != null) {
-                    filePath = fileUri.getPath();
                     textFileName.setText(fileUri.getPath());
                 }
             }
+        }
+    }
+
+    private boolean hasPermissions() {
+        return ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED &&
+                ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermissions() {
+        ActivityCompat.requestPermissions(getActivity(), new String[]{
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        }, REQUEST_CODE_PERMISSIONS);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if (requestCode == REQUEST_CODE_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                if (fileUri != null) {
+                    uploadFile();
+                } else {
+                    Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Toast.makeText(getContext(), "Permissions denied by the user.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Permissions denied by the user.");
+            }
+        }
+    }
+
+    private void uploadFile() {
+        if (fileUri != null) {
+            chrService.uploadChr(fileUri);
+        } else {
+            Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
     }
 }
