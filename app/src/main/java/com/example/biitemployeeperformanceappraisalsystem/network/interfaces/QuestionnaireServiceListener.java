@@ -8,8 +8,10 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface QuestionnaireServiceListener {
@@ -29,6 +31,10 @@ public interface QuestionnaireServiceListener {
     Call<List<Question>> GetPeerQuestions();
     @GET("Questionnaire/GetSeniorQuestions")
     Call<List<Question>> GetSeniorQuestions();
+    @PUT("Questionnaire/PutQuestion")
+    Call<Question> putQuestion(@Body Question question);
+    @DELETE("Questionnaire/DeleteQuestion")
+    Call<Question> deleteQuestion(@Query("id") int id);
     @GET("Questionnaire/GetOptionsWeightages")
     Call<List<OptionWeightage>> getOptionsWeightage();
 }

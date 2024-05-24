@@ -23,6 +23,7 @@
             android:textSize="16dp"
             android:layout_weight="9"/>
         <ImageView
+            android:id="@+id/btn_options_task"
             android:layout_width="0dp"
             android:layout_height="20dp"
             android:textSize="16dp"

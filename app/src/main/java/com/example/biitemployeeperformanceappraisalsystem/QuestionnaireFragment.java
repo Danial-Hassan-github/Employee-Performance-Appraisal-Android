@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem;
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 
@@ -23,49 +24,30 @@ import com.example.biitemployeeperformanceappraisalsystem.network.services.Quest
 
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link QuestionnaireFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class QuestionnaireFragment extends Fragment {
+public class QuestionnaireFragment extends Fragment implements QuestionnaireAdapter.OnQuestionActionListener {
 
     int questionnaireTypeSpinnerSelectedItemId;
     private List<Question> questionsList;
     private List<QuestionnaireType> questionnaireTypes;
     ListView questionnaireListView;
     Spinner questionnaireTypeSpinner;
+    private QuestionnaireService questionnaire;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view=inflater.inflate(R.layout.fragment_questionnaire, container, false);
+        View view = inflater.inflate(R.layout.fragment_questionnaire, container, false);
 
-        questionnaireListView=view.findViewById(R.id.questtionnaire_list_view);
-        questionnaireTypeSpinner=view.findViewById(R.id.quetionnaire_type_spinner);
-
-        QuestionnaireService questionnaire=new QuestionnaireService(view.getContext());
-
-//        questionnaire.getConfidentialQuestions(
-//                // onSuccess callback
-//                questions -> {
-//                    questionsList = questions;
-//                    // Create ArrayAdapter and set it to the ListView
-//                    QuestionAdapter adapter =  new QuestionAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
-//                    questionnaireListView.setAdapter(adapter);
-//                },
-//                // onFailure callback
-//                errorMessage -> {
-//                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-//                });
+        questionnaireListView = view.findViewById(R.id.questtionnaire_list_view);
+        questionnaireTypeSpinner = view.findViewById(R.id.quetionnaire_type_spinner);
+        questionnaire = new QuestionnaireService(view.getContext());
 
         questionnaire.getQuestionnaireType(
                 questionnaireTypeList -> {
                     questionnaireTypes = questionnaireTypeList;
-                    questionnaire.populateSpinner(questionnaireTypes,questionnaireTypeSpinner);
+                    questionnaire.populateSpinner(questionnaireTypes, questionnaireTypeSpinner);
                 },
-                // onFailure callback
                 errorMessage -> {
-                    // Handle failure
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 }
         );
@@ -76,18 +58,15 @@ public class QuestionnaireFragment extends Fragment {
                 questionnaireTypeSpinnerSelectedItemId = questionnaireTypes.get(position).getId();
                 questionnaire.getQuestionnaireByType(
                         questionnaireTypes.get(position).getId(),
-                        // onSuccess callback
                         questions -> {
                             questionsList = questions;
-                            // Create ArrayAdapter and set it to the ListView
-                            QuestionnaireAdapter adapter =  new QuestionnaireAdapter(view.getContext(),R.layout.questtionnaire_list_item_layout,questions);
+                            QuestionnaireAdapter adapter = new QuestionnaireAdapter(view.getContext(), R.layout.questtionnaire_list_item_layout, questions, QuestionnaireFragment.this);
                             questionnaireListView.setAdapter(adapter);
                         },
-                        // onFailure callback
                         errorMessage -> {
                             Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         }
-                        );
+                );
             }
 
             @Override
@@ -96,61 +75,78 @@ public class QuestionnaireFragment extends Fragment {
             }
         });
 
-        //Modal code
-        // Inside your activity or fragment
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setView(R.layout.question_modal_layout);
-
-
-        AlertDialog dialog = builder.create();
-
         Button showModalButton = view.findViewById(R.id.btn_add_question);
         showModalButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Inflate the layout for the dialog
-                View dialogView = getLayoutInflater().inflate(R.layout.question_modal_layout, null);
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                builder.setView(dialogView);
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        // Handle Save button click
-                        AlertDialog alertDialog = (AlertDialog) dialog;
-                        TextView questionTextView = alertDialog.findViewById(R.id.text_question);
-                        Question question = new Question();
-                        question.setQuestion(questionTextView.getText().toString().trim());
-                        question.setType_id(questionnaireTypeSpinnerSelectedItemId);
-                        question.setDeleted(false);
-                        questionnaire.postQuestion(
-                                question,
-                                question1 -> {
-                                    questionsList.add(question1);
-                                },
-                                errorMessage -> {
-                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                }
-                        );
-
-                        // Get the description text and save the task
-                        dialog.dismiss();
-                    }
-                });
-
-                AlertDialog dialog = builder.create();
-                dialog.show();
+                showQuestionDialog(null, -1);
             }
         });
 
-
-        // Inflate the layout for this fragment
         return view;
+    }
+
+    private void showQuestionDialog(@Nullable Question question, int position) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        View dialogView = getLayoutInflater().inflate(R.layout.question_modal_layout, null);
+        builder.setView(dialogView);
+
+        TextView questionTextView = dialogView.findViewById(R.id.text_question);
+        if (question != null) {
+            questionTextView.setText(question.getQuestion());
+        }
+
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        builder.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                AlertDialog alertDialog = (AlertDialog) dialog;
+                String questionText = questionTextView.getText().toString().trim();
+                if (question == null) {
+                    // Adding a new question
+                    Question newQuestion = new Question();
+                    newQuestion.setQuestion(questionText);
+                    newQuestion.setType_id(questionnaireTypeSpinnerSelectedItemId);
+                    newQuestion.setDeleted(false);
+                    questionnaire.postQuestion(
+                            newQuestion,
+                            postedQuestion -> {
+                                questionsList.add(postedQuestion);
+                                ((QuestionnaireAdapter) questionnaireListView.getAdapter()).notifyDataSetChanged();
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
+                } else {
+                    // Updating an existing question
+                    question.setQuestion(questionText);
+                    questionnaire.putQuestion(
+                            question,
+                            updatedQuestion -> {
+                                questionsList.set(position, updatedQuestion);
+                                ((QuestionnaireAdapter) questionnaireListView.getAdapter()).notifyDataSetChanged();
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
+                }
+                dialog.dismiss();
+            }
+        });
+
+        builder.create().show();
+    }
+
+    @Override
+    public void onEditQuestion(Question question, int position) {
+        showQuestionDialog(question, position);
     }
 }

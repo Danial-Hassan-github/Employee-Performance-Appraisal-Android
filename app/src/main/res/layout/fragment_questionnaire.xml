@@ -33,7 +33,7 @@
 
    <ListView
        android:id="@+id/questtionnaire_list_view"
-       android:layout_width="wrap_content"
+       android:layout_width="match_parent"
        android:layout_height="wrap_content"
        tools:listitem="@layout/questtionnaire_list_item_layout"/>
 

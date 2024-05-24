@@ -50,7 +50,7 @@ public class EvaluationTimeService {
                 if (response.isSuccessful()){
                     onSuccess.accept(response.body());
                 }else {
-                    onFailure.accept(response.message());
+                    onFailure.accept(response.message()+": You are not eligible for degree exit evaluation");
                 }
             }
 

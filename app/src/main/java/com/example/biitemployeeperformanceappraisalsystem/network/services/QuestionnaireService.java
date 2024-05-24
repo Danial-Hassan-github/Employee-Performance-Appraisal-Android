@@ -138,4 +138,40 @@ public class QuestionnaireService {
         }
         return titles;
     }
+
+    public void putQuestion(Question question, final Consumer<Question> onSuccess, final Consumer<String> onFailure) {
+        Call<Question> call = questionnaireServiceListener.putQuestion(question);
+        call.enqueue(new Callback<Question>() {
+            public void onResponse(Call<Question> call, Response<Question> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Question> call, Throwable t) {
+                onFailure.accept("Something went wrong while updating question");
+            }
+        });
+    }
+
+    public void deleteQuestion(int id, final Consumer<Question> onSuccess, final Consumer<String> onFailure) {
+        Call<Question> call = questionnaireServiceListener.deleteQuestion(id);
+        call.enqueue(new Callback<Question>() {
+            public void onResponse(Call<Question> call, Response<Question> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Question> call, Throwable t) {
+                onFailure.accept("Something went wrong while deleting question");
+            }
+        });
+    }
 }

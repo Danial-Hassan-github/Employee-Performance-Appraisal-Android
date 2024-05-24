@@ -7,16 +7,19 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
+import com.example.biitemployeeperformanceappraisalsystem.models.Student;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationTimeService;
 import com.google.android.material.tabs.TabLayout;
 
 public class StudentMainActivity extends AppCompatActivity {
+    TextView txtStudentDetails, txtTop;
     int studentID;
     EditText editTextPin;
     Button btnSubmitPin;
@@ -34,6 +37,8 @@ public class StudentMainActivity extends AppCompatActivity {
         fragmentContainer = findViewById(R.id.fragment_container);
         fragmentUtils = new FragmentUtils();
 
+        txtStudentDetails = findViewById(R.id.txt_student_details);
+        txtTop = findViewById(R.id.txt_top);
         editTextPin = findViewById(R.id.editText_pin);
         btnSubmitPin = findViewById(R.id.btn_pin_submit);
         tabLayout = findViewById(R.id.tab_layout_student);
@@ -41,7 +46,10 @@ public class StudentMainActivity extends AppCompatActivity {
         sharedPreferencesManager = new SharedPreferencesManager(getApplicationContext());
         evaluationTimeService = new EvaluationTimeService(getApplicationContext());
 
-        studentID = sharedPreferencesManager.getStudentUserObject().getId();
+        Student std = sharedPreferencesManager.getStudentUserObject();
+        studentID = std.getId();
+
+        txtStudentDetails.setText(std.getName()+"\n"+std.getAridNo()+"\n"+std.getDiscipline()+"-"+std.getSemester()+std.getSection());
         replaceFragment(new StudentCoursesFragment());
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

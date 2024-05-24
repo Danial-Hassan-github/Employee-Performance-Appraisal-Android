@@ -8,6 +8,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -32,4 +33,6 @@ public interface TaskServiceListener {
     Call<List<TaskWithEmployees>> postRoleBasedTask(@Body TaskWithRole taskWithRole);
     @PUT("Task/PutTask")
     Call<Task> putTask(@Body Task task);
+    @DELETE("Task/DeleteTask")
+    Call<Task> deleteTask(@Query("id") int id);
 }

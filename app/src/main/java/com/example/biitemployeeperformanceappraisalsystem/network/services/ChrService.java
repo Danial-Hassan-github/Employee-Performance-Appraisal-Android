@@ -22,7 +22,8 @@ import retrofit2.Response;
 public class ChrService {
     private Context context;
     private ChrServiceListener chrServiceListener;
-    public ChrService(Context context){
+
+    public ChrService(Context context) {
         chrServiceListener = RetrofitClient.getRetrofitInstance().create(ChrServiceListener.class);
         this.context = context;
     }
@@ -30,10 +31,11 @@ public class ChrService {
     public void uploadChr(Uri fileUri) {
         if (fileUri != null) {
             String filePath = RealPathUtil.getRealPath(context, fileUri);
+            Log.d("ChrService", "Resolved file path: " + filePath);
             if (filePath != null) {
                 File file = new File(filePath);
                 if (file.exists()) {
-
+                    Log.d("ChrService", "File exists: " + file.getAbsolutePath());
                     // Create RequestBody instance from file
                     RequestBody requestFile = RequestBody.create(MediaType.parse("application/vnd.ms-excel"), file);
 
@@ -57,14 +59,16 @@ public class ChrService {
                         }
                     });
                 } else {
+                    Log.e("ChrService", "File does not exist: " + filePath);
                     Toast.makeText(context.getApplicationContext(), "File does not exist", Toast.LENGTH_SHORT).show();
                 }
             } else {
+                Log.e("ChrService", "Failed to get file path");
                 Toast.makeText(context.getApplicationContext(), "Failed to get file path", Toast.LENGTH_SHORT).show();
             }
         } else {
+            Log.e("ChrService", "File URI is null");
             Toast.makeText(context.getApplicationContext(), "File URI is null", Toast.LENGTH_SHORT).show();
         }
     }
-
 }
