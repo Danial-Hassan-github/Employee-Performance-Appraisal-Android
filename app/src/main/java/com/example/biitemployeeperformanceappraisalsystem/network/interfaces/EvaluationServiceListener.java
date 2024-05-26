@@ -1,9 +1,12 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.ConfidentialEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.DegreeExitEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.DirectorEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.PeerEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.SeniorTeacherEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.SupervisorEvaluation;
 
 import java.util.List;
 
@@ -22,6 +25,12 @@ public interface EvaluationServiceListener {
     Call<String> postSeniorTeacherEvaluation(@Body List<SeniorTeacherEvaluation> seniorTeacherEvaluations);
     @POST("Evaluation/PostDegreeExitEvaluation")
     Call<String> postDegreeExitEvaluation(@Body List<DegreeExitEvaluation> degreeExitEvaluations);
+    @POST("Evaluation/PostConfidentialEvaluation")
+    Call<String> postConfidentialEvaluation(@Body List<ConfidentialEvaluation> confidentialEvaluations);
+    @POST("Evaluation/PostSupervisorEvaluation")
+    Call<String> postSupervisorEvaluation(@Body List<SupervisorEvaluation> supervisorEvaluations);
+    @POST("Evaluation/PostDirectorEvaluation")
+    Call<String> postDirectorEvaluation(@Body List<DirectorEvaluation> directorEvaluations);
     @GET("Evaluation/IsEvaluated")
     Call<String> isEvaluated(@Query("studentId") int studentId, @Query("teacherId") int teacherId, @Query("courseId") int courseId, @Query("sessionId") int sessionId, @Query("evaluationType") String evaluationType);
 }

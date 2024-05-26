@@ -1,22 +1,12 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class SeniorTeacherEvaluation {
-    private int id;
     private int senior_teacher_id;
     private int junior_teacher_id;
     private int course_id;
     private int session_id;
     private int question_id;
     private Integer score; // Nullable in Java
-
-    // Getter and Setter for id
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     // Getter and Setter for seniorTeacherId
     public int getSeniorTeacherId() {

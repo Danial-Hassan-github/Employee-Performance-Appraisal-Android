@@ -3,11 +3,14 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.ConfidentialEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.DegreeExitEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.DirectorEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.PeerEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.SeniorTeacherEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.SupervisorEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EvaluationServiceListener;
 
@@ -116,6 +119,63 @@ public class EvaluationService {
 
     public void postDegreeExitEvaluations(List<DegreeExitEvaluation> degreeExitEvaluations) {
         Call<String> call = evaluationServiceListener.postDegreeExitEvaluation(degreeExitEvaluations);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postConfidentialEvaluation(List<ConfidentialEvaluation> confidentialEvaluations) {
+        Call<String> call = evaluationServiceListener.postConfidentialEvaluation(confidentialEvaluations);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postSupervisorEvaluation(List<SupervisorEvaluation> supervisorEvaluations) {
+        Call<String> call = evaluationServiceListener.postSupervisorEvaluation(supervisorEvaluations);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()) {
+                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                Toast.makeText(context.getApplicationContext(), t.getMessage(),Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    public void postDirectorEvaluation(List<DirectorEvaluation> directorEvaluations) {
+        Call<String> call = evaluationServiceListener.postDirectorEvaluation(directorEvaluations);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

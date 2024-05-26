@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
@@ -36,6 +37,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+
 public class KpiFragment extends Fragment {
     int sessionId;
     KpiService kpiService;
@@ -43,7 +45,7 @@ public class KpiFragment extends Fragment {
     List<GroupKpiDetails> groupKpiDetailsList;
     List<Session> sessionList;
     Spinner sessionSpinner;
-    Button btnAddKpi,btnAddGroupKpi,btnAddIndividualKpi;
+    Button btnAddKpi, btnAddGroupKpi, btnAddIndividualKpi;
     ArrayList<Float> pieChartValues;
     ArrayList<String> pieChartTitles;
 
@@ -54,8 +56,6 @@ public class KpiFragment extends Fragment {
 
         sessionSpinner = view.findViewById(R.id.spinner_session);
         btnAddKpi = view.findViewById(R.id.btn_add_general_kpi);
-        // btnAddGroupKpi =view.findViewById(R.id.btn_add_group_kpi);
-        // btnAddIndividualKpi = view.findViewById(R.id.btn_add_individual_kpi);
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
 
         DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
@@ -69,37 +69,30 @@ public class KpiFragment extends Fragment {
         SessionService sessionService = new SessionService(view.getContext());
         sessionService.getSessions(sessions -> {
                     sessionList = sessions;
-                    sessionService.populateSpinner(sessions,sessionSpinner);
+                    sessionService.populateSpinner(sessions, sessionSpinner);
                 },
                 errorMessage -> {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 });
 
-        // Set an item selected listener for the session spinner
         sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View v, int position, long id) {
-                // Get the selected session
                 Session selectedSession = sessionList.get(position);
-                // Use the ID of the selected session
                 sessionId = selectedSession.getId();
-                // Perform actions with the session ID
                 showKpiGraph(view);
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Handle case where nothing is selected
             }
         });
-
-        // showKpiGraph(view);
 
         return view;
     }
 
     private void showKpiGraph(View view) {
-        ViewGroup container = view.findViewById(R.id.chart_container); // Assuming chart container is a ViewGroup in your layout XML
+        ViewGroup container = view.findViewById(R.id.chart_container);
         kpiService = new KpiService(getContext());
         pieChartValues = new ArrayList<>();
         pieChartTitles = new ArrayList<>();
@@ -109,7 +102,33 @@ public class KpiFragment extends Fragment {
                     groupKpiDetailsList = groupKpiDetails;
                     if (groupKpiDetailsList != null) {
                         for (GroupKpiDetails details : groupKpiDetailsList) {
-                            // Create a new pie chart for each item in the list
+                            if (details.getGroupKpi() != null) {
+                                String department = "";
+                                String designation = "";
+                                String employeeType = "";
+                                if (details.getGroupKpi().getDesignation() != null) {
+                                    designation = details.getGroupKpi().getDesignation().getName();
+                                }
+                                if (details.getGroupKpi().getDepartment() != null) {
+                                    department = details.getGroupKpi().getDepartment().getName();
+                                }
+                                if (details.getGroupKpi().getEmployeeType() != null) {
+                                    employeeType = details.getGroupKpi().getEmployeeType().getTitle();
+                                }
+                                TextView textView = new TextView(getContext());
+                                textView.setText(employeeType + " " + department + " " + designation);
+                                textView.setLayoutParams(new ViewGroup.LayoutParams(
+                                        ViewGroup.LayoutParams.MATCH_PARENT,
+                                        ViewGroup.LayoutParams.WRAP_CONTENT
+                                ));
+                                // Set background color
+                                textView.setBackgroundColor(getResources().getColor(R.color.brown));
+                                // Set text color
+                                textView.setTextColor(Color.WHITE);
+                                // Add the TextView to the container
+                                container.addView(textView);
+                            }
+
                             PieChart pieChart = new PieChart(getContext());
                             pieChart.getDescription().setTextColor(Color.TRANSPARENT);
                             int chartHeight = (int) getResources().getDimension(R.dimen.pie_chart_height);
@@ -119,8 +138,7 @@ public class KpiFragment extends Fragment {
                             ));
 
                             ArrayList<PieEntry> entries = new ArrayList<>();
-                            // Assuming details contains data necessary to populate the pie chart
-                            for (KPI kpi: details.getKpiList()) {
+                            for (KPI kpi : details.getKpiList()) {
                                 float weightage = kpi.getKpiWeightage().getWeightage();
                                 entries.add(new PieEntry(weightage, kpi.getName()));
                                 pieChartValues.add(weightage);
@@ -130,7 +148,6 @@ public class KpiFragment extends Fragment {
                             PieDataSet dataSet = new PieDataSet(entries, "");
                             dataSet.setValueTextSize(20f);
 
-                            // Generate colors dynamically
                             CommonMethods commonMethods = new CommonMethods();
                             ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
                             dataSet.setColors(colors);
@@ -139,18 +156,15 @@ public class KpiFragment extends Fragment {
                             pieChart.setData(data);
                             pieChart.invalidate();
 
-                            // Add the pie chart to the container
                             container.addView(pieChart);
 
                             pieChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
                                 @Override
                                 public void onValueSelected(Entry e, Highlight h) {
-                                    // Extract data associated with the selected slice
                                     PieEntry entry = (PieEntry) e;
                                     String kpiName = entry.getLabel();
                                     float kpiValue = entry.getValue();
 
-                                    // Find the selected KPI
                                     KPI selectedKpi = null;
                                     for (KPI kpi : details.getKpiList()) {
                                         if (kpi.getName().equals(kpiName) && kpi.getKpiWeightage().getWeightage() == kpiValue) {
@@ -159,7 +173,6 @@ public class KpiFragment extends Fragment {
                                         }
                                     }
 
-                                    // Pass data to editable form fragment
                                     AddGeneralKpiFragment addGeneralKpiFragment = new AddGeneralKpiFragment(details, selectedKpi);
 
                                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
@@ -170,7 +183,6 @@ public class KpiFragment extends Fragment {
 
                                 @Override
                                 public void onNothingSelected() {
-                                    // Handle case where no slice is selected
                                 }
                             });
                         }
@@ -181,5 +193,4 @@ public class KpiFragment extends Fragment {
                 }
         );
     }
-
 }

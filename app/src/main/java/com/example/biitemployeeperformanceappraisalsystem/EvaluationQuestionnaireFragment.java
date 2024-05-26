@@ -16,14 +16,18 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.EvaluationQuestionnaireAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
+import com.example.biitemployeeperformanceappraisalsystem.models.ConfidentialEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.DegreeExitEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.DirectorEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.PeerEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.Question;
 import com.example.biitemployeeperformanceappraisalsystem.models.SeniorTeacherEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.models.StudentEvaluation;
+import com.example.biitemployeeperformanceappraisalsystem.models.SupervisorEvaluation;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluatorService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
@@ -109,14 +113,32 @@ public class EvaluationQuestionnaireFragment extends Fragment {
             List<DegreeExitEvaluation> degreeExitEvaluations = new ArrayList<>();
             List<PeerEvaluation> peerEvaluations = new ArrayList<>();
             List<SeniorTeacherEvaluation> seniorTeacherEvaluations = new ArrayList<>();
+            List<ConfidentialEvaluation> confidentialEvaluations = new ArrayList<>();
+            List<SupervisorEvaluation> supervisorEvaluations = new ArrayList<>();
+            List<DirectorEvaluation> directorEvaluations = new ArrayList<>();
 
             if (parentActivity instanceof StudentMainActivity){
-                if (evaluationType.equalsIgnoreCase("degree exit")){
+                if (evaluationType.equalsIgnoreCase("confidential")) {
+                    for (Pair<Integer, Integer> pair : selectedAnswers) {
+                        ConfidentialEvaluation confidentialEvaluation = new ConfidentialEvaluation();
+                        confidentialEvaluation.setStudent_id(sharedPreferencesManager.getStudentUserObject().getId()); // Set your student ID
+                        confidentialEvaluation.setSession_id(sessionID); // Set your session ID
+                        confidentialEvaluation.setTeacher_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                        confidentialEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
+                        confidentialEvaluation.setScore(pair.second); // Set the score from the selected answers
+                        confidentialEvaluations.add(confidentialEvaluation);
+                        Toast.makeText(getContext(), confidentialEvaluation.getStudent_id() + "\n" + confidentialEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                    }
+                    evaluationService.postConfidentialEvaluation(confidentialEvaluations);
+                    StudentCoursesFragment studentCoursesFragment = new StudentCoursesFragment();
+                    replaceFragment(parentActivity.getSupportFragmentManager(),studentCoursesFragment,fragmentContainerId);
+                }
+                else if (evaluationType.equalsIgnoreCase("degree exit")){
                     for (Pair<Integer, Integer> pair : selectedAnswers) {
                         DegreeExitEvaluation degreeExitEvaluation = new DegreeExitEvaluation();
                         degreeExitEvaluation.setStudent_id(sharedPreferencesManager.getStudentUserObject().getId()); // Set your student ID
                         degreeExitEvaluation.setSession_id(sessionID); // Set your session ID
-                        degreeExitEvaluation.setTeacher_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                        degreeExitEvaluation.setSupervisor_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
                         degreeExitEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         degreeExitEvaluation.setScore(pair.second); // Set the score from the selected answers
                         degreeExitEvaluations.add(degreeExitEvaluation);
@@ -125,7 +147,8 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                     evaluationService.postDegreeExitEvaluations(degreeExitEvaluations);
                     StudentCoursesFragment studentCoursesFragment = new StudentCoursesFragment();
                     replaceFragment(parentActivity.getSupportFragmentManager(),studentCoursesFragment,fragmentContainerId);
-                }else {
+                }
+                else {
                     for (Pair<Integer, Integer> pair : selectedAnswers) {
                         StudentEvaluation studentEvaluation = new StudentEvaluation();
                         studentEvaluation.setStudent_id(sharedPreferencesManager.getStudentUserObject().getId()); // Set your student ID
@@ -141,44 +164,71 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                     CourseTeacherFragment fragment = new CourseTeacherFragment(courseID);
                     replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
                 }
-            } else if (courseID == 0) {
-                for (Pair<Integer, Integer> pair : selectedAnswers) {
-                    PeerEvaluation peerEvaluation = new PeerEvaluation();
-                    peerEvaluation.setEvaluator_id(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
-                    peerEvaluation.setSession_id(sessionID); // Set your session ID
-                    peerEvaluation.setEvaluatee_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
-                    peerEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
-                    peerEvaluation.setScore(pair.second); // Set the score from the selected answers
-                    peerEvaluations.add(peerEvaluation);
-                    Toast.makeText(getContext(), peerEvaluation.getEvaluator_id() + "\n" + peerEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+            }
+            else if (parentActivity instanceof FacultyMain || parentActivity instanceof HodMainActivity) {
+                if (evaluationType.equalsIgnoreCase("peer")){
+                    for (Pair<Integer, Integer> pair : selectedAnswers) {
+                        PeerEvaluation peerEvaluation = new PeerEvaluation();
+                        peerEvaluation.setEvaluator_id(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
+                        peerEvaluation.setSession_id(sessionID); // Set your session ID
+                        peerEvaluation.setEvaluatee_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                        peerEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
+                        peerEvaluation.setScore(pair.second); // Set the score from the selected answers
+                        peerEvaluations.add(peerEvaluation);
+                        Toast.makeText(getContext(), peerEvaluation.getEvaluator_id() + "\n" + peerEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                    }
+                    evaluationService.postPeerEvaluations(peerEvaluations);
+                    EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+                    replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
                 }
-                evaluationService.postPeerEvaluations(peerEvaluations);
-                EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
-                replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
-            } else if (courseID > 0) {
-                for (Pair<Integer, Integer> pair : selectedAnswers) {
-                    SeniorTeacherEvaluation seniorTeacherEvaluation = new SeniorTeacherEvaluation();
-                    seniorTeacherEvaluation.setSeniorTeacherId(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
-                    seniorTeacherEvaluation.setCourseId(courseID);
-                    seniorTeacherEvaluation.setSessionId(sessionID); // Set your session ID
-                    seniorTeacherEvaluation.setJuniorTeacherId(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
-                    seniorTeacherEvaluation.setQuestionId(pair.first); // Set the question ID from the selected answers
-                    seniorTeacherEvaluation.setScore(pair.second); // Set the score from the selected answers
-                    seniorTeacherEvaluations.add(seniorTeacherEvaluation);
-                    Toast.makeText(getContext(), seniorTeacherEvaluation.getSeniorTeacherId() + "\n" + seniorTeacherEvaluation.getSessionId(), Toast.LENGTH_SHORT).show();
+                else if (evaluationType.equalsIgnoreCase("senior")){
+                    for (Pair<Integer, Integer> pair : selectedAnswers) {
+                        SeniorTeacherEvaluation seniorTeacherEvaluation = new SeniorTeacherEvaluation();
+                        seniorTeacherEvaluation.setSeniorTeacherId(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
+                        seniorTeacherEvaluation.setCourseId(courseID);
+                        seniorTeacherEvaluation.setSessionId(sessionID); // Set your session ID
+                        seniorTeacherEvaluation.setJuniorTeacherId(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                        seniorTeacherEvaluation.setQuestionId(pair.first); // Set the question ID from the selected answers
+                        seniorTeacherEvaluation.setScore(pair.second); // Set the score from the selected answers
+                        seniorTeacherEvaluations.add(seniorTeacherEvaluation);
+                        Toast.makeText(getContext(), seniorTeacherEvaluation.getSeniorTeacherId() + "\n" + seniorTeacherEvaluation.getSessionId(), Toast.LENGTH_SHORT).show();
+                    }
+                    evaluationService.postSeniorTeacherEvaluations(seniorTeacherEvaluations);
+                    EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+                    replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
                 }
-                evaluationService.postSeniorTeacherEvaluations(seniorTeacherEvaluations);
-                EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+                else if (evaluationType.equalsIgnoreCase("supervisor")){
+                    for (Pair<Integer, Integer> pair : selectedAnswers) {
+                        SupervisorEvaluation supervisorEvaluation = new SupervisorEvaluation();
+                        supervisorEvaluation.setSupervisor_id(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
+                        supervisorEvaluation.setSession_id(sessionID); // Set your session ID
+                        supervisorEvaluation.setSubordinate_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                        supervisorEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
+                        supervisorEvaluation.setScore(pair.second); // Set the score from the selected answers
+                        supervisorEvaluations.add(supervisorEvaluation);
+                        Toast.makeText(getContext(), supervisorEvaluation.getSupervisor_id() + "\n" + supervisorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                    }
+                    evaluationService.postSupervisorEvaluation(supervisorEvaluations);
+                    EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
+                    replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
+                }
+            }
+            else if (parentActivity instanceof DirectorMainActivity) {
+                for (Pair<Integer, Integer> pair : selectedAnswers) {
+                    DirectorEvaluation directorEvaluation = new DirectorEvaluation();
+                    directorEvaluation.setEvaluator_id(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
+                    directorEvaluation.setSession_id(sessionID); // Set your session ID
+                    directorEvaluation.setEvaluatee_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
+                    directorEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
+                    directorEvaluation.setScore(pair.second); // Set the score from the selected answers
+                    directorEvaluations.add(directorEvaluation);
+                    Toast.makeText(getContext(), directorEvaluation.getEvaluator_id() + "\n" + directorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                }
+                evaluationService.postDirectorEvaluation(directorEvaluations);
+                EmployeeListFragment fragment = new EmployeeListFragment();
                 replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
             }
-            // studentMainActivity=(StudentMainActivity) getActivity();
-            // studentMainActivity.replaceFragment(new StudentCoursesFragment());
-            // EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
-            // replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
             Toast.makeText(getContext(), "Evaluated Successfully", Toast.LENGTH_SHORT).show();
-
-            // Now you have a list of StudentEvaluation objects with the necessary values set
-            // You can proceed to use this list as needed
         });
 
 

@@ -47,6 +47,26 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Evaluation Type"/>
+
+        <Spinner
+            android:id="@+id/spinner_questionnaire_type"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/employee_questions_scores"
         android:layout_width="match_parent"
