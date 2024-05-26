@@ -70,6 +70,7 @@
     <ListView
         android:id="@+id/employee_questions_scores"
         android:layout_width="match_parent"
+        android:background="@color/white"
         android:layout_height="wrap_content"/>
 
 </LinearLayout>

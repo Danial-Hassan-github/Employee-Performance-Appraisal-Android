@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Random;
 
 public class CommonMethods {
-    public ArrayList<Integer> generateRandomColors(int count) {
+    public static ArrayList<Integer> generateRandomColors(int count) {
         ArrayList<Integer> colors = new ArrayList<>();
         Random random = new Random();
         for (int i = 0; i < count; i++) {
@@ -21,5 +21,9 @@ public class CommonMethods {
             colors.add(color);
         }
         return colors;
+    }
+
+    public static boolean isSpinnerPopulated(Spinner spinner) {
+        return spinner.getAdapter() != null && spinner.getAdapter().getCount() > 0;
     }
 }

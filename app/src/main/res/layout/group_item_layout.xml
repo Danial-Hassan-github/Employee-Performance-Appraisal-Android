@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <!-- Name column -->
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Name"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Session Title column -->
+    <TextView
+        android:id="@+id/sessionTitleTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Session Title"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Course Name column -->
+    <TextView
+        android:id="@+id/courseNameTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Course Name"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+    <!-- Score column -->
+    <TextView
+        android:id="@+id/scoreTextView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:text="Score"
+        android:textStyle="bold"
+        android:padding="8dp"
+        android:textSize="16sp"
+        android:gravity="center" />
+
+</LinearLayout>
