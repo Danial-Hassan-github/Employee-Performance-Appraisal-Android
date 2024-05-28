@@ -17,7 +17,9 @@ import androidx.fragment.app.Fragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.DateTime;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
+import com.example.biitemployeeperformanceappraisalsystem.models.EvaluationPin;
 import com.example.biitemployeeperformanceappraisalsystem.models.EvaluationTime;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationPinService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationTimeService;
 
 import java.text.ParseException;
@@ -29,7 +31,7 @@ import java.util.Locale;
 public class ConfidentialEvaluationSettingFragment extends Fragment {
     SharedPreferencesManager sharedPreferencesManager;
     EvaluationTimeService evaluationTimeService;
-    EditText startTimeEditText, endTimeEditText;
+    EditText pinEditText, startTimeEditText, endTimeEditText;
     Button saveButton;
 
     @Override
@@ -37,6 +39,7 @@ public class ConfidentialEvaluationSettingFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_confidential_evaluation_setting, container, false);
 
+        pinEditText = view.findViewById(R.id.pin);
         startTimeEditText = view.findViewById(R.id.start_time);
         endTimeEditText = view.findViewById(R.id.end_time);
         saveButton = view.findViewById(R.id.save_button);
@@ -78,10 +81,23 @@ public class ConfidentialEvaluationSettingFragment extends Fragment {
                         evaluationTime.setEvaluation_type("confidential");
                         evaluationTime.setSession_id(sharedPreferencesManager.getSessionId());
                         // TODO: Add Pin
+                        EvaluationPinService evaluationPinService = new EvaluationPinService(getContext());
+                        EvaluationPin evaluationPin = new EvaluationPin();
+                        evaluationPin.setPin(Integer.parseInt(pinEditText.getText().toString()));
+                        evaluationPin.setSession_id(sharedPreferencesManager.getSessionId());
+                        evaluationPinService.postConfidentialEvaluationPin(
+                                evaluationPin,
+                                evaluationPin1 -> {
+                                    Toast.makeText(getContext(), "Pin Added Successfully", Toast.LENGTH_SHORT).show();
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                        );
                         evaluationTimeService.postEvaluationTime(
                                 evaluationTime,
                                 evaluationTime1 -> {
-                                    Toast.makeText(getContext(), evaluationTime1.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Confidential time added successfully", Toast.LENGTH_SHORT).show();
                                 },
                                 errorMessage -> {
                                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();

@@ -13,6 +13,8 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface KpiServiceListener {
+    @GET("KPI/GetKPIs")
+    Call<List<KPI>> getKpis();
     @GET("Kpi/GetSessionKpis")
     Call<List<GroupKpiDetails>> getSessionKpis(@Query("sessionID") int sessionID);
     @GET("KPI/GetKpiGroup")

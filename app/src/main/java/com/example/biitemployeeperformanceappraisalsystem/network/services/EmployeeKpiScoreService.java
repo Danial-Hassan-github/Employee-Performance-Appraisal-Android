@@ -40,6 +40,24 @@ public class EmployeeKpiScoreService {
         });
     }
 
+    public void compareEmployeeKpiScore(int employeeID1, int employeeID2, int sessionID, final Consumer<List<List<EmployeeKpiScore>>> onSuccess, final Consumer<String> onFailure){
+        Call<List<List<EmployeeKpiScore>>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeID1, employeeID2, sessionID);
+        employeeKpiScoresCall.enqueue(new Callback<List<List<EmployeeKpiScore>>>() {
+            @Override
+            public void onResponse(Call<List<List<EmployeeKpiScore>>> call, Response<List<List<EmployeeKpiScore>>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<List<EmployeeKpiScore>>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
+
     public void getEmployeeKpiScoreMultiSession(int employeeID, int startingSessionID, int endingSessionID, final Consumer<List<EmployeeKpiScoreMultiSession>> onSuccess, final Consumer<String> onFailure){
         Call<List<EmployeeKpiScoreMultiSession>> employeeKpiScoresCall = employeeKpiScoreServiceListener.getEmployeeKpiScoreMultiSession(employeeID, startingSessionID, endingSessionID);
         employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScoreMultiSession>>() {

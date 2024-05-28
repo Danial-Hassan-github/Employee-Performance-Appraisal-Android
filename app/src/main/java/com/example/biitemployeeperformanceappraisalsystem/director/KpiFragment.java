@@ -138,18 +138,33 @@ public class KpiFragment extends Fragment {
                             ));
 
                             ArrayList<PieEntry> entries = new ArrayList<>();
+                            float totalScore = 0;
                             for (KPI kpi : details.getKpiList()) {
                                 float weightage = kpi.getKpiWeightage().getWeightage();
+                                totalScore += weightage;
                                 entries.add(new PieEntry(weightage, kpi.getName()));
                                 pieChartValues.add(weightage);
                                 pieChartTitles.add(kpi.getName());
                             }
 
+                            // Calculate remaining percentage
+                            float remainingPercentage = 100 - totalScore;
+                            if (remainingPercentage > 0) {
+                                entries.add(new PieEntry(remainingPercentage, ""));
+                            }
+
                             PieDataSet dataSet = new PieDataSet(entries, "");
                             dataSet.setValueTextSize(20f);
 
+                            pieChart.setHoleRadius(10);
+                            pieChart.setTransparentCircleRadius(10f + 5f);
+
+                            // Generate colors dynamically
                             CommonMethods commonMethods = new CommonMethods();
-                            ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
+                            ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size() - 1); // exclude the transparent entry
+                            if (remainingPercentage > 0) {
+                                colors.add(Color.TRANSPARENT); // Add transparent color for the remaining space
+                            }
                             dataSet.setColors(colors);
 
                             PieData data = new PieData(dataSet);

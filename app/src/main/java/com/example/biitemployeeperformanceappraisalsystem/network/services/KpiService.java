@@ -49,6 +49,25 @@ public class KpiService {
         });
     }
 
+    public void getKpis(final Consumer<List<KPI>> onSuccess, final Consumer<String> onFailure){
+        Call<List<KPI>> call = kpiServiceListener.getKpis();
+        call.enqueue(new Callback<List<KPI>>() {
+            @Override
+            public void onResponse(Call<List<KPI>> call, Response<List<KPI>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<KPI>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
     public void getGroupKpi(int groupID, final Consumer<List<KPI>> onSuccess, final Consumer<String> onFailure){
         Call<List<KPI>> call = kpiServiceListener.getKpiGroup(groupID);
         call.enqueue(new Callback<List<KPI>>() {

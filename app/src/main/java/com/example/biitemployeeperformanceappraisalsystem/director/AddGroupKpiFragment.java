@@ -94,9 +94,13 @@ public class AddGroupKpiFragment extends Fragment {
         subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                subKpiAdapterList.add(subKpiList.get(position));
-                // Notify the adapter to refresh the ListView
-                subKpiListAdapter.notifyDataSetChanged();
+                try {
+                    subKpiAdapterList.add(subKpiList.get(position));
+                    // Notify the adapter to refresh the ListView
+                    subKpiListAdapter.notifyDataSetChanged();
+                }catch (Exception ex){
+
+                }
             }
 
             @Override
