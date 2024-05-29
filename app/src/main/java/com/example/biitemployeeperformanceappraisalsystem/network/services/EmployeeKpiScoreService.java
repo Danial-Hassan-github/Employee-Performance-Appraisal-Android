@@ -2,6 +2,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
@@ -40,8 +41,8 @@ public class EmployeeKpiScoreService {
         });
     }
 
-    public void compareEmployeeKpiScore(int employeeID1, int employeeID2, int sessionID, final Consumer<List<List<EmployeeKpiScore>>> onSuccess, final Consumer<String> onFailure){
-        Call<List<List<EmployeeKpiScore>>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeID1, employeeID2, sessionID);
+    public void compareEmployeeKpiScore(EmployeeIdsWithSession employeeIdsWithSession, final Consumer<List<List<EmployeeKpiScore>>> onSuccess, final Consumer<String> onFailure){
+        Call<List<List<EmployeeKpiScore>>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeIdsWithSession);
         employeeKpiScoresCall.enqueue(new Callback<List<List<EmployeeKpiScore>>>() {
             @Override
             public void onResponse(Call<List<List<EmployeeKpiScore>>> call, Response<List<List<EmployeeKpiScore>>> response) {

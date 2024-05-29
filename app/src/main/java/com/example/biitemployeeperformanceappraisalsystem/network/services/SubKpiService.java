@@ -25,6 +25,25 @@ public class SubKpiService {
         this.context = context;
     }
 
+    public void getAvailableSubKpis(int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
+        Call<List<SubKpi>> call = subKpiServiceListener.getAvailableSubKpis(sessionID);
+        call.enqueue(new Callback<List<SubKpi>>() {
+            @Override
+            public void onResponse(Call<List<SubKpi>> call, Response<List<SubKpi>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SubKpi>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
     public void getSubKPIs(int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
         Call<List<SubKpi>> call = subKpiServiceListener.getSubKPIs(sessionID);
         call.enqueue(new Callback<List<SubKpi>>() {
@@ -44,7 +63,7 @@ public class SubKpiService {
         });
     }
 
-    public void GetSubKPIsOfKpi(int kpi_id, int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
+    public void getSubKPIsOfKpi(int kpi_id, int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
         Call<List<SubKpi>> call = subKpiServiceListener.getSubKPIsOfKpi(kpi_id, sessionID);
         call.enqueue(new Callback<List<SubKpi>>() {
             @Override

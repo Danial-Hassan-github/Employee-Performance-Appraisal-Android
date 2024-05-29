@@ -52,6 +52,7 @@ public class MyTasksAdapter extends ArrayAdapter<TaskWithEmployees> {
             public void onClick(View v) {
                 Task t = new Task();
                 t = task.getTask();
+                t.setStatus(1);
                 taskService.putTask(
                         t,
                         task1 -> {

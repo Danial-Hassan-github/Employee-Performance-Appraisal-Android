@@ -24,6 +24,7 @@ import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
@@ -403,6 +404,8 @@ public class PerformanceFragment extends Fragment {
         pieChart.setVisibility(View.GONE);
         sessionLayout.setVisibility(View.GONE);
 
+        List<Integer> employeeIds = new ArrayList<>();
+
         isComparison = true;
         barChart.setVisibility(View.VISIBLE);
         employeeLayout.setVisibility(View.VISIBLE);
@@ -415,12 +418,16 @@ public class PerformanceFragment extends Fragment {
             // Define the labels for each group
             List<String> groupLabels = new ArrayList<>();
 
+            employeeIds.add(employeeID);
+            employeeIds.add(employee2.getId());
+
             EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
+            EmployeeIdsWithSession employeeIdsWithSession = new EmployeeIdsWithSession();
+            employeeIdsWithSession.setEmployeeIds(employeeIds);
+            employeeIdsWithSession.setSession_id(session.getId());
 
             employeeKpiScoreService.compareEmployeeKpiScore(
-                    employeeID,
-                    employee2.getId(),
-                    session.getId(),
+                    employeeIdsWithSession,
                     employeeKpiScores -> {
                         // TODO
                         multiEmployeesKpiScoreList = employeeKpiScores;

@@ -19,9 +19,11 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.SubKpiListAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
 import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.KpiWeightage;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiWithSubKpiWeightages;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
@@ -47,10 +49,13 @@ public class AddGeneralKpiFragment extends Fragment {
     Spinner sessionSpinner,employeeTypeSpinner,designationSpinner,departmentSpinner,subKpiSpinner;
     Button btnSave;
     List<SubKpi> subKpiList;
+    private List<SubKpi> availableSubKpiList;
     List<SubKpi> subKpiAdapterList;
     SubKpiListAdapter subKpiListAdapter;
     SubKpiService subKpiService;
     KpiService kpiService;
+    SharedPreferencesManager sharedPreferencesManager;
+    private boolean isSubKpiSpinnerInitialized = false;
 
     public AddGeneralKpiFragment(){
 
@@ -73,16 +78,23 @@ public class AddGeneralKpiFragment extends Fragment {
         kpiService = new KpiService(getContext());
 
         subKpiList = new ArrayList<>();
+        availableSubKpiList = new ArrayList<>();
         subKpiAdapterList = new ArrayList<>();
 
-        subKpiService.getSubKPIs(
-                10,
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+
+        // Initialize the subKpiList and the adapter
+        subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
+        subKpiListView.setAdapter(subKpiListAdapter);
+
+        subKpiService.getAvailableSubKpis(
+                sharedPreferencesManager.getSessionId(),
                 subKpiList1 -> {
                     if (subKpiList1 != null) {
-                        subKpiList = subKpiList1;
-                        String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
+                        availableSubKpiList = subKpiList1;
+                        String subKpiTitles[] = subKpiService.getSubKpiTitles(availableSubKpiList);
                         if (subKpiTitles != null) {
-                            subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+                            subKpiService.populateSpinner(availableSubKpiList, subKpiSpinner);
                         } else {
                             Toast.makeText(getContext(), "No SubKPI titles available", Toast.LENGTH_SHORT).show();
                         }
@@ -96,21 +108,22 @@ public class AddGeneralKpiFragment extends Fragment {
         );
 
         // Initialize the subKpiList and the adapter
-        subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
-        subKpiListView.setAdapter(subKpiListAdapter);
+        // subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
+        // subKpiListView.setAdapter(subKpiListAdapter);
 
         // Set the spinner item selected listener
         subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                subKpiAdapterList.add(subKpiList.get(position));
+                subKpiAdapterList.add(availableSubKpiList.get(position));
                 // Notify the adapter to refresh the ListView
                 subKpiListAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                // Do nothing
+
             }
         });
 
@@ -126,6 +139,19 @@ public class AddGeneralKpiFragment extends Fragment {
             kpiNameEditText.setText(kpiName);
             kpiValueEditText.setText(String.valueOf(kpiValue));
 
+            subKpiService.getSubKPIsOfKpi(
+                    kpi.getId(),
+                    sharedPreferencesManager.getSessionId(),
+                    subKpiList1 -> {
+                        subKpiList = subKpiList1;
+                        subKpiListAdapter.addAll(subKpiList);
+                        subKpiListAdapter.notifyDataSetChanged();
+                    },
+                    errorMessage -> {
+                        Toast.makeText(getContext(), "Failed to fetch SubKPIs", Toast.LENGTH_SHORT).show();
+                    }
+            );
+
             // Pass these values to the KpiWeightageAdjustmentFormFragment
         }
             btnSave.setOnClickListener(new View.OnClickListener() {
@@ -138,17 +164,20 @@ public class AddGeneralKpiFragment extends Fragment {
                         // TODO
                         kpiService.getGroupKpi(
                                 0,
+                                sharedPreferencesManager.getSessionId(),
                                 kpis -> {
                                     int weightageSum = Integer.parseInt(kpiValueEditText.getText().toString());
                                     KPI newKpi = new KPI();
                                     newKpi.setName(kpiNameEditText.getText().toString());
                                     KpiWeightage newKpiWeightage = new KpiWeightage();
                                     newKpiWeightage.setWeightage(weightageSum);
+                                    newKpiWeightage.setSession_id(sharedPreferencesManager.getSessionId());
                                     newKpi.setKpiWeightage(newKpiWeightage);
                                     kpis.add(newKpi);
                                     groupKpiDetails = new GroupKpiDetails();
                                     groupKpiDetails.setKpiList(kpis);
-                                    for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
+                                    // dont include the last item weightage because already got it from input box
+                                    for (int i = 0 ; i < groupKpiDetails.getKpiList().size() - 1; i++){
 //                                        if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
 //                                            KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
 //                                            kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
@@ -159,6 +188,29 @@ public class AddGeneralKpiFragment extends Fragment {
                                     }
                                     if (weightageSum > 100){
                                         navigateToWeightageAdjustmentForm();
+                                    }else {
+                                        KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
+                                        List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
+                                        kpiWithSubKpiWeightages.setKpi(newKpi);
+                                        kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
+                                        for (SubKpi s:subKpiAdapterList) {
+                                            SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
+                                            subKpiWeightage.setSession_id(sharedPreferencesManager.getSessionId());
+                                            subKpiWeightage.setSub_kpi_id(s.getId());
+                                            s.setSubKpiWeightage(subKpiWeightage);
+                                            subKpiWeightages.add(s.getSubKpiWeightage());
+                                        }
+                                        kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
+
+                                        // kpiWithSubKpiWeightages.getSubKpiWeightages().add();
+                                        kpiService.postGeneralKpi(
+                                                kpiWithSubKpiWeightages,
+                                                kpi1 -> {
+                                                    Toast.makeText(getContext(), "Kpi Added Successfully", Toast.LENGTH_SHORT).show();
+                                                },
+                                                errorMessage -> {
+                                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                                });
                                     }
                                 },
                                 errorMessage -> {
@@ -166,7 +218,8 @@ public class AddGeneralKpiFragment extends Fragment {
                                 }
                         );
                         // Toast.makeText(getContext(), sum+"", Toast.LENGTH_SHORT).show();
-                    }else {
+                    }
+                    else {
                         for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
                             if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
                                 KpiWeightage kpiWeightage = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
