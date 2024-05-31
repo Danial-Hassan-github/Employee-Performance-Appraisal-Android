@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,9 +117,12 @@ public class AddGeneralKpiFragment extends Fragment {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                subKpiAdapterList.add(availableSubKpiList.get(position));
-                // Notify the adapter to refresh the ListView
-                subKpiListAdapter.notifyDataSetChanged();
+                // subKpiAdapterList.add(availableSubKpiList.get(position));
+                SubKpi selectedSubKpi = availableSubKpiList.get(position);
+                if (!subKpiAdapterList.contains(selectedSubKpi)) {
+                    subKpiAdapterList.add(selectedSubKpi);
+                    subKpiListAdapter.notifyDataSetChanged();
+                }
             }
 
             @Override
@@ -186,22 +190,23 @@ public class AddGeneralKpiFragment extends Fragment {
                                             weightageSum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
                                         // }
                                     }
+
+                                    KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
+                                    List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
+                                    kpiWithSubKpiWeightages.setKpi(newKpi);
+                                    kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
+                                    for (SubKpi s:subKpiAdapterList) {
+                                        //SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
+                                        s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+                                        s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+                                        // s.setSubKpiWeightage(subKpiWeightage);
+                                        subKpiWeightages.add(s.getSubKpiWeightage());
+                                    }
+                                    kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
+
                                     if (weightageSum > 100){
                                         navigateToWeightageAdjustmentForm();
                                     }else {
-                                        KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
-                                        List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
-                                        kpiWithSubKpiWeightages.setKpi(newKpi);
-                                        kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
-                                        for (SubKpi s:subKpiAdapterList) {
-                                            SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
-                                            subKpiWeightage.setSession_id(sharedPreferencesManager.getSessionId());
-                                            subKpiWeightage.setSub_kpi_id(s.getId());
-                                            s.setSubKpiWeightage(subKpiWeightage);
-                                            subKpiWeightages.add(s.getSubKpiWeightage());
-                                        }
-                                        kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
-
                                         // kpiWithSubKpiWeightages.getSubKpiWeightages().add();
                                         kpiService.postGeneralKpi(
                                                 kpiWithSubKpiWeightages,

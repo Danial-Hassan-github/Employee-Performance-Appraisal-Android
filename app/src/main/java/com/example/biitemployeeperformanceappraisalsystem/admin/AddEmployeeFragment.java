@@ -85,31 +85,45 @@ public class AddEmployeeFragment extends Fragment {
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (employee != null) {
-                    employeeService.putEmployee(
-                            employee,
-                            employee1 -> {
-                            },
-                            errorMessage -> {
-                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                            });
-                } else {
-                    employee = new Employee();
-                    employee.setName(editTextEmployeeName.getText().toString());
-                    employee.setEmail(editTextEmployeeEmail.getText().toString());
-                    employee.setPassword(editTextEmployeePassword.getText().toString());
-                    employee.setSalary(Double.parseDouble(editTextEmployeeSalary.getText().toString()));
-                    employee.setDeleted(false);
-                    employee.setDesignationId(designationList.get(designationSpinner.getSelectedItemPosition()).getId());
-                    employee.setDepartmentId(departmentList.get(departmentSpinner.getSelectedItemPosition()).getId());
-                    employee.setEmployeeTypeId(employeeTypeList.get(employeeTypeSpinner.getSelectedItemPosition()).getId());
-                    employeeService.postEmployee(
-                            employee,
-                            employee1 -> {
-                            },
-                            errorMessage -> {
-                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                            });
+                try {
+                    if (employee != null) {
+                        employee.setName(editTextEmployeeName.getText().toString());
+                        employee.setEmail(editTextEmployeeEmail.getText().toString());
+                        employee.setPassword(editTextEmployeePassword.getText().toString());
+                        employee.setSalary(Double.parseDouble(editTextEmployeeSalary.getText().toString()));
+                        employee.setDeleted(false);
+                        employee.setDesignationId(designationList.get(designationSpinner.getSelectedItemPosition()).getId());
+                        employee.setDepartmentId(departmentList.get(departmentSpinner.getSelectedItemPosition()).getId());
+                        employee.setEmployeeTypeId(employeeTypeList.get(employeeTypeSpinner.getSelectedItemPosition()).getId());
+                        employeeService.putEmployee(
+                                employee,
+                                employee1 -> {
+
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                    else {
+                        employee = new Employee();
+                        employee.setName(editTextEmployeeName.getText().toString());
+                        employee.setEmail(editTextEmployeeEmail.getText().toString());
+                        employee.setPassword(editTextEmployeePassword.getText().toString());
+                        employee.setSalary(Double.parseDouble(editTextEmployeeSalary.getText().toString()));
+                        employee.setDeleted(false);
+                        employee.setDesignationId(designationList.get(designationSpinner.getSelectedItemPosition()).getId());
+                        employee.setDepartmentId(departmentList.get(departmentSpinner.getSelectedItemPosition()).getId());
+                        employee.setEmployeeTypeId(employeeTypeList.get(employeeTypeSpinner.getSelectedItemPosition()).getId());
+                        employeeService.postEmployee(
+                                employee,
+                                employee1 -> {
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                });
+                    }
+                }catch (Exception e){
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -205,8 +219,7 @@ public class AddEmployeeFragment extends Fragment {
                 editTextEmployeeEmail.setText(employee.getEmail());
                 editTextEmployeePassword.setText(employee.getPassword());
                 editTextEmployeeSalary.setText(employee.getSalary().toString());
-                Department dep = employeeDetails.getDepartment();
-                departmentPosition = departmentList.indexOf(dep);
+                departmentPosition = departmentList.indexOf(employeeDetails.getDepartment());
                 designationPosition = designationList.indexOf(employeeDetails.getDesignation());
                 employeeTypePosition = employeeTypeList.indexOf(employeeDetails.getEmployeeType());
                 employeeTypeSpinner.setSelection(employeeTypePosition);

@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,6 +67,29 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
             if (!editTextList.contains(editTextWeightage)) {
                 editTextList.add(editTextWeightage);
             }
+
+            editTextWeightage.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    try {
+                        int weightage = Integer.parseInt(s.toString());
+                        if (subKpi.getSubKpiWeightage() == null) {
+                            subKpi.setSubKpiWeightage(new SubKpiWeightage());
+                        }
+                        subKpi.getSubKpiWeightage().setWeightage(weightage);
+                    } catch (NumberFormatException e) {
+                        if (subKpi.getSubKpiWeightage() != null) {
+                            subKpi.getSubKpiWeightage().setWeightage(0);
+                        }
+                    }
+                }
+            });
 
 //            editTextWeightage.addTextChangedListener(new TextWatcher() {
 //                @Override

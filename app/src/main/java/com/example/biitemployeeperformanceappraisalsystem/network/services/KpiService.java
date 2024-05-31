@@ -1,12 +1,15 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiWithWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.KpiWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.KpiWithSubKpiWeightages;
@@ -83,6 +86,7 @@ public class KpiService {
 
             @Override
             public void onFailure(Call<List<KPI>> call, Throwable t) {
+                Log.e("Error","While adding general kpi",t);
                 onFailure.accept(t.getMessage());
             }
         });
@@ -103,6 +107,44 @@ public class KpiService {
 
             @Override
             public void onFailure(Call<KPI> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void postGroupKpi(GroupKpiWithWeightage groupKpiWithWeightage, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.postGroupKpi(groupKpiWithWeightage);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void postEmployeeKpi(EmployeeKpi employeeKpi, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.postEmployeeKpi(employeeKpi);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });

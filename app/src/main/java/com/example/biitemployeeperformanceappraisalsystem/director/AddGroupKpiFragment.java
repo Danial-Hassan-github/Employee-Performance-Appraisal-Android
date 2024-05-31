@@ -41,7 +41,7 @@ public class AddGroupKpiFragment extends Fragment {
     List<SubKpi> subKpiAdapterList;
     SubKpiListAdapter subKpiListAdapter;
     ListView subKpiListView;
-    //List<Session> sessionList;
+    // List<Session> sessionList;
     List<Designation> designationList;
     List<Department> departmentList;
     List<EmployeeType> employeeTypeList;
@@ -114,7 +114,7 @@ public class AddGroupKpiFragment extends Fragment {
                     designationList=designations;
                     designationService.populateDesignationSpinner(designations,designationSpinner);
                 },errorMessage ->{
-                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -124,7 +124,7 @@ public class AddGroupKpiFragment extends Fragment {
                     departmentService.populateDepartmentSpinner(departments,departmentSpinner);
                 },
                 errorMessage -> {
-                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT).show();
                 }
         );
 
@@ -134,14 +134,14 @@ public class AddGroupKpiFragment extends Fragment {
                     employeeService.populateEmployeeTypeSpinner(employeeTypes,employeeTypeSpinner);
                 },
                 errorMessage -> {
-                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT);
+                    Toast.makeText(getContext(),errorMessage,Toast.LENGTH_SHORT).show();
                 }
         );
 
-        CommonData data = new CommonData(getContext());
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        subKpiSpinner.setAdapter(adapter);
+//        CommonData data = new CommonData(getContext());
+//        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, data.getSubKPITypes());
+//        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        subKpiSpinner.setAdapter(adapter);
 
         // Inflate the layout for this fragment
         return view;

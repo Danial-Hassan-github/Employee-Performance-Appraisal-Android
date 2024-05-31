@@ -106,6 +106,7 @@ public class KpiFragment extends Fragment {
                                 String department = "";
                                 String designation = "";
                                 String employeeType = "";
+                                String employeeName = "";
                                 if (details.getGroupKpi().getDesignation() != null) {
                                     designation = details.getGroupKpi().getDesignation().getName();
                                 }
@@ -116,7 +117,13 @@ public class KpiFragment extends Fragment {
                                     employeeType = details.getGroupKpi().getEmployeeType().getTitle();
                                 }
                                 TextView textView = new TextView(getContext());
-                                textView.setText(employeeType + " " + department + " " + designation);
+                                if (details.getGroupKpi().getEmployee() != null){
+                                    employeeName = details.getGroupKpi().getEmployee().getName();
+                                    textView.setText(employeeName);
+                                }
+                                else {
+                                    textView.setText(employeeType + " " + department + " " + designation);
+                                }
                                 textView.setLayoutParams(new ViewGroup.LayoutParams(
                                         ViewGroup.LayoutParams.MATCH_PARENT,
                                         ViewGroup.LayoutParams.WRAP_CONTENT
