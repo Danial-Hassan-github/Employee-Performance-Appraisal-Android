@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.Log;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCourseScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCoursesPerformanceRequest;
+import com.example.biitemployeeperformanceappraisalsystem.models.MultiEmployeeCoursePerformanceRequest;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeCoursePerformanceServiceListener;
 
@@ -37,6 +39,44 @@ public class EmployeeCoursePerformanceService {
             @Override
             public void onFailure(Call<EmployeeCourseScore> call, Throwable t) {
                 Log.e("single"," person",t);
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getEmployeeCoursesPerformance(EmployeeCoursesPerformanceRequest employeeCoursesPerformanceRequest, final Consumer<List<EmployeeCourseScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeCourseScore>> call = employeeCoursePerformanceServiceListener.getEmployeeCoursesPerformance(employeeCoursesPerformanceRequest);
+        call.enqueue(new Callback<List<EmployeeCourseScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeCourseScore>> call, Response<List<EmployeeCourseScore>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeCourseScore>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getMultiEmployeeCoursePerformance(MultiEmployeeCoursePerformanceRequest multiEmployeeCoursePerformanceRequest, final Consumer<List<EmployeeCourseScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeCourseScore>> call = employeeCoursePerformanceServiceListener.getMultiEmployeeCoursePerformance(multiEmployeeCoursePerformanceRequest);
+        call.enqueue(new Callback<List<EmployeeCourseScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeCourseScore>> call, Response<List<EmployeeCourseScore>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeCourseScore>> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });

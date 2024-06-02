@@ -1,10 +1,28 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class SubKpiWeightage {
+    private int id;
     private Integer kpi_id;
     private int sub_kpi_id;
     private int session_id;
     private int weightage;
+    private boolean deleted;
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getWeightage() {
         return weightage;

@@ -8,6 +8,7 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -66,6 +67,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
 
         viewHolder.checkbox.setOnCheckedChangeListener(null); // Clear previous listener
 
+        Toast.makeText(getContext(), position+"", Toast.LENGTH_SHORT).show();
         if (position == 0) {
             viewHolder.checkbox.setChecked(selectAllChecked);
         } else {

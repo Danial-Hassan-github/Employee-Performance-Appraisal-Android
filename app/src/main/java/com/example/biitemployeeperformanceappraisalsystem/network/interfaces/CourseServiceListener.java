@@ -13,6 +13,8 @@ public interface CourseServiceListener {
     @GET("Course/GetCourses")
     Call<List<Course>> getCourses();
     @GET("Course/GetTeacherCourses")
+    Call<List<Course>> getTeacherCourses(@Query("teacherID") int teacherID, @Query("sessionID") int sessionID);
+    @GET("Course/GetTeacherCourses")
     Call<List<Course>> getTeacherCourses(@Query("teacherID") int teacherID);
     @GET("Course/GetStudentCourses")
     Call<List<Course>> getStudentCourses(@Query("studentID") int studentID,@Query("sessionID") int sessionID);

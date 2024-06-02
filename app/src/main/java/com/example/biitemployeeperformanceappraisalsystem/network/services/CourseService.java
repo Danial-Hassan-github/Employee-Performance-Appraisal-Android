@@ -43,6 +43,25 @@ public class CourseService {
         });
     }
 
+    public void getTeacherCourses(int teacherID, int sessionID, final Consumer<List<Course>> onSuccess,final Consumer<String> onFailure){
+        Call<List<Course>> courseCall = courseServiceListener.getTeacherCourses(teacherID, sessionID);
+        courseCall.enqueue(new Callback<List<Course>>() {
+            @Override
+            public void onResponse(Call<List<Course>> call, Response<List<Course>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<Course>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching courses");
+            }
+        });
+    }
+
     public void getStudentCourses(int studentID,int sessionID,final Consumer<List<Course>> onSuccess,final Consumer<String> onFailure){
         Call<List<Course>> courseCall = courseServiceListener.getStudentCourses(studentID,sessionID);
         courseCall.enqueue(new Callback<List<Course>>() {

@@ -24,6 +24,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.ChrService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EnrollmentService;
 
 public class UploadExcelFileFragment extends Fragment {
     private static final int REQUEST_CODE_PERMISSIONS = 1000;
@@ -31,19 +32,26 @@ public class UploadExcelFileFragment extends Fragment {
     private static final String TAG = "UploadExcelFileFragment";
 
     private ChrService chrService;
+    private EnrollmentService enrollmentService;
     private View view;
     private TextView textFileName;
     private Button btnChooseFile, btnUploadFile;
     private Uri fileUri;
+    private boolean isChr = true;
 
     public UploadExcelFileFragment() {
         // Required empty public constructor
+    }
+
+    public UploadExcelFileFragment(boolean isChr) {
+        this.isChr = isChr;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         view = inflater.inflate(R.layout.fragment_upload_excel_file, container, false);
         chrService = new ChrService(getContext());
+        enrollmentService = new EnrollmentService(getContext());
         textFileName = view.findViewById(R.id.text_file_name);
         btnChooseFile = view.findViewById(R.id.btn_choose_file);
         btnUploadFile = view.findViewById(R.id.btn_upload_file);
@@ -139,7 +147,11 @@ public class UploadExcelFileFragment extends Fragment {
 
     private void uploadFile() {
         if (fileUri != null) {
-            chrService.uploadChr(fileUri);
+            if (isChr){
+                chrService.uploadChr(fileUri);
+            }else {
+                enrollmentService.uploadEnrollmentFile(fileUri);
+            }
         } else {
             Toast.makeText(getContext(), "No file selected", Toast.LENGTH_SHORT).show();
         }
