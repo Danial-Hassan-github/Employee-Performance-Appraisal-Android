@@ -127,7 +127,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         confidentialEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         confidentialEvaluation.setScore(pair.second); // Set the score from the selected answers
                         confidentialEvaluations.add(confidentialEvaluation);
-                        Toast.makeText(getContext(), confidentialEvaluation.getStudent_id() + "\n" + confidentialEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), confidentialEvaluation.getStudent_id() + "\n" + confidentialEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                     }
                     evaluationService.postConfidentialEvaluation(confidentialEvaluations);
                     StudentCoursesFragment studentCoursesFragment = new StudentCoursesFragment();
@@ -142,7 +142,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         degreeExitEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         degreeExitEvaluation.setScore(pair.second); // Set the score from the selected answers
                         degreeExitEvaluations.add(degreeExitEvaluation);
-                        Toast.makeText(getContext(), degreeExitEvaluation.getStudent_id() + "\n" + degreeExitEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), degreeExitEvaluation.getStudent_id() + "\n" + degreeExitEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                     }
                     evaluationService.postDegreeExitEvaluations(degreeExitEvaluations);
                     StudentCoursesFragment studentCoursesFragment = new StudentCoursesFragment();
@@ -158,7 +158,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         studentEvaluation.setScore(pair.second); // Set the score from the selected answers
                         studentEvaluation.setCourse_id(courseID); // Set the course ID from the fragment constructor
                         studentEvaluations.add(studentEvaluation);
-                        Toast.makeText(getContext(), studentEvaluation.getStudent_id() + "\n" + studentEvaluation.getSession_id() + "\n" + studentEvaluation.getCourse_id(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), studentEvaluation.getStudent_id() + "\n" + studentEvaluation.getSession_id() + "\n" + studentEvaluation.getCourse_id(), Toast.LENGTH_SHORT).show();
                     }
                     evaluationService.postStudentEvaluations(studentEvaluations);
                     CourseTeacherFragment fragment = new CourseTeacherFragment(courseID);
@@ -175,7 +175,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         peerEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         peerEvaluation.setScore(pair.second); // Set the score from the selected answers
                         peerEvaluations.add(peerEvaluation);
-                        Toast.makeText(getContext(), peerEvaluation.getEvaluator_id() + "\n" + peerEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), peerEvaluation.getEvaluator_id() + "\n" + peerEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                     }
                     evaluationService.postPeerEvaluations(peerEvaluations);
                     EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
@@ -206,7 +206,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         supervisorEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         supervisorEvaluation.setScore(pair.second); // Set the score from the selected answers
                         supervisorEvaluations.add(supervisorEvaluation);
-                        Toast.makeText(getContext(), supervisorEvaluation.getSupervisor_id() + "\n" + supervisorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                        // Toast.makeText(getContext(), supervisorEvaluation.getSupervisor_id() + "\n" + supervisorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                     }
                     evaluationService.postSupervisorEvaluation(supervisorEvaluations);
                     EvaluateeListFragment fragment = new EvaluateeListFragment(fragmentContainerId);
@@ -222,7 +222,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                     directorEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                     directorEvaluation.setScore(pair.second); // Set the score from the selected answers
                     directorEvaluations.add(directorEvaluation);
-                    Toast.makeText(getContext(), directorEvaluation.getEvaluator_id() + "\n" + directorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
+                    // Toast.makeText(getContext(), directorEvaluation.getEvaluator_id() + "\n" + directorEvaluation.getSession_id(), Toast.LENGTH_SHORT).show();
                 }
                 evaluationService.postDirectorEvaluation(directorEvaluations);
                 EmployeeListFragment fragment = new EmployeeListFragment();
@@ -232,7 +232,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
         });
 
 
-        Toast.makeText(getContext(),"course id"+courseID+"\nevaluatee id"+evaluateeID,Toast.LENGTH_SHORT).show();
+        // Toast.makeText(getContext(),"course id"+courseID+"\nevaluatee id"+evaluateeID,Toast.LENGTH_SHORT).show();
         // Inflate the layout for this fragment
         return view;
     }

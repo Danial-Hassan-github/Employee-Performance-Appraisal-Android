@@ -79,7 +79,7 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
                         }
                     },
                     errorMessage -> {
-                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT);
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                     }
             );
         }
@@ -87,7 +87,7 @@ public class EvaluationQuestionnaireAdapter extends ArrayAdapter<Question> {
         optionsRadioGroup.setOnCheckedChangeListener((group, checkedId) -> {
             int selectedOptionIndex = group.indexOfChild(group.findViewById(checkedId));
             selectedOptions.put(position, optionWeightageList.get(selectedOptionIndex).getWeightage());
-            Toast.makeText(getContext(), selectedOptionIndex+"", Toast.LENGTH_SHORT).show();
+            // Toast.makeText(getContext(), selectedOptionIndex+"", Toast.LENGTH_SHORT).show();
             // int count = getCount();
             if (selectedOptions.size() == getCount()){
                 btnSubmit.setEnabled(true);

@@ -18,12 +18,14 @@
             android:id="@+id/tab_session"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             android:text="Session"/>
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_employee_comparison"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:visibility="visible"
             android:text="Comparison"/>
 
         <com.google.android.material.tabs.TabItem

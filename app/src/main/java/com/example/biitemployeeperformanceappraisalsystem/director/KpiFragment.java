@@ -195,12 +195,21 @@ public class KpiFragment extends Fragment {
                                         }
                                     }
 
-                                    AddGeneralKpiFragment addGeneralKpiFragment = new AddGeneralKpiFragment(details, selectedKpi);
+                                    if (details.getGroupKpi() == null){
+                                        AddGeneralKpiFragment addGeneralKpiFragment = new AddGeneralKpiFragment(details, selectedKpi);
 
-                                    FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                                    transaction.replace(R.id.fragment_container, addGeneralKpiFragment);
-                                    transaction.addToBackStack(null);
-                                    transaction.commit();
+                                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragment_container, addGeneralKpiFragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                    }else {
+                                        AddGroupKpiFragment addGroupKpiFragment = new AddGroupKpiFragment(details, selectedKpi);
+
+                                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                        transaction.replace(R.id.fragment_container, addGroupKpiFragment);
+                                        transaction.addToBackStack(null);
+                                        transaction.commit();
+                                    }
                                 }
 
                                 @Override

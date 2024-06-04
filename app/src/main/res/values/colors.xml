@@ -12,6 +12,8 @@
     <color name="topBar">#3447B5</color>
     <color name="bottomBar">#0A5E2D</color>
     <color name="check">#3447B5</color>
+    <color name="red">#DD2C00</color>
+    <color name="green">#00C853</color>
     <color name="edit_text_background_color">#F5F5F5</color>
     <color name="metaData">#A5A8A8</color>
     <color name="colorPrimary">#189F51</color>

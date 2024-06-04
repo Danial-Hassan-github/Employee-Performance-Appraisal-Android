@@ -247,7 +247,7 @@ public class TaskFragment extends Fragment {
                             Date parsedDate = dateFormat.parse(dueDateEditText.getText().toString());
                             task.setDue_date(parsedDate);
                         } catch (ParseException e) {
-                            throw new RuntimeException(e);
+                            Toast.makeText(getContext(), "Set date in format dd/MM/yyyy HH:mm", Toast.LENGTH_SHORT).show();
                         }
 
                         if (isIndividual){
@@ -273,6 +273,7 @@ public class TaskFragment extends Fragment {
                                     taskWithRole,
                                     task -> {
                                         // set response task in list and update list view
+                                        Toast.makeText(getContext(), "Task Added Successfully", Toast.LENGTH_SHORT).show();
                                     },
                                     errorMessage -> {
                                         Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();

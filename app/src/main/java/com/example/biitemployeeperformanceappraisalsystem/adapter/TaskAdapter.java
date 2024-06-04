@@ -51,6 +51,8 @@ public class TaskAdapter extends ArrayAdapter<TaskWithEmployees> {
         TextView weightageTextView = convertView.findViewById(R.id.text_weightage);
         TextView assignedByTextView = convertView.findViewById(R.id.text_assigned_by);
         ImageView btnOptions = convertView.findViewById(R.id.btn_options_task);
+        EditText editTextScore = convertView.findViewById(R.id.text_score);
+        Button btnOk = convertView.findViewById(R.id.btn_ok);
 
         taskDescriptionTextView.setText(task.getTask().getTask_description());
         SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
@@ -59,11 +61,29 @@ public class TaskAdapter extends ArrayAdapter<TaskWithEmployees> {
             SimpleDateFormat dateFormatOutput = new SimpleDateFormat("dd/MM/yyyy HH:mm", Locale.getDefault());
             dueDateTextView.setText(dateFormatOutput.format(dueDate));
         } catch (ParseException e) {
-            e.printStackTrace();
+            Toast.makeText(getContext(), "Set date in dd/MM/yyyy HH:mm format", Toast.LENGTH_SHORT).show();
         }
         assignedToTextView.setText(task.getAssigned_to().getName());
         weightageTextView.setText(String.valueOf(task.getTask().getWeightage()));
         assignedByTextView.setText(task.getAssigned_by().getName());
+        // editTextScore.setText(task.getTask().getScore().toString());
+
+        btnOk.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                task.getTask().setScore(Integer.parseInt(editTextScore.getText().toString()));
+                task.getTask().setStatus(2);
+                taskService.putTask(
+                        task.getTask(),
+                        success -> {
+                            Toast.makeText(getContext(), "Score added successfully", Toast.LENGTH_SHORT).show();
+                        },
+                        errorMessage -> {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        }
+                );
+            }
+        });
 
         btnOptions.setOnClickListener(new View.OnClickListener() {
             @Override

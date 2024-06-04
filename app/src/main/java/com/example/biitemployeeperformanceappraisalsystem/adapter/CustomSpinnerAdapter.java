@@ -8,33 +8,42 @@ import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomSpinnerAdapter extends ArrayAdapter<String> {
+public class CustomSpinnerAdapter extends ArrayAdapter<Employee> {
 
-    private List<String> items;
+    public interface OnItemSelectionChangedListener {
+        void onItemSelectionChanged(List<Integer> selectedEmployeeIds);
+    }
+
     private List<Integer> evaluatee_ids;
+    private List<Employee> employees;
     private List<Boolean> itemChecked;
     private LayoutInflater inflater;
     private boolean selectAllChecked = false;
+    private OnItemSelectionChangedListener listener;
 
-    public CustomSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<String> items) {
-        super(context, resource, items);
-        this.items = items;
+    public CustomSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Employee> employees) {
+        super(context, resource, employees);
+        this.employees = employees;
+        this.evaluatee_ids = new ArrayList<>();
         this.itemChecked = new ArrayList<>();
-        for (int i = 0; i < items.size(); i++) {
+        for (int i = 0; i < employees.size(); i++) {
             itemChecked.add(false);
         }
         inflater = LayoutInflater.from(context);
-        evaluatee_ids = new ArrayList<>();
+    }
+
+    public void setOnItemSelectionChangedListener(OnItemSelectionChangedListener listener) {
+        this.listener = listener;
     }
 
     @NonNull
@@ -62,12 +71,11 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        final String item = items.get(position);
-        viewHolder.text.setText(item);
+        final Employee employee = employees.get(position);
+        viewHolder.text.setText(employee.getName());
 
         viewHolder.checkbox.setOnCheckedChangeListener(null); // Clear previous listener
 
-        Toast.makeText(getContext(), position+"", Toast.LENGTH_SHORT).show();
         if (position == 0) {
             viewHolder.checkbox.setChecked(selectAllChecked);
         } else {
@@ -86,12 +94,13 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
                 } else {
                     itemChecked.set(position, isChecked);
                     if (isChecked) {
-                        // If checked, add the corresponding employee ID to evaluatee_ids list
-                        evaluatee_ids.add(position - 1); // Subtract 1 because 0th position is for select all
+                        evaluatee_ids.add(employee.getId());
                     } else {
-                        // If unchecked, remove the corresponding employee ID from evaluatee_ids list
-                        evaluatee_ids.remove((Integer) (position - 1));
+                        evaluatee_ids.remove((Integer) employee.getId());
                     }
+                }
+                if (listener != null) {
+                    listener.onItemSelectionChanged(new ArrayList<>(evaluatee_ids));
                 }
             }
         });
@@ -104,8 +113,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<String> {
         TextView text;
     }
 
-    // Method to get the list of selected employee IDs
     public List<Integer> getSelectedEmployeeIds() {
-        return evaluatee_ids;
+        return new ArrayList<>(evaluatee_ids);
     }
 }

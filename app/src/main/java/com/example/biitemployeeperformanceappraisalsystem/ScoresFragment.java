@@ -15,6 +15,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
+import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
@@ -71,7 +72,7 @@ public class ScoresFragment extends Fragment {
         questionnaireTypeSpinner = view.findViewById(R.id.spinner_questionnaire_type);
         employeeSpinnerLayout = view.findViewById(R.id.employee_spinner_layout);
 
-        if (getActivity() instanceof FacultyMain){
+        if (getActivity() instanceof FacultyMain || getActivity() instanceof HodMainActivity){
             employeeSpinnerLayout.setVisibility(View.GONE);
         }
 

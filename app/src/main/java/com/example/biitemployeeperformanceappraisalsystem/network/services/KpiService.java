@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.Query;
 
 public class KpiService {
     Context context;
@@ -133,6 +134,84 @@ public class KpiService {
 
     public void postEmployeeKpi(EmployeeKpi employeeKpi, final Consumer<String> onSuccess, final Consumer<String> onFailure){
         Call<String> call = kpiServiceListener.postEmployeeKpi(employeeKpi);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void putGeneralKpi(List<KPI> kpiList, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.putGeneralKpi(kpiList);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }
+                else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void putGroupKpi(List<KPI> kpiList, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.putGroupKpi(kpiList);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getGroupKpiId( int department_id, int designation_id, int employee_type_id, int employee_id, final Consumer<Integer> onSuccess, final Consumer<String> onFailure){
+        Call<Integer> call = kpiServiceListener.getKpiGroupId(department_id, designation_id, employee_type_id, employee_id);
+
+        call.enqueue(new Callback<Integer>() {
+            @Override
+            public void onResponse(Call<Integer> call, Response<Integer> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<Integer> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void putEmployeeKpi(List<KPI> employeeKpis, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.putEmployeeKpi(employeeKpis);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

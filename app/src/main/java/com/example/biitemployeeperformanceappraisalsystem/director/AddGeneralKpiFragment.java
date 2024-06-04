@@ -6,6 +6,8 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -88,6 +90,8 @@ public class AddGeneralKpiFragment extends Fragment {
         subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
         subKpiListView.setAdapter(subKpiListAdapter);
 
+
+
         subKpiService.getAvailableSubKpis(
                 sharedPreferencesManager.getSessionId(),
                 subKpiList1 -> {
@@ -135,6 +139,36 @@ public class AddGeneralKpiFragment extends Fragment {
          EditText kpiNameEditText = view.findViewById(R.id.text_kpi_title);
          EditText kpiValueEditText = view.findViewById(R.id.text_kpi_weightage);
 
+         kpiValueEditText.addTextChangedListener(new TextWatcher() {
+             @Override
+             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+             }
+
+             @Override
+             public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+             }
+
+             @Override
+             public void afterTextChanged(Editable s) {
+                 int sum = 0;
+                 // btnSave.setEnabled(false);
+                 try {
+                     sum = Integer.parseInt(kpiValueEditText.getText().toString());
+                     // btnSave.setEnabled(true);
+                 }catch (Exception ex){
+                     Toast.makeText(getContext(), "Weightage must be in numbers", Toast.LENGTH_SHORT).show();
+                 }
+                 if (sum > 100 || sum < 0){
+                     Toast.makeText(getContext(), "Weightage cannot be more than 100 or less than 0", Toast.LENGTH_SHORT).show();
+                     btnSave.setEnabled(false);
+                 }else {
+                     btnSave.setEnabled(true);
+                 }
+             }
+         });
+
         if (kpi != null) {
             String kpiName = kpi.getName();
             float kpiValue = kpi.getKpiWeightage().getWeightage();
@@ -161,9 +195,18 @@ public class AddGeneralKpiFragment extends Fragment {
             btnSave.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    int sum = Integer.parseInt(kpiValueEditText.getText().toString());
+                    int sum = 0;
+                    try {
+                        sum = Integer.parseInt(kpiValueEditText.getText().toString());
+                    }catch (Exception ex){
+                        Toast.makeText(getContext(), "Weightage must be in numbers", Toast.LENGTH_SHORT).show();
+                    }
                     ArrayList<Float> pieChartValues = new ArrayList<>();
                     ArrayList<String> pieChartTitles = new ArrayList<>();
+
+                    KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
+                    List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
+
                     if (kpi == null){
                         // TODO
                         kpiService.getGroupKpi(
@@ -191,10 +234,6 @@ public class AddGeneralKpiFragment extends Fragment {
                                         // }
                                     }
 
-                                    KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
-                                    List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
-                                    kpiWithSubKpiWeightages.setKpi(newKpi);
-                                    kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
                                     for (SubKpi s:subKpiAdapterList) {
                                         //SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
                                         s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
@@ -202,10 +241,15 @@ public class AddGeneralKpiFragment extends Fragment {
                                         // s.setSubKpiWeightage(subKpiWeightage);
                                         subKpiWeightages.add(s.getSubKpiWeightage());
                                     }
+
+                                    kpiWithSubKpiWeightages.setKpi(newKpi);
+                                    kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
                                     kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
 
+                                    kpis.get(kpis.size() - 1).setSubKpiWeightages(subKpiWeightages);
+
                                     if (weightageSum > 100){
-                                        navigateToWeightageAdjustmentForm();
+                                        navigateToWeightageAdjustmentForm(kpiWithSubKpiWeightages);
                                     }else {
                                         // kpiWithSubKpiWeightages.getSubKpiWeightages().add();
                                         kpiService.postGeneralKpi(
@@ -241,10 +285,19 @@ public class AddGeneralKpiFragment extends Fragment {
                         }
                         // Navigate to the KpiWeightageAdjustmentFormFragment and pass values
                         if (sum > 100){
-                            navigateToWeightageAdjustmentForm();
+                            navigateToWeightageAdjustmentForm(kpiWithSubKpiWeightages);
+                        }else {
+                            // kpiWithSubKpiWeightages.getSubKpiWeightages().add();
+                            kpiService.putGeneralKpi(
+                                    groupKpiDetails.getKpiList(),
+                                    kpi1 -> {
+                                        Toast.makeText(getContext(), "General Kpi Updated Successfully", Toast.LENGTH_SHORT).show();
+                                    },
+                                    errorMessage -> {
+                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                    });
                         }
                     }
-
 
                 }
             });
@@ -256,8 +309,8 @@ public class AddGeneralKpiFragment extends Fragment {
         return view;
     }
 
-    public void navigateToWeightageAdjustmentForm() {
-        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(groupKpiDetails);
+    public void navigateToWeightageAdjustmentForm(KpiWithSubKpiWeightages kpiWithSubKpiWeightages) {
+        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(groupKpiDetails, kpiWithSubKpiWeightages);
         FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragment_container, fragment);
         transaction.addToBackStack(null);

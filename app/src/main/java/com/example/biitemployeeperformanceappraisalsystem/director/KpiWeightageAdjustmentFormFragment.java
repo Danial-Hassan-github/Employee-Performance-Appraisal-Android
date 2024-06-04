@@ -1,5 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.director;
 
+import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,25 +13,40 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
+import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiWithWeightage;
 import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiWithSubKpiWeightages;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.KpiService;
 
-import java.util.ArrayList;
-
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link KpiWeightageAdjustmentFormFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class KpiWeightageAdjustmentFormFragment extends Fragment {
     GroupKpiDetails groupKpiDetails;
+    KpiWithSubKpiWeightages kpiWithSubKpiWeightages;
+    EmployeeKpi employeeKpi;
+    GroupKpiWithWeightage groupKpiWithWeightage;
+    TextView txtTotalWeightage, txtExceedMsg;
+    KpiService kpiService;
+    float newSum = 0;
 
-    public KpiWeightageAdjustmentFormFragment(GroupKpiDetails groupKpiDetails) {
+    public KpiWeightageAdjustmentFormFragment(GroupKpiDetails groupKpiDetails, KpiWithSubKpiWeightages kpiWithSubKpiWeightages) {
         this.groupKpiDetails = groupKpiDetails;
+        this.kpiWithSubKpiWeightages = kpiWithSubKpiWeightages;
+    }
+
+    public KpiWeightageAdjustmentFormFragment(GroupKpiDetails groupKpiDetails, EmployeeKpi employeeKpi) {
+        this.groupKpiDetails = groupKpiDetails;
+        this.employeeKpi = employeeKpi;
+    }
+
+    public KpiWeightageAdjustmentFormFragment(GroupKpiDetails groupKpiDetails, GroupKpiWithWeightage groupKpiWithWeightage) {
+        this.groupKpiDetails = groupKpiDetails;
+        this.groupKpiWithWeightage = groupKpiWithWeightage;
     }
 
     @Override
@@ -38,6 +54,11 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_kpi_weightage_adjustment_form, container, false);
         LinearLayout layout = view.findViewById(R.id.kpi_weightage_adjustment_form_layout);
+        txtTotalWeightage = view.findViewById(R.id.txt_total_weightage);
+        txtExceedMsg = view.findViewById(R.id.exceed_msg);
+        Button saveButton = view.findViewById(R.id.save_button);
+
+        kpiService = new KpiService(getContext());
 
         EditText[] editTexts = new EditText[groupKpiDetails.getKpiList().size()];
 
@@ -68,45 +89,130 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
 
                 @Override
                 public void afterTextChanged(Editable s) {
-                    float newSum = calculateTotalSum(editTexts);
+                    try {
+                        kpiDetails.getKpiWeightage().setWeightage(Integer.parseInt(valueEditText.getText().toString()));
+                    }catch (Exception ex){
+
+                    }
+                    newSum = calculateTotalSum(editTexts);
+                    txtTotalWeightage.setText(String.format("%.2f", newSum));
                     if (newSum > 100) {
-                        float adjustment = newSum - 100;
-                        distributeAdjustment(editTexts, adjustment, valueEditText);
+                        saveButton.setEnabled(false);
+                        txtTotalWeightage.setTextColor(Color.RED);
+                        txtExceedMsg.setText("Please adjust weightage below 100");
+                    } else {
+                        saveButton.setEnabled(true);
+                        txtTotalWeightage.setTextColor(Color.GREEN);
+                        txtExceedMsg.setText("");
                     }
                 }
             });
         }
 
-        Button saveButton = view.findViewById(R.id.save_button);
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Save the modified values
+                // Implement save functionality here
+                // KPI newKpi = groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1);
+                // groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1).setSubKpiWeightages(kpiWithSubKpiWeightages);
+                // newKpi.getKpiWeightage().
+                groupKpiDetails.getKpiList().remove(groupKpiDetails.getKpiList().size() - 1);
+                if (groupKpiDetails.getGroupKpi() == null){
+                    kpiService.putGeneralKpi(
+                            groupKpiDetails.getKpiList(),
+                            k -> {
+                                Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            });
+                    if (kpiWithSubKpiWeightages != null){
+                        kpiService.postGeneralKpi(
+                                kpiWithSubKpiWeightages,
+                                kpi -> {
+                                    Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                }
+                        );
+                    }
+                }else {
+                    int group_id = groupKpiDetails.getGroupKpi().getId();
+                    Employee employee = groupKpiDetails.getGroupKpi().getEmployee();
+//                    for (KPI k: groupKpiDetails.getKpiList()) {
+//                        k.setGroup_kpi_id(group_id);
+//                    }
+                    for(int i = 0; i < groupKpiDetails.getKpiList().size(); i++){
+                        groupKpiDetails.getKpiList().get(i).setGroup_kpi_id(group_id);
+                    }
+                    if (employee == null){
+                        kpiService.putGroupKpi(
+                                groupKpiDetails.getKpiList(),
+                                k -> {
+                                    Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                });
+                        if (groupKpiWithWeightage != null){
+                            kpiService.postGroupKpi(
+                                    groupKpiWithWeightage,
+                                    kpi -> {
+                                        Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
+                                    },
+                                    errorMessage -> {
+                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                    }
+                            );
+                        }
+                    }else {
+                        kpiService.putEmployeeKpi(
+                                groupKpiDetails.getKpiList(),
+                                k -> {
+                                    Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
+                                },
+                                errorMessage -> {
+                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                });
+                        if (employeeKpi != null){
+                            kpiService.postEmployeeKpi(
+                                    employeeKpi,
+                                    kpi -> {
+                                        Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
+                                    },
+                                    errorMessage -> {
+                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                                    }
+                            );
+                        }
+                    }
+                }
             }
         });
 
         return view;
     }
 
-    // Helper method to calculate the total sum of values in EditTexts
     private float calculateTotalSum(EditText[] editTexts) {
         float sum = 0;
-
         for (EditText editText : editTexts) {
             String text = editText.getText().toString();
             if (!text.isEmpty()) {
-                sum += Float.parseFloat(text);
+                try {
+                    sum += Float.parseFloat(text);
+                } catch (NumberFormatException e) {
+                    // Handle potential number format exception
+                    Toast.makeText(requireContext(), "Invalid number format", Toast.LENGTH_SHORT).show();
+                }
             }
         }
-
         return sum;
     }
 
-    // Helper method to distribute adjustment across EditTexts
     private void distributeAdjustment(EditText[] editTexts, float adjustment, EditText excludeEditText) {
         float totalAdjustment = 0;
 
-        // Calculate total sum of values excluding the excluded EditText
         float totalSumExcluding = 0;
         for (EditText editText : editTexts) {
             if (editText != excludeEditText) {
@@ -117,7 +223,6 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
             }
         }
 
-        // Distribute the adjustment proportionally across all EditTexts
         for (EditText editText : editTexts) {
             if (editText != excludeEditText) {
                 String text = editText.getText().toString();
@@ -126,23 +231,19 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                     float adjustmentRatio = value / totalSumExcluding;
                     float individualAdjustment = adjustmentRatio * adjustment;
 
-                    // Update EditText value
-                    editText.setText(Float.toString(value - individualAdjustment));
+                    editText.setText(String.format("%.2f", value - individualAdjustment));
 
                     totalAdjustment += individualAdjustment;
                 }
             }
         }
 
-        // Apply any remaining adjustment to the excluded EditText
         if (excludeEditText != null) {
             String text = excludeEditText.getText().toString();
             if (!text.isEmpty()) {
                 float value = Float.parseFloat(text);
-                excludeEditText.setText(Float.toString(value - (adjustment - totalAdjustment)));
+                excludeEditText.setText(String.format("%.2f", value - (adjustment - totalAdjustment)));
             }
         }
     }
-
-
 }

@@ -7,7 +7,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
-
 public class RetrofitClient {
     private static Retrofit retrofit;
     public static Retrofit getRetrofitInstance() {
@@ -20,7 +19,7 @@ public class RetrofitClient {
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(logging).build();
         if (retrofit == null) {
-            retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.14/api/").client(client).addConverterFactory(GsonConverterFactory.create(gson)).build();
+            retrofit = new Retrofit.Builder().baseUrl("http://192.168.1.6/api/").client(client).addConverterFactory(GsonConverterFactory.create(gson)).build();
         }
         return retrofit;
     }

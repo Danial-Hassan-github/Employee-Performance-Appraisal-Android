@@ -102,10 +102,14 @@ public class EvaluatorFragment extends Fragment {
         int evaluatorId = employeeList.get(evaluatorPosition).getId();
 
         // Create a new list to hold the updated items for the evaluatee spinner
-        List<String> updatedEvaluateeList = new ArrayList<>();
+        List<Employee> updatedEvaluateeList = new ArrayList<>();
 
         // Add the default "Select All" item to the list
-        updatedEvaluateeList.add("Select All");
+        // updatedEvaluateeList.add("Select All");
+        // Add the default "Select All" item to the list
+        Employee employee = new Employee();
+        employee.setName("Select All");
+        updatedEvaluateeList.add(employee);
 
         // Add all employees to the list initially
         updatedEvaluateeList.addAll(getUpdatedEmployeeList(evaluatorId));
@@ -115,11 +119,11 @@ public class EvaluatorFragment extends Fragment {
         evaluateeSpinner.setAdapter(customSpinnerAdapter);
     }
 
-    private List<String> getUpdatedEmployeeList(int evaluatorId) {
-        List<String> updatedEmployeeList = new ArrayList<>();
+    private List<Employee> getUpdatedEmployeeList(int evaluatorId) {
+        List<Employee> updatedEmployeeList = new ArrayList<>();
         for (Employee employee : employeeList) {
             if (employee.getId() != evaluatorId) {
-                updatedEmployeeList.add(employee.getName());
+                updatedEmployeeList.add(employee);
             }
         }
         return updatedEmployeeList;

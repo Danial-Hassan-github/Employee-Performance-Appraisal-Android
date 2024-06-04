@@ -8,6 +8,33 @@
     android:layout_gravity="center"
     tools:context="director.KpiWeightageAdjustmentFormFragment">
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Total Weightage:"/>
+
+        <TextView
+            android:id="@+id/txt_total_weightage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0"
+            android:textColor="@color/red"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/exceed_msg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="please adjust weightage below 100"
+        android:layout_gravity="center"/>
+
     <!-- Dynamic input fields will be added here programmatically -->
     <LinearLayout
         android:id="@+id/kpi_weightage_adjustment_form_layout"
@@ -21,6 +48,7 @@
         android:id="@+id/save_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:enabled="false"
         android:text="Save"
         android:layout_marginTop="16dp"/>
 

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:windowSoftInputMode="adjustResize"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/white"
@@ -46,8 +47,10 @@
 <!--    </LinearLayout>-->
 
     <LinearLayout
+        android:id="@+id/employee_type_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <TextView
@@ -64,7 +67,9 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/designation_layout"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -82,7 +87,9 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/department_layout"
         android:layout_width="match_parent"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
@@ -132,6 +139,7 @@
             android:id="@+id/text_weightage"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:imeOptions="flagNoFullscreen"
             android:hint="Kpi Weightage..."/>
 
     </LinearLayout>
@@ -147,6 +155,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginRight="2dp"
+            android:enabled="false"
             android:layout_gravity="center_horizontal"
             android:text="Save"/>
 

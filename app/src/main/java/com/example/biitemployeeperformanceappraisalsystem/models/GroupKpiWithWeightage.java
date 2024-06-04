@@ -10,8 +10,17 @@ public class GroupKpiWithWeightage {
     private int department_id;
     private int designation_id;
     private int employee_type_id;
+    private int employee_id;
     private int weightage;
     private int session_id;
+
+    public int getEmployee_id() {
+        return employee_id;
+    }
+
+    public void setEmployee_id(int employee_id) {
+        this.employee_id = employee_id;
+    }
 
     public List<SubKpiWeightage> getSubKpiWeightages() {
         return subKpiWeightages;
