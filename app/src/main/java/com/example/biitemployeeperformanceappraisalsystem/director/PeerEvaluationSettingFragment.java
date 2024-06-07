@@ -86,7 +86,7 @@ public class PeerEvaluationSettingFragment extends Fragment {
                         evaluationTimeService.postEvaluationTime(
                                 evaluationTime,
                                 evaluationTime1 -> {
-                                    Toast.makeText(getContext(), evaluationTime1.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Peer Evaluation time Added Successfully", Toast.LENGTH_SHORT).show();
                                 },
                                 errorMessage -> {
                                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();

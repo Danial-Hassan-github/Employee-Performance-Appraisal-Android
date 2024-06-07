@@ -27,8 +27,10 @@
 <!--    </LinearLayout>-->
 
     <LinearLayout
+        android:id="@+id/employee_spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <TextView
@@ -45,8 +47,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/kpi_spinner_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="visible"
         android:orientation="vertical">
 
         <TextView

@@ -71,17 +71,26 @@ public class TaskAdapter extends ArrayAdapter<TaskWithEmployees> {
         btnOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                task.getTask().setScore(Integer.parseInt(editTextScore.getText().toString()));
-                task.getTask().setStatus(2);
-                taskService.putTask(
-                        task.getTask(),
-                        success -> {
-                            Toast.makeText(getContext(), "Score added successfully", Toast.LENGTH_SHORT).show();
-                        },
-                        errorMessage -> {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                );
+                try{
+                    int score = Integer.parseInt(editTextScore.getText().toString());
+                    if (score > task.getTask().getWeightage()){
+                        Toast.makeText(getContext(), "Score must be less than weightage", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    task.getTask().setScore(score);
+                    task.getTask().setStatus(2);
+                    taskService.putTask(
+                            task.getTask(),
+                            success -> {
+                                Toast.makeText(getContext(), "Score added successfully", Toast.LENGTH_SHORT).show();
+                            },
+                            errorMessage -> {
+                                Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                            }
+                    );
+                }catch (Exception ex){
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

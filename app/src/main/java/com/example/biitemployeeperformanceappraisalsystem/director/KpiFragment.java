@@ -203,12 +203,21 @@ public class KpiFragment extends Fragment {
                                         transaction.addToBackStack(null);
                                         transaction.commit();
                                     }else {
-                                        AddGroupKpiFragment addGroupKpiFragment = new AddGroupKpiFragment(details, selectedKpi);
+                                        if (details.getGroupKpi().getEmployee() == null){
+                                            AddGroupKpiFragment addGroupKpiFragment = new AddGroupKpiFragment(details, selectedKpi);
 
-                                        FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                                        transaction.replace(R.id.fragment_container, addGroupKpiFragment);
-                                        transaction.addToBackStack(null);
-                                        transaction.commit();
+                                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.fragment_container, addGroupKpiFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+                                        }else {
+                                            AddIndividualKpiFragment addIndividualKpiFragment = new AddIndividualKpiFragment(details, selectedKpi);
+
+                                            FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.fragment_container, addIndividualKpiFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+                                        }
                                     }
                                 }
 

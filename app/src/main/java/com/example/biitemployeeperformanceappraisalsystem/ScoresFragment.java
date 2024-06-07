@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,9 @@ import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
@@ -154,13 +157,17 @@ public class ScoresFragment extends Fragment {
 
     private void handleSpinnerSelectionChange() {
         try {
-            if (employeeSpinner.getAdapter().isEmpty() && sessionSpinner.getAdapter().isEmpty() && questionnaireTypeSpinner.getAdapter().isEmpty()) {
-                return;
-            }
-            if (employeeSpinner != null && sessionSpinner != null && questionnaireTypeSpinner != null) {
+            if (sessionSpinner != null && questionnaireTypeSpinner != null) {
+                SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getContext());
                 // Retrieve the selected session and employee IDs
                 int sessionId = sessionList.get(sessionSpinner.getSelectedItemPosition()).getId();
-                int employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
+                int employeeId = 0;
+
+                if (getActivity() instanceof DirectorMainActivity){
+                    employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
+                }else {
+                    employeeId = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
+                }
 
                 // Set the evaluation type ID (you might want to change this according to your logic)
                 int evaluationTypeId = questionnaireTypeList.get(questionnaireTypeSpinner.getSelectedItemPosition()).getId();
@@ -180,7 +187,7 @@ public class ScoresFragment extends Fragment {
                             for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
                                 EmployeeQuestionScore score = employeeQuestionScoreList.get(i);
                                 // Assuming you have some method to format EmployeeQuestionScore to String
-                                String scoreString = score != null ? score.getQuestion().getQuestion().toString() + "\n" + score.getObtainedScore() + "/" + score.getTotalScore() : ""; // Handle null case
+                                String scoreString = score != null ? score.getQuestion().getQuestion().toString() + "\n" + Math.round(score.getAverage())+"%" : ""; // Handle null case
                                 scoresData[i] = scoreString;
                             }
                             // Set the adapter for the ListView
@@ -195,6 +202,7 @@ public class ScoresFragment extends Fragment {
                 Toast.makeText(getContext(), "Spinners are not initialized", Toast.LENGTH_SHORT).show();
             }
         }catch (Exception ex){
+            Log.e("","",ex);
             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }

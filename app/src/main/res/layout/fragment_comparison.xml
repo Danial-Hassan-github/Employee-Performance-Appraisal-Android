@@ -5,71 +5,41 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
-    tools:context=".PerformanceFragment">
+    tools:context=".director.ComparisonFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:visibility="visible"
-        android:id="@+id/performance_type_tab"
+        android:id="@+id/comparison_type_tab"
         android:layout_width="match_parent"
-        app:tabMode="scrollable"
         android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_kpi"
+            android:id="@+id/tab_employee_kpi_comparison"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:text="Kpi"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_subKpi"
+            android:id="@+id/tab_employee_subKpi_comparison"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:visibility="visible"
-            android:text="Sub Kpi"/>
+            android:text="Sub-Kpi"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_employee_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:text="Comparison"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_course_session"
+            android:id="@+id/tab_employee_course_comparison"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Course"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_course_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Course Comparison"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_question"
+            android:id="@+id/tab_employee_question_comparison"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Question"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_question_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Question Comparison"/>
-
     </com.google.android.material.tabs.TabLayout>
-
-    <TextView
-        android:id="@+id/txt_employeee_name"
-        android:layout_width="match_parent"
-        android:textColor="@color/white"
-        android:layout_height="wrap_content"
-        android:background="@color/brown"
-        android:text="Munir Ahmed"
-        android:visibility="visible"
-        android:padding="10dp"/>
 
     <!-- TODO: Update blank fragment layout -->
     <LinearLayout
@@ -113,12 +83,12 @@
             android:layout_marginRight="5dp"/>
     </LinearLayout>
 
-<!--    <CheckBox-->
-<!--        android:id="@+id/check_course_performance"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:background="@color/white"-->
-<!--        android:text="Course Performance"/>-->
+    <!--    <CheckBox-->
+    <!--        android:id="@+id/check_course_performance"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:background="@color/white"-->
+    <!--        android:text="Course Performance"/>-->
 
     <LinearLayout
         android:id="@+id/session_spinner_layout"
@@ -147,13 +117,13 @@
                 android:layout_marginRight="5dp"/>
         </LinearLayout>
 
-<!--        <androidx.appcompat.widget.AppCompatButton-->
-<!--            android:id="@+id/btn_show"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_weight="3"-->
-<!--            android:text="Show"/>-->
+        <!--        <androidx.appcompat.widget.AppCompatButton-->
+        <!--            android:id="@+id/btn_show"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_weight="3"-->
+        <!--            android:text="Show"/>-->
 
     </LinearLayout>
 
@@ -186,66 +156,66 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/comparison_sessions_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="gone"
-        android:weightSum="8"
-        android:background="@color/white">
+<!--    <LinearLayout-->
+<!--        android:id="@+id/comparison_sessions_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:visibility="gone"-->
+<!--        android:weightSum="8"-->
+<!--        android:background="@color/white">-->
 
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/txt_session_from"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="From"/>
-            <Spinner
-                android:id="@+id/spinner_session_from"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:orientation="vertical">
-            <TextView
-                android:id="@+id/txt_session_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="To"/>
-            <Spinner
-                android:id="@+id/spinner_session_to"
-                android:layout_width="match_parent"
-                android:layout_height="40dp"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="5dp"/>
-        </LinearLayout>
-
-<!--        <androidx.appcompat.widget.AppCompatButton-->
-<!--            android:id="@+id/btn_compare"-->
-<!--            android:layout_width="0dp"-->
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
 <!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="16dp"-->
-<!--            android:layout_weight="3"-->
-<!--            android:text="Compare"/>-->
+<!--            android:layout_weight="4"-->
+<!--            android:orientation="vertical">-->
+<!--            <TextView-->
+<!--                android:id="@+id/txt_session_from"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="From"/>-->
+<!--            <Spinner-->
+<!--                android:id="@+id/spinner_session_from"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="5dp"-->
+<!--                android:layout_marginRight="5dp"/>-->
+<!--        </LinearLayout>-->
 
-    </LinearLayout>
+<!--        <LinearLayout-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_weight="4"-->
+<!--            android:orientation="vertical">-->
+<!--            <TextView-->
+<!--                android:id="@+id/txt_session_to"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="To"/>-->
+<!--            <Spinner-->
+<!--                android:id="@+id/spinner_session_to"-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="40dp"-->
+<!--                android:layout_marginLeft="5dp"-->
+<!--                android:layout_marginRight="5dp"/>-->
+<!--        </LinearLayout>-->
 
-    <com.github.mikephil.charting.charts.PieChart
-        android:visibility="gone"
-        android:id="@+id/pie_chart"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <!--        <androidx.appcompat.widget.AppCompatButton-->
+        <!--            android:id="@+id/btn_compare"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="wrap_content"-->
+        <!--            android:layout_marginTop="16dp"-->
+        <!--            android:layout_weight="3"-->
+        <!--            android:text="Compare"/>-->
+
+<!--    </LinearLayout>-->
+
+<!--    <com.github.mikephil.charting.charts.PieChart-->
+<!--        android:visibility="gone"-->
+<!--        android:id="@+id/pie_chart"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
 
     <com.github.mikephil.charting.charts.BarChart
         android:visibility="visible"

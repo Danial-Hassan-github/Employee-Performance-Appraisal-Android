@@ -101,6 +101,10 @@ public class DirectorMainActivity extends AppCompatActivity {
                     replaceFragment(new AddSessionFragment());
                     topText.setText("Session");
                     return true;
+                } else if (R.id.navigation_comparison == item.getItemId()) {
+                    replaceFragment(new ComparisonFragment());
+                    topText.setText("Comparison");
+                    return true;
                 }
                 return false;
             }

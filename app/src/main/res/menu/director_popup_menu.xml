@@ -2,6 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
+        android:id="@+id/navigation_comparison"
+        android:title="Comparison"
+        android:icon="@drawable/question_icon"
+        />
+
+    <item
         android:id="@+id/navigation_questionnaire"
         android:title="Questionnaire"
         android:icon="@drawable/question_icon"

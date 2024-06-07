@@ -410,7 +410,7 @@ public class AddGroupKpiFragment extends Fragment {
 
                                     for (int i = 0 ; i < groupKpiDetails.getKpiList().size(); i++){
                                         if (kpi.getId() == groupKpiDetails.getKpiList().get(i).getId()){
-                                            KpiWeightage kpiWeightage1 = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
+                                            // KpiWeightage kpiWeightage1 = groupKpiDetails.getKpiList().get(i).getKpiWeightage();
                                             kpiWeightage.setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
                                             groupKpiDetails.getKpiList().get(i).getKpiWeightage().setWeightage(Integer.parseInt(kpiValueEditText.getText().toString()));
                                             groupKpiDetails.getKpiList().get(i).setName(kpiNameEditText.getText().toString());

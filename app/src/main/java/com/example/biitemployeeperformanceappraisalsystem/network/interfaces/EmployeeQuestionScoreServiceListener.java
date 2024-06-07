@@ -9,6 +9,6 @@ import retrofit2.http.GET;
 import retrofit2.http.Query;
 
 public interface EmployeeQuestionScoreServiceListener {
-    @GET("EvaluationScores/GetQuestionsScoresByEvaluationId")
+    @GET("QuestionsScores/GetQuestionsScoresByEvaluationId")
     Call<List<EmployeeQuestionScore>> getQuestionsScoresByEvaluationId(@Query("employeeID") int employeeID, @Query("sessionID") int sessionID, @Query("evaluationTypeID") int evaluationTypeID);
 }

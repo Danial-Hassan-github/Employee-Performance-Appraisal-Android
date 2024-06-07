@@ -2,8 +2,17 @@ package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class EmployeeQuestionScore {
     private Question question;
+    private double average;
     private int obtainedScore;
     private int totalScore;
+
+    public double getAverage() {
+        return average;
+    }
+
+    public void setAverage(double average) {
+        this.average = average;
+    }
 
     public Question getQuestion() {
         return question;

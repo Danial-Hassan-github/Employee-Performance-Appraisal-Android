@@ -96,7 +96,7 @@ public class StudentEvaluationSettingFragment extends Fragment {
                         evaluationTimeService.postEvaluationTime(
                                 evaluationTime,
                                 evaluationTime1 -> {
-                                    Toast.makeText(getContext(), evaluationTime1.toString(), Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getContext(), "Student Evaluation Time Added", Toast.LENGTH_SHORT).show();
                                 },
                                 errorMessage -> {
                                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();

@@ -19,7 +19,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:drawableLeft="@drawable/arrow_back_foreground"
             android:text="Tasks"
             android:textSize="30dp"
             android:textStyle="bold"
