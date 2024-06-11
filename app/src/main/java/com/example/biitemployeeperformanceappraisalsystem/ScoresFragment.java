@@ -20,7 +20,7 @@ import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeQuestionScoreService;
@@ -39,7 +39,7 @@ public class ScoresFragment extends Fragment {
     List<Session> sessionList;
     List<Employee> employeeList;
     List<QuestionnaireType> questionnaireTypeList;
-    List<EmployeeQuestionScore> employeeQuestionScoreList;
+    List<QuestionScore> employeeQuestionScoreList;
     ListView employeeScoreListView;
     Spinner sessionSpinner, employeeSpinner, questionnaireTypeSpinner;
     LinearLayout employeeSpinnerLayout;
@@ -185,7 +185,7 @@ public class ScoresFragment extends Fragment {
 
                             // Populate the array with the data from employeeScoreList
                             for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
-                                EmployeeQuestionScore score = employeeQuestionScoreList.get(i);
+                                QuestionScore score = employeeQuestionScoreList.get(i);
                                 // Assuming you have some method to format EmployeeQuestionScore to String
                                 String scoreString = score != null ? score.getQuestion().getQuestion().toString() + "\n" + Math.round(score.getAverage())+"%" : ""; // Handle null case
                                 scoresData[i] = scoreString;

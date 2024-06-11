@@ -1,9 +1,9 @@
 package com.example.biitemployeeperformanceappraisalsystem;
 
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.Bundle;
 
-import androidx.constraintlayout.widget.Group;
 import androidx.fragment.app.Fragment;
 
 import android.util.Log;
@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ExpandableListView;
 import android.widget.LinearLayout;
@@ -22,39 +21,38 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CoursePerformanceExpandableListAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CustomSpinnerAdapter;
-import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
-import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCourseScore;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCoursesPerformanceRequest;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
-import com.example.biitemployeeperformanceappraisalsystem.models.MultiEmployeeCoursePerformanceRequest;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeSubKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
-import com.example.biitemployeeperformanceappraisalsystem.network.services.CommonData;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeCoursePerformanceService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeKpiScoreService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeQuestionScoreService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeSubKpiScoreService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.charts.PieChart;
-import com.github.mikephil.charting.components.Legend;
+import com.github.mikephil.charting.components.IMarker;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.data.PieData;
-import com.github.mikephil.charting.data.PieDataSet;
-import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
-import com.google.android.material.tabs.TabItem;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.utils.MPPointF;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -68,8 +66,10 @@ import java.util.List;
  */
 public class PerformanceFragment extends Fragment {
     SharedPreferencesManager sharedPreferencesManager;
-    Boolean isComparison = false;
-    Boolean isCourseComparison = false;
+    Boolean isKpi = true;
+    Boolean isSubKpi = false;
+    Boolean isCourse = false;
+    Boolean isQuestion = false;
     int employeeID;
     Employee employee2;
     Session session;
@@ -77,17 +77,25 @@ public class PerformanceFragment extends Fragment {
     List<EmployeeKpiScore> employeeKpiScoreList;
     List<List<EmployeeKpiScore>> multiEmployeesKpiScoreList;
     List<EmployeeKpiScoreMultiSession> employeeKpiScoreMultiSessionList;
+    SessionService sessionService;
+    CourseService courseService;
+    EmployeeService employeeService;
     EmployeeCoursePerformanceService employeeCoursePerformanceService;
+    EmployeeSubKpiScoreService employeeSubKpiScoreService;
+    EmployeeQuestionScoreService employeeQuestionScoreService;
+    QuestionnaireService questionnaireService;
     List<Employee> employeeList;
+    List<QuestionnaireType> questionnaireTypeList;
+    List<QuestionScore> employeeQuestionScoreList;
     List<Course> courseList;
     List<Session> sessionList;
-    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout;
+    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout, questionnaireTypeLayout;
     CustomSpinnerAdapter customSpinnerAdapter;
     TextView txtEmployeeName;
     PieChart pieChart;
     BarChart barChart;
     TabLayout tabLayout;
-    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,courseSpinner, employeeSpinner;
+    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,courseSpinner, employeeSpinner, questionnaireTypeSpinner;
     CheckBox checkCoursePerformance;
     ExpandableListView expandableListView;
     CoursePerformanceExpandableListAdapter adapter;
@@ -106,26 +114,34 @@ public class PerformanceFragment extends Fragment {
         pieChart = view.findViewById(R.id.pie_chart);
         barChart = view.findViewById(R.id.bar_chart);
         tabLayout = view.findViewById(R.id.performance_type_tab);
-        employeeLayout = view.findViewById(R.id.employee_spinner_layout);
+        // employeeLayout = view.findViewById(R.id.employee_spinner_layout);
         sessionLayout = view.findViewById(R.id.session_spinner_layout);
+        questionnaireTypeLayout = view.findViewById(R.id.questionnaire_type_spinner_layout);
         courseLayout = view.findViewById(R.id.course_spinner_layout);
         comparisonSessionLayout = view.findViewById(R.id.comparison_sessions_layout);
+        questionnaireTypeSpinner = view.findViewById(R.id.spinner_questionnaire_type);
         expandableListView = view.findViewById(R.id.employee_course_questions_scores);
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
         session = new Session();
         session.setId(sharedPreferencesManager.getSessionId());
+        employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
+        employeeSubKpiScoreService = new EmployeeSubKpiScoreService(getContext());
+        questionnaireService = new QuestionnaireService(getContext());
+        employeeService = new EmployeeService(getContext());
+        courseService = new CourseService(getContext());
+        sessionService = new SessionService(view.getContext());
 
-        if (getActivity() instanceof FacultyMain || getActivity() instanceof HodMainActivity){
-            // tabLayout.setVisibility(View.GONE);
-            tabLayout.getTabAt(1).view.setVisibility(View.GONE);
-            tabLayout.getTabAt(3).view.setVisibility(View.GONE);
-            try {
-                employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
-            }catch (Exception ex){
-
-            }
-            txtEmployeeName.setVisibility(View.GONE);
-        }
+//        if (getActivity() instanceof FacultyMain || getActivity() instanceof HodMainActivity){
+//            // tabLayout.setVisibility(View.GONE);
+//            tabLayout.getTabAt(1).view.setVisibility(View.GONE);
+//            tabLayout.getTabAt(3).view.setVisibility(View.GONE);
+//            try {
+//                employeeID = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
+//            }catch (Exception ex){
+//
+//            }
+//            txtEmployeeName.setVisibility(View.GONE);
+//        }
 
         adapter = new CoursePerformanceExpandableListAdapter(getContext(), new ArrayList<>(), new HashMap<>());
         expandableListView.setAdapter(adapter);
@@ -133,7 +149,7 @@ public class PerformanceFragment extends Fragment {
         pieChart.getDescription().setTextColor(Color.TRANSPARENT);
         barChart.getDescription().setTextColor(Color.TRANSPARENT);
 
-        employeeSpinner = view.findViewById(R.id.spinner_employee);
+        // employeeSpinner = view.findViewById(R.id.spinner_employee);
         courseSpinner = view.findViewById(R.id.spinner_course);
         sessionSpinner = view.findViewById(R.id.spinner_session);
 //        fromSessionSpinner = view.findViewById(R.id.spinner_session_from);
@@ -142,26 +158,34 @@ public class PerformanceFragment extends Fragment {
         employeeCoursePerformanceService = new EmployeeCoursePerformanceService(getContext());
         // EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
 
-        EmployeeService employeeService = new EmployeeService(getContext());
-        employeeService.getEmployees(
-                employees -> {
-                    employeeList = employees;
-                    // employeeService.populateEmployeesSpinner(employeeList, employeeSpinner);
-                    for (Employee e: employeeList) {
-                        if (e.getId() == employeeID){
-                            txtEmployeeName.setText(e.getName());
-                        }
-                    }
-                    updateEvaluateeSpinnerContents();
+//        employeeService.getEmployees(
+//                employees -> {
+//                    employeeList = employees;
+//                    // employeeService.populateEmployeesSpinner(employeeList, employeeSpinner);
+//                    for (Employee e: employeeList) {
+//                        if (e.getId() == employeeID){
+//                            txtEmployeeName.setText(e.getName());
+//                        }
+//                    }
+//                    updateEvaluateeSpinnerContents();
+//
+//                    // employeeService.populateEmployeesSpinner(employeeList, employeeSpinner);
+//                },
+//                errorMessage -> {
+//                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                }
+//        );
 
-                    // employeeService.populateEmployeesSpinner(employeeList, employeeSpinner);
+        questionnaireService.getQuestionnaireType(
+                questionnaireTypes -> {
+                    questionnaireTypeList = questionnaireTypes;
+                    questionnaireService.populateSpinner(questionnaireTypeList, questionnaireTypeSpinner);
                 },
                 errorMessage -> {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                 }
         );
 
-        CourseService courseService = new CourseService(getContext());
         courseService.getTeacherCourses(
                 employeeID,
                 session.getId(),
@@ -181,8 +205,6 @@ public class PerformanceFragment extends Fragment {
                 }
         );
 
-
-        SessionService sessionService = new SessionService(view.getContext());
         sessionService.getSessions(sessions -> {
                     // Handle the list of sessions here
                     sessionList = sessions;
@@ -210,28 +232,28 @@ public class PerformanceFragment extends Fragment {
 //            }
 //        });
 
-        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                course = courseList.get(position);
-                if (isComparison){
-                    if (isCourseComparison)
-                        updateCoursePerformanceComparisonBarChart();
-                    else
-                        updateGroupBarChart();
-                }else {
-                    if (isCourseComparison)
-                        updateCoursesPerformanceBarChart();
-                    else
-                        updateKpiPerformanceChart();
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
+//        courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                course = courseList.get(position);
+//                if (isComparison){
+//                    if (isCourseComparison)
+//                        updateQuestionsPerformanceBarChart();
+//                    else
+//                        updateGroupBarChart();
+//                }else {
+//                    if (isCourseComparison)
+//                        updateCoursesPerformanceBarChart();
+//                    else
+//                        updateKpiPerformanceChart();
+//                }
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//
+//            }
+//        });
 
         // Set an item selected listener for the session spinner
         sessionSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -239,23 +261,24 @@ public class PerformanceFragment extends Fragment {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 // Get the selected session
                 session = sessionList.get(position);
-                // updateEvaluateeSpinnerContents();
-                if (isComparison){
-                    if (isCourseComparison)
-                        updateCoursePerformanceComparisonBarChart();
-                    else
-                        updateGroupBarChart();
-                }else {
-                    if (isCourseComparison)
-                        updateCoursesPerformanceBarChart();
-                    else
-                        updateKpiPerformanceChart();
-                }
+                updateChart();
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 // Handle case where nothing is selected
+            }
+        });
+
+        questionnaireTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateChart();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
             }
         });
 
@@ -303,22 +326,17 @@ public class PerformanceFragment extends Fragment {
                 int position = tab.getPosition();
                 switch (position){
                     case 0:
-                        isComparison = false;
                         updateKpiPerformanceChart();
                         break;
                     case 1:
-                        isComparison = true;
-                        updateGroupBarChart();
+                        updateSubKpiPerformanceChart();
                         break;
                     case 2:
-                        isComparison = false;
-                        isCourseComparison = false;
                         updateCoursesPerformanceBarChart();
                         break;
                     case 3:
-                        isComparison = true;
-                        isCourseComparison = true;
-                        updateCoursePerformanceComparisonBarChart();
+                        questionnaireTypeLayout.setVisibility(View.VISIBLE);
+                        updateQuestionsPerformanceBarChart();
                         break;
                     default:
                         break;
@@ -327,7 +345,24 @@ public class PerformanceFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                int position = tab.getPosition();
+                switch (position) {
+                    case 0:
+                        isKpi = false;
+                        break;
+                    case 1:
+                        isSubKpi = false;
+                        break;
+                    case 2:
+                        isCourse = false;
+                        break;
+                    case 3:
+                        questionnaireTypeLayout.setVisibility(View.GONE);
+                        isQuestion = false;
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -342,11 +377,11 @@ public class PerformanceFragment extends Fragment {
 
     private void updateKpiPerformanceChart() {
         // pieChart.setVisibility(View.GONE);
-        employeeLayout.setVisibility(View.GONE);
+        // employeeLayout.setVisibility(View.GONE);
 
         // barChart.setVisibility(View.VISIBLE);
-        sessionLayout.setVisibility(View.VISIBLE);
-        courseLayout.setVisibility(View.GONE);
+        // sessionLayout.setVisibility(View.VISIBLE);
+        // courseLayout.setVisibility(View.GONE);
 
         EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
         employeeKpiScoreService.getEmployeeKpiScore(
@@ -402,17 +437,18 @@ public class PerformanceFragment extends Fragment {
         sessionLayout.setVisibility(View.VISIBLE);
 
         // barChart.setVisibility(View.VISIBLE);
-        employeeLayout.setVisibility(View.GONE);
-        courseLayout.setVisibility(View.GONE);
+        // employeeLayout.setVisibility(View.GONE);
+        // courseLayout.setVisibility(View.GONE);
 
         try {
-            List<Integer> coursesIds = new ArrayList<>();
-            for (Course c: courseList) {
-                coursesIds.add(c.getId());
-            }
-            EmployeeCoursesPerformanceRequest employeeCoursesPerformanceRequest = new EmployeeCoursesPerformanceRequest(employeeID, session.getId(), coursesIds);
+//            List<Integer> coursesIds = new ArrayList<>();
+//            for (Course c: courseList) {
+//                coursesIds.add(c.getId());
+//            }
+//            EmployeeCoursesPerformanceRequest employeeCoursesPerformanceRequest = new EmployeeCoursesPerformanceRequest(employeeID, session.getId(), coursesIds);
             employeeCoursePerformanceService.getEmployeeCoursesPerformance(
-                    employeeCoursesPerformanceRequest,
+                    employeeID,
+                    session.getId(),
                     employeeCourseScores -> {
                         // employeeKpiScoreList = employeeKpiScores;
                         ArrayList<BarEntry> entries = new ArrayList<>();
@@ -461,84 +497,125 @@ public class PerformanceFragment extends Fragment {
         }
     }
 
-    public void updateCoursePerformanceComparisonBarChart(){
+    public void updateQuestionsPerformanceBarChart(){
         // pieChart.setVisibility(View.GONE);
-        sessionLayout.setVisibility(View.VISIBLE);
+        // sessionLayout.setVisibility(View.VISIBLE);
 
         // barChart.setVisibility(View.VISIBLE);
-        employeeLayout.setVisibility(View.VISIBLE);
-        courseLayout.setVisibility(View.VISIBLE);
+        // employeeLayout.setVisibility(View.VISIBLE);
+        // courseLayout.setVisibility(View.VISIBLE);
         try {
-            // Define the labels for each group
-            List<String> groupLabels = new ArrayList<>();
-            ArrayList<Integer> employeeIds = new ArrayList<>();
+            if (sessionSpinner != null && questionnaireTypeSpinner != null) {
+                SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getContext());
+                // Retrieve the selected session and employee IDs
+//                int sessionId = sessionList.get(sessionSpinner.getSelectedItemPosition()).getId();
+//                int employeeId = 0;
+//
+//                if (getActivity() instanceof DirectorMainActivity){
+//                    employeeId = employeeList.get(employeeSpinner.getSelectedItemPosition()).getId();
+//                }else {
+//                    employeeId = sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId();
+//                }
 
-            employeeIds.add(employeeID);
-            // Log.i("",customSpinnerAdapter.getSelectedEmployeeIds().get(0).toString());
-            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
-            employeeIds.remove(new int[]{0});
-            // employeeIds.add(employee2.getId());
+                // Set the evaluation type ID (you might want to change this according to your logic)
+                int evaluationTypeId = questionnaireTypeList.get(questionnaireTypeSpinner.getSelectedItemPosition()).getId();
 
-            MultiEmployeeCoursePerformanceRequest multiEmployeeCoursePerformanceRequest = new MultiEmployeeCoursePerformanceRequest(course.getId(), session.getId(), employeeIds);
+                // Call the service to get employee question scores based on the selected session, employee, and evaluation type
+                employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
+                employeeQuestionScoreService.getEmployeeQuestionScore(
+                        employeeID,
+                        session.getId(),
+                        evaluationTypeId,
+                        employeeQuestionScores -> {
+                            // Handle the retrieved employee question scores
+                            employeeQuestionScoreList = employeeQuestionScores;
 
-            employeeCoursePerformanceService.getMultiEmployeeCoursePerformance(
-                    multiEmployeeCoursePerformanceRequest,
-                    employeeCourseScores -> {
-                        // TODO
-                        ArrayList<BarEntry> entries = new ArrayList<>();
-                        ArrayList<String> kpiTitles = new ArrayList<>();
-                        int index = 0;
+                            // Populate the array with the data from employeeScoreList
+                            for (int i = 0; i < employeeQuestionScoreList.size(); i++) {
+                                QuestionScore score = employeeQuestionScoreList.get(i);
 
-                        for (EmployeeCourseScore e : employeeCourseScores) {
-                            BarEntry barEntry = new BarEntry(index++, (float) e.getAverage());
-                            entries.add(barEntry);
-                            kpiTitles.add(e.getEmployee().getName());
-                        }
+                            }
+                            ArrayList<BarEntry> entries = new ArrayList<>();
+                            ArrayList<String> questionTitles = new ArrayList<>();
+                            int index = 0;
 
-                        // Create the BarDataSet
-                        BarDataSet dataSet = new BarDataSet(entries, "");
-                        dataSet.setValueTextSize(15f);
+                            for (QuestionScore e : employeeQuestionScoreList) {
+                                BarEntry barEntry = new BarEntry(index++, (float) e.getAverage());
+                                entries.add(barEntry);
+                                // questionTitles.add(e.getQuestion().getQuestion());
+                                questionTitles.add("Q"+(index));
+                            }
 
-                        // Generate colors dynamically
-                        CommonMethods commonMethods = new CommonMethods();
-                        ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
-                        dataSet.setColors(colors);
+                            // Create the BarDataSet
+                            BarDataSet dataSet = new BarDataSet(entries, "");
+                            dataSet.setValueTextSize(15f);
 
-                        // Create the BarData
-                        BarData data = new BarData(dataSet);
-                        data.setBarWidth(0.2f); // set custom bar width
+                            // Generate colors dynamically
+                            CommonMethods commonMethods = new CommonMethods();
+                            ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
+                            dataSet.setColors(colors);
 
-                        // Set the data for the bar chart
-                        barChart.setData(data);
-                        barChart.setFitBars(true); // make the x-axis fit exactly all bars
+                            // Create the BarData
+                            BarData data = new BarData(dataSet);
+                            data.setBarWidth(0.2f); // set custom bar width
 
-                        // Set up the x-axis labels
-                        XAxis xAxis = barChart.getXAxis();
-                        xAxis.setValueFormatter(new IndexAxisValueFormatter(kpiTitles));
-                        xAxis.setGranularity(1f); // only intervals of 1
-                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                            // Set the data for the bar chart
+                            barChart.setData(data);
+                            barChart.setFitBars(true); // make the x-axis fit exactly all bars
 
-                        // Refresh the chart
-                        barChart.notifyDataSetChanged();
-                        barChart.invalidate();
-                    },
-                    errorMessage -> {
-                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-            );
+                            barChart.setMarker(new IMarker() {
+                                @Override
+                                public MPPointF getOffset() {
+                                    return null;
+                                }
+
+                                @Override
+                                public MPPointF getOffsetForDrawingAtPoint(float posX, float posY) {
+                                    return null;
+                                }
+
+                                @Override
+                                public void refreshContent(Entry e, Highlight highlight) {
+
+                                }
+
+                                @Override
+                                public void draw(Canvas canvas, float posX, float posY) {
+
+                                }
+                            });
+
+                            // Set up the x-axis labels
+                            XAxis xAxis = barChart.getXAxis();
+                            xAxis.setValueFormatter(new IndexAxisValueFormatter(questionTitles));
+                            xAxis.setGranularity(1f); // only intervals of 1
+                            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+                            // Refresh the chart
+                            barChart.notifyDataSetChanged();
+                            barChart.invalidate();
+                        },
+                        errorMessage -> {
+                            // Handle the error message
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        });
+            } else {
+                // Handle the case where either spinner is null
+                Toast.makeText(getContext(), "Spinners are not initialized", Toast.LENGTH_SHORT).show();
+            }
         }catch (Exception ex){
-            Log.e("","", ex);
+            Log.e("","",ex);
             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
     private void updateGroupBarChart() {
         // pieChart.setVisibility(View.GONE);
-        sessionLayout.setVisibility(View.VISIBLE);
+        // sessionLayout.setVisibility(View.VISIBLE);
 
         // barChart.setVisibility(View.VISIBLE);
-        employeeLayout.setVisibility(View.VISIBLE);
-        courseLayout.setVisibility(View.GONE);
+        // employeeLayout.setVisibility(View.VISIBLE);
+        // courseLayout.setVisibility(View.GONE);
 
 //        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
 //            return;
@@ -697,41 +774,107 @@ public class PerformanceFragment extends Fragment {
         }
     }
 
-    private void updateEvaluateeSpinnerContents() {
-        // Create a new list to hold the updated items for the evaluatee spinner
-         List<Employee> updatedEvaluateeList = new ArrayList<>();
+    private void updateSubKpiPerformanceChart() {
+        try {
+            employeeSubKpiScoreService.getSubKpiEmployeePerformance(
+                    employeeID,
+                    session.getId(),
+                    employeeSubKpiScores -> {
+                        // employeeKpiScoreList = employeeKpiScores;
+                        ArrayList<BarEntry> entries = new ArrayList<>();
+                        ArrayList<String> titles = new ArrayList<>();
+                        int index = 0;
 
-        // Add the default "Select All" item to the list
-        Employee employee = new Employee();
-        employee.setName("Select All");
-        updatedEvaluateeList.add(employee);
+                        for (EmployeeSubKpiScore e : employeeSubKpiScores) {
+                            BarEntry barEntry = new BarEntry(index++, (float) e.getScore());
+                            entries.add(barEntry);
+                            titles.add(e.getName());
+                        }
 
-        // Add all employees to the list initially
-         updatedEvaluateeList.addAll(getUpdatedEmployeeList(employeeID));
+                        // Create the BarDataSet
+                        BarDataSet dataSet = new BarDataSet(entries, "");
+                        dataSet.setValueTextSize(15f);
 
-        // Update the evaluatee spinner with the updated list
-        customSpinnerAdapter = new CustomSpinnerAdapter(getContext(), R.layout.custom_spinner_item_layout, updatedEvaluateeList);
-        employeeSpinner.setAdapter(customSpinnerAdapter);
+                        // Generate colors dynamically
+                        CommonMethods commonMethods = new CommonMethods();
+                        ArrayList<Integer> colors = commonMethods.generateRandomColors(entries.size());
+                        dataSet.setColors(colors);
 
-        customSpinnerAdapter.setOnItemSelectionChangedListener(new CustomSpinnerAdapter.OnItemSelectionChangedListener() {
-            @Override
-            public void onItemSelectionChanged(List<Integer> selectedEmployeeIds) {
-                if (isCourseComparison)
-                    updateCoursePerformanceComparisonBarChart();
-                else
-                    updateGroupBarChart();
-            }
-        });
+                        // Create the BarData
+                        BarData data = new BarData(dataSet);
+                        data.setBarWidth(0.2f); // set custom bar width
 
-    }
+                        // Set the data for the bar chart
+                        barChart.setData(data);
+                        barChart.setFitBars(true); // make the x-axis fit exactly all bars
 
-    private List<Employee> getUpdatedEmployeeList(int evaluatorId) {
-        List<Employee> updatedEmployeeList = new ArrayList<>();
-        for (Employee employee : employeeList) {
-            if (employee.getId() != evaluatorId) {
-                updatedEmployeeList.add(employee);
-            }
+                        // Set up the x-axis labels
+                        XAxis xAxis = barChart.getXAxis();
+                        xAxis.setValueFormatter(new IndexAxisValueFormatter(titles));
+                        xAxis.setGranularity(1f); // only intervals of 1
+                        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+                        // Refresh the chart
+                        barChart.notifyDataSetChanged();
+                        barChart.invalidate();
+                    },
+                    errorMessage -> {
+                        Log.e("Error Sub Kpi:", errorMessage);
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+            );
+        }catch (Exception ex){
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
-        return updatedEmployeeList;
     }
+
+    public void updateChart(){
+        if (isKpi){
+            updateKpiPerformanceChart();
+        } else if (isSubKpi) {
+            updateSubKpiPerformanceChart();
+        } else if (isCourse) {
+            updateCoursesPerformanceBarChart();
+        } else if (isQuestion) {
+            updateQuestionsPerformanceBarChart();
+        }
+    }
+
+//    private void updateEvaluateeSpinnerContents() {
+//        // Create a new list to hold the updated items for the evaluatee spinner
+//         List<Employee> updatedEvaluateeList = new ArrayList<>();
+//
+//        // Add the default "Select All" item to the list
+//        Employee employee = new Employee();
+//        employee.setName("Select All");
+//        updatedEvaluateeList.add(employee);
+//
+//        // Add all employees to the list initially
+//         updatedEvaluateeList.addAll(getUpdatedEmployeeList(employeeID));
+//
+//        // Update the evaluatee spinner with the updated list
+//        customSpinnerAdapter = new CustomSpinnerAdapter(getContext(), R.layout.custom_spinner_item_layout, updatedEvaluateeList);
+//        employeeSpinner.setAdapter(customSpinnerAdapter);
+//
+//        customSpinnerAdapter.setOnItemSelectionChangedListener(new CustomSpinnerAdapter.OnItemSelectionChangedListener() {
+//            @Override
+//            public void onItemSelectionChanged(List<Integer> selectedEmployeeIds) {
+//                if (isCourseComparison)
+//                    updateQuestionsPerformanceBarChart();
+//                else
+//                    updateGroupBarChart();
+//            }
+//        });
+//
+//    }
+//
+//    private List<Employee> getUpdatedEmployeeList(int evaluatorId) {
+//        List<Employee> updatedEmployeeList = new ArrayList<>();
+//        for (Employee employee : employeeList) {
+//            if (employee.getId() != evaluatorId) {
+//                updatedEmployeeList.add(employee);
+//            }
+//        }
+//        return updatedEmployeeList;
+//    }
 }

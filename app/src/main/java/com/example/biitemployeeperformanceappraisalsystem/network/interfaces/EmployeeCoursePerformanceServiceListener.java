@@ -17,8 +17,8 @@ public interface EmployeeCoursePerformanceServiceListener {
     Call<EmployeeCourseScore> getEmployeeCoursePerformance(@Query("employeeID") int employeeID, @Query("sessionID") int sessionID, @Query("courseID") int courseID);
     @GET("EmployeeCoursePerformance/CompareEmployeeCoursePerformance")
     Call<List<EmployeeCourseScore>> compareEmployeeCoursePerformance(@Query("employeeID1") int employeeID1, @Query("employeeID2") int employeeID2, @Query("sessionID") int sessionID, @Query("courseID") int courseID);
-    @POST("EmployeeCoursePerformance/GetEmployeeCoursesPerformance")
-    Call<List<EmployeeCourseScore>> getEmployeeCoursesPerformance(@Body EmployeeCoursesPerformanceRequest employeeCoursesPerformanceRequest);
+    @GET("EmployeeCoursePerformance/GetEmployeeCoursesPerformance")
+    Call<List<EmployeeCourseScore>> getEmployeeCoursesPerformance(@Query("teacherID") int teacherID, @Query("sessionID") int sessionID);
     @POST("EmployeeCoursePerformance/GetMultiEmployeeCoursePerformance")
     Call<List<EmployeeCourseScore>> getMultiEmployeeCoursePerformance(@Body MultiEmployeeCoursePerformanceRequest multiEmployeeCoursePerformanceRequest);
 }

@@ -13,29 +13,30 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CustomSpinnerAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.QuestionsScoresRequest;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCourseScore;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCoursesPerformanceRequest;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionsScores;
 import com.example.biitemployeeperformanceappraisalsystem.models.MultiEmployeeCoursePerformanceRequest;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeCoursePerformanceService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeKpiScoreService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeQuestionScoreService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.charts.PieChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
@@ -64,6 +65,7 @@ public class ComparisonFragment extends Fragment {
     CourseService courseService;
     SessionService sessionService;
     List<EmployeeKpiScore> employeeKpiScoreList;
+    List<EmployeeQuestionsScores> employeeQuestionsScoresList;
     List<List<EmployeeKpiScore>> multiEmployeesKpiScoreList;
     List<EmployeeKpiScoreMultiSession> employeeKpiScoreMultiSessionList;
     EmployeeCoursePerformanceService employeeCoursePerformanceService;
@@ -124,24 +126,16 @@ public class ComparisonFragment extends Fragment {
                 int position = tab.getPosition();
                 switch (position){
                     case 0:
-                        isKpi = true;
-                        isCourse = isSubKpi = isQuestion = false;
                         updateKpiComparisonBarChart();
                         break;
                     case 1:
-                        isSubKpi = true;
-                        isCourse = isKpi = isQuestion = false;
                         break;
                     case 2:
-                        isCourse = true;
-                        isSubKpi = isKpi = isQuestion = false;
-                        // updateCoursesPerformanceBarChart();
+                        courseLayout.setVisibility(View.VISIBLE);
                         updateCourseComparisonBarChart();
                         break;
                     case 3:
-                        isQuestion = true;
-                        isCourse = isKpi = isSubKpi = false;
-                        // updateCoursePerformanceComparisonBarChart();
+                        updateQuestionComparisonBarChart();
                         break;
                     default:
                         break;
@@ -150,7 +144,24 @@ public class ComparisonFragment extends Fragment {
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-
+                int position = tab.getPosition();
+                switch (position){
+                    case 0:
+                        isKpi = false;
+                        break;
+                    case 1:
+                        isSubKpi = false;
+                        break;
+                    case 2:
+                        isCourse = false;
+                        courseLayout.setVisibility(View.GONE);
+                        break;
+                    case 3:
+                        isQuestion = false;
+                        break;
+                    default:
+                        break;
+                }
             }
 
             @Override
@@ -173,15 +184,7 @@ public class ComparisonFragment extends Fragment {
                     customSpinnerAdapter.setOnItemSelectionChangedListener(new CustomSpinnerAdapter.OnItemSelectionChangedListener() {
                         @Override
                         public void onItemSelectionChanged(List<Integer> selectedEmployeeIds) {
-                            if (isKpi) {
-                                updateKpiComparisonBarChart();
-                            } else if (isSubKpi) {
-
-                            } else if (isCourse) {
-                                updateCourseComparisonBarChart();
-                            } else if (isQuestion) {
-
-                            }
+                            updateChart();
                         }
                     });
 
@@ -224,6 +227,7 @@ public class ComparisonFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 course = courseList.get(position);
+                updateChart();
 //                if (isComparison){
 //                    if (isCourseComparison)
 //                        updateCoursePerformanceComparisonBarChart();
@@ -250,15 +254,7 @@ public class ComparisonFragment extends Fragment {
                 // Get the selected session
                 session = sessionList.get(position);
                 // updateEvaluateeSpinnerContents();
-                if (isKpi) {
-                    updateKpiComparisonBarChart();
-                } else if (isSubKpi) {
-
-                } else if (isCourse) {
-                    updateCourseComparisonBarChart();
-                } else if (isQuestion) {
-
-                }
+                updateChart();
             }
 
             @Override
@@ -461,11 +457,11 @@ public class ComparisonFragment extends Fragment {
     }
 
     private void updateKpiComparisonBarChart() {
-        sessionLayout.setVisibility(View.VISIBLE);
+        // sessionLayout.setVisibility(View.VISIBLE);
 
         // barChart.setVisibility(View.VISIBLE);
         // employeeLayout.setVisibility(View.VISIBLE);
-        courseLayout.setVisibility(View.GONE);
+        // courseLayout.setVisibility(View.GONE);
 
 //        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
 //            return;
@@ -499,6 +495,7 @@ public class ComparisonFragment extends Fragment {
                             for (List<EmployeeKpiScore> scores : multiEmployeesKpiScoreList) {
                                 int newSize = Math.max(maxSize, scores.size());
                                 if (newSize > maxSize){
+                                    kpiLabels.clear();
                                     for (EmployeeKpiScore s:scores) {
                                         kpiLabels.add(s.getKpi_title());
                                     }
@@ -621,6 +618,148 @@ public class ComparisonFragment extends Fragment {
         }catch (Exception ex){
             Log.e("","", ex);
             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void updateQuestionComparisonBarChart() {
+        // Ensure the spinners have data
+//        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
+//            return;
+//        }
+
+        try {
+            List<String> groupLabels = new ArrayList<>();
+            ArrayList<Integer> employeeIds = new ArrayList<>();
+
+            // Get selected employee IDs and remove default value if necessary
+            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
+            if (employeeIds.contains(0)) {
+                employeeIds.remove((Integer) 0);
+            }
+
+            EmployeeQuestionScoreService employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
+            QuestionsScoresRequest questionsScoresRequest = new QuestionsScoresRequest();
+            questionsScoresRequest.setEmployeeIDs(employeeIds);
+            questionsScoresRequest.setSessionID(session.getId());
+            questionsScoresRequest.setEvaluationTypeID(1);
+
+            employeeQuestionScoreService.getMultiEmployeeQuestionsScores(
+                    questionsScoresRequest,
+                    employeeQuestionsScores -> {
+                        try {
+                            employeeQuestionsScoresList = employeeQuestionsScores;
+                            List<String> labels = new ArrayList<>();
+                            int maxSize = 0;
+
+                            // Determine the maximum size of the groups and labels
+                            for (EmployeeQuestionsScores scores : employeeQuestionsScoresList) {
+                                int newSize = scores.getQuestionScores().size();
+                                if (newSize > maxSize) {
+                                    maxSize = newSize;
+                                    labels.clear();
+                                    for (QuestionScore s : scores.getQuestionScores()) {
+                                        labels.add(s.getQuestion().getQuestion());
+                                    }
+                                }
+                            }
+
+                            if (employeeQuestionsScoresList.size() > 0) {
+                                CommonMethods commonMethods = new CommonMethods();
+                                ArrayList<Integer> colors = commonMethods.generateRandomColors(maxSize);
+
+                                List<List<BarEntry>> groups = new ArrayList<>();
+
+                                for (int i = 0; i < maxSize; i++) {
+                                    groups.add(new ArrayList<>());
+                                }
+
+                                int xCounter = 0;
+                                int xInitialCounter = 1;
+
+                                for (int i = 0; i < employeeQuestionsScoresList.size(); i++) {
+                                    List<QuestionScore> questionScores = employeeQuestionsScoresList.get(i).getQuestionScores();
+
+                                    // Pad the list with empty QuestionScore if necessary
+                                    while (questionScores.size() < maxSize) {
+                                        questionScores.add(new QuestionScore());
+                                    }
+
+                                    if (i == 0) {
+                                        for (int j = 0; j < customSpinnerAdapter.getSelectedEmployeeIds().size(); j++) {
+                                            groupLabels.add(employeeList.get(j).getName());
+                                        }
+                                    }
+
+                                    for (int k = 0; k < maxSize; k++) {
+                                        groups.get(k).add(new BarEntry(xCounter, (float) questionScores.get(k).getAverage()));
+                                        xCounter += 3;
+                                    }
+
+                                    xCounter = xInitialCounter;
+                                    xInitialCounter++;
+                                }
+
+                                BarData barData = new BarData();
+
+                                for (int i = 0; i < groups.size(); i++) {
+                                    BarDataSet barDataSet = new BarDataSet(groups.get(i), labels.get(i));
+                                    barDataSet.setColor(colors.get(i));
+                                    barData.addDataSet(barDataSet);
+                                }
+
+                                // Ensure at least two datasets
+                                while (barData.getDataSetCount() < 2) {
+                                    barData.addDataSet(new BarDataSet(new ArrayList<>(), ""));
+                                }
+
+                                float groupSpace = 0.5f;
+                                float barSpace = 0.02f;
+                                float barWidth = 0.2f;
+
+                                barData.setBarWidth(barWidth);
+                                barChart.setData(barData);
+                                barChart.groupBars(0, groupSpace, barSpace);
+                                barChart.invalidate();
+
+                                // Set custom labels for the x-axis
+                                XAxis xAxis = barChart.getXAxis();
+                                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                                xAxis.setLabelCount(groupLabels.size());
+                                xAxis.setValueFormatter(new ValueFormatter() {
+                                    @Override
+                                    public String getFormattedValue(float value) {
+                                        int index = (int) value;
+                                        if (index >= 0 && index < groupLabels.size()) {
+                                            return groupLabels.get(index);
+                                        } else {
+                                            return "";
+                                        }
+                                    }
+                                });
+                            }
+                        } catch (Exception ex) {
+                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    errorMessage -> {
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+            );
+        } catch (Exception ex) {
+            Log.e("", "", ex);
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    public void updateChart(){
+        if (isKpi){
+            updateKpiComparisonBarChart();
+        } else if (isSubKpi) {
+
+        } else if (isCourse) {
+            updateCourseComparisonBarChart();
+        } else if (isQuestion) {
+            updateQuestionComparisonBarChart();
         }
     }
 

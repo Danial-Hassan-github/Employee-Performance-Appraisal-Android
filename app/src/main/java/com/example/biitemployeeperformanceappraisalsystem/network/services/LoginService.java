@@ -79,14 +79,14 @@ public class LoginService {
                     }
                 } else {
                     // Handle unsuccessful login response
-                    Toast.makeText(context, "Login failed", Toast.LENGTH_LONG);
+                    Toast.makeText(context, "Incorrect username or password", Toast.LENGTH_LONG).show();
                 }
             }
 
             @Override
             public void onFailure(Call<EmployeeDetails> call, Throwable t) {
                 // Handle failure of login request
-                Toast.makeText(context, "Login failed", Toast.LENGTH_LONG);
+                Toast.makeText(context, "Login failed", Toast.LENGTH_LONG).show();
             }
         });
     }

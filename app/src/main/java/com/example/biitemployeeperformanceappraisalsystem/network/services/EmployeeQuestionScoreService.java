@@ -2,7 +2,9 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.QuestionsScoresRequest;
+import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionsScores;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeQuestionScoreServiceListener;
 
@@ -21,11 +23,11 @@ public class EmployeeQuestionScoreService {
         this.context = context;
     }
 
-    public void getEmployeeQuestionScore(int employeeID, int sessionID, int evaluationTypeID, final Consumer<List<EmployeeQuestionScore>> onSuccess, final Consumer<String> onFailure) {
-        Call<List<EmployeeQuestionScore>> emloyeeScoreCall = employeeQuestionScoreServiceListener.getQuestionsScoresByEvaluationId(employeeID, sessionID, evaluationTypeID);
-        emloyeeScoreCall.enqueue(new Callback<List<EmployeeQuestionScore>>() {
+    public void getEmployeeQuestionScore(int employeeID, int sessionID, int evaluationTypeID, final Consumer<List<QuestionScore>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<QuestionScore>> employeeScoreCall = employeeQuestionScoreServiceListener.getQuestionsScoresByEvaluationId(employeeID, sessionID, evaluationTypeID);
+        employeeScoreCall.enqueue(new Callback<List<QuestionScore>>() {
             @Override
-            public void onResponse(Call<List<EmployeeQuestionScore>> call, Response<List<EmployeeQuestionScore>> response) {
+            public void onResponse(Call<List<QuestionScore>> call, Response<List<QuestionScore>> response) {
                 if (response.isSuccessful()){
                     onSuccess.accept(response.body());
                 }else {
@@ -34,7 +36,26 @@ public class EmployeeQuestionScoreService {
             }
 
             @Override
-            public void onFailure(Call<List<EmployeeQuestionScore>> call, Throwable t) {
+            public void onFailure(Call<List<QuestionScore>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching scores");
+            }
+        });
+    }
+
+    public void getMultiEmployeeQuestionsScores(QuestionsScoresRequest questionsScoresRequest, final Consumer<List<EmployeeQuestionsScores>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeQuestionsScores>> employeeScoreCall = employeeQuestionScoreServiceListener.getMultiEmployeeQuestionsScores(questionsScoresRequest);
+        employeeScoreCall.enqueue(new Callback<List<EmployeeQuestionsScores>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeQuestionsScores>> call, Response<List<EmployeeQuestionsScores>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeQuestionsScores>> call, Throwable t) {
                 onFailure.accept("Something went wrong while fetching scores");
             }
         });

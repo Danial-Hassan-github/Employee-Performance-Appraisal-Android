@@ -1,4 +1,4 @@
-package com.example.biitemployeeperformanceappraisalsystem.models;
+package com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels;
 
 import java.util.List;
 

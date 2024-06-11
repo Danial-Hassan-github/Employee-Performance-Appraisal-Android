@@ -2,7 +2,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 
 import android.content.Context;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;

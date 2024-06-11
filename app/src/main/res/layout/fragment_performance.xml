@@ -11,7 +11,6 @@
         android:visibility="visible"
         android:id="@+id/performance_type_tab"
         android:layout_width="match_parent"
-        app:tabMode="scrollable"
         android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabItem
@@ -29,23 +28,10 @@
             android:text="Sub Kpi"/>
 
         <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_employee_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:visibility="visible"
-            android:text="Comparison"/>
-
-        <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_course_session"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Course"/>
-
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_course_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Course Comparison"/>
 
         <com.google.android.material.tabs.TabItem
             android:id="@+id/tab_question"
@@ -53,11 +39,6 @@
             android:layout_height="wrap_content"
             android:text="Question"/>
 
-        <com.google.android.material.tabs.TabItem
-            android:id="@+id/tab_question_comparison"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Question Comparison"/>
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -72,26 +53,26 @@
         android:padding="10dp"/>
 
     <!-- TODO: Update blank fragment layout -->
-    <LinearLayout
-        android:id="@+id/employee_spinner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/white">
-        <TextView
-            android:id="@+id/txtEmployee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Employee"/>
-        <Spinner
-            android:id="@+id/spinner_employee"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            style="@style/Widget.AppCompat.Spinner.DropDown"
-            tools:listitem="@layout/custom_spinner_item_layout"
-            android:layout_marginLeft="5dp"
-            android:layout_marginRight="5dp"/>
-    </LinearLayout>
+<!--    <LinearLayout-->
+<!--        android:id="@+id/employee_spinner_layout"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="vertical"-->
+<!--        android:background="@color/white">-->
+<!--        <TextView-->
+<!--            android:id="@+id/txtEmployee"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Employee"/>-->
+<!--        <Spinner-->
+<!--            android:id="@+id/spinner_employee"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="40dp"-->
+<!--            style="@style/Widget.AppCompat.Spinner.DropDown"-->
+<!--            tools:listitem="@layout/custom_spinner_item_layout"-->
+<!--            android:layout_marginLeft="5dp"-->
+<!--            android:layout_marginRight="5dp"/>-->
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/course_spinner_layout"
@@ -120,19 +101,11 @@
 <!--        android:background="@color/white"-->
 <!--        android:text="Course Performance"/>-->
 
-    <LinearLayout
-        android:id="@+id/session_spinner_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:visibility="visible"
-        android:weightSum="8"
-        android:background="@color/white">
-
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:id="@+id/session_spinner_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="8"
+            android:background="@color/white"
             android:orientation="vertical">
             <TextView
                 android:id="@+id/txtSession"
@@ -154,6 +127,27 @@
 <!--            android:layout_marginTop="16dp"-->
 <!--            android:layout_weight="3"-->
 <!--            android:text="Show"/>-->
+
+
+    <LinearLayout
+        android:id="@+id/questionnaire_type_spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select Evaluation Type"/>
+
+        <Spinner
+            android:id="@+id/spinner_questionnaire_type"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            />
 
     </LinearLayout>
 

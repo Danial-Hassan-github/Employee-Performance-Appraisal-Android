@@ -6,7 +6,7 @@ public class EmployeeCourseScore {
     private Employee employee;
     private Course course;
     private double average;
-    private List<EmployeeQuestionScore> employeeQuestionScores;
+    private List<QuestionScore> employeeQuestionScores;
 
     public Course getCourse() {
         return course;
@@ -24,11 +24,11 @@ public class EmployeeCourseScore {
         this.employee = employee;
     }
 
-    public List<EmployeeQuestionScore> getEmployeeQuestionScores() {
+    public List<QuestionScore> getEmployeeQuestionScores() {
         return employeeQuestionScores;
     }
 
-    public void setEmployeeQuestionScores(List<EmployeeQuestionScore> employeeQuestionScores) {
+    public void setEmployeeQuestionScores(List<QuestionScore> employeeQuestionScores) {
         this.employeeQuestionScores = employeeQuestionScores;
     }
 

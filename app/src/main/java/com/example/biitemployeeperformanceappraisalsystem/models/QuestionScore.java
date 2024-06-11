@@ -1,6 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
-public class EmployeeQuestionScore {
+public class QuestionScore {
     private Question question;
     private double average;
     private int obtainedScore;

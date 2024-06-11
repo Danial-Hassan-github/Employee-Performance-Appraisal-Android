@@ -1,6 +1,6 @@
 package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeIdsWithSession;
+import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 

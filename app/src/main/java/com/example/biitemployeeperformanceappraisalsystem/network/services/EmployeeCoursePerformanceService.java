@@ -44,8 +44,8 @@ public class EmployeeCoursePerformanceService {
         });
     }
 
-    public void getEmployeeCoursesPerformance(EmployeeCoursesPerformanceRequest employeeCoursesPerformanceRequest, final Consumer<List<EmployeeCourseScore>> onSuccess, final Consumer<String> onFailure){
-        Call<List<EmployeeCourseScore>> call = employeeCoursePerformanceServiceListener.getEmployeeCoursesPerformance(employeeCoursesPerformanceRequest);
+    public void getEmployeeCoursesPerformance(int teacherID, int sessionID, final Consumer<List<EmployeeCourseScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeCourseScore>> call = employeeCoursePerformanceServiceListener.getEmployeeCoursesPerformance(teacherID, sessionID);
         call.enqueue(new Callback<List<EmployeeCourseScore>>() {
             @Override
             public void onResponse(Call<List<EmployeeCourseScore>> call, Response<List<EmployeeCourseScore>> response) {
