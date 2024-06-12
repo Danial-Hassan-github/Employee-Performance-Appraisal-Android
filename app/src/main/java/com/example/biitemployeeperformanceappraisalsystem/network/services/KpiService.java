@@ -93,6 +93,26 @@ public class KpiService {
         });
     }
 
+    public void postKpi(KpiWithSubKpiWeightages kpiWithSubKpiWeightages, final Consumer<KPI> onSuccess, final Consumer<String> onFailure){
+        Call<KPI> call = kpiServiceListener.postGeneralKpi(kpiWithSubKpiWeightages);
+        call.enqueue(new Callback<KPI>() {
+            @Override
+            public void onResponse(Call<KPI> call, Response<KPI> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }
+                else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<KPI> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
     public void postGeneralKpi(KpiWithSubKpiWeightages kpiWithSubKpiWeightages, final Consumer<KPI> onSuccess, final Consumer<String> onFailure){
         Call<KPI> call = kpiServiceListener.postGeneralKpi(kpiWithSubKpiWeightages);
         call.enqueue(new Callback<KPI>() {

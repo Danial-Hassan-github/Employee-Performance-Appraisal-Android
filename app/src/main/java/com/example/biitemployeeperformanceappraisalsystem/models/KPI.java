@@ -4,6 +4,7 @@ import java.util.List;
 
 public class KPI {
     private int group_kpi_id;
+    private int department_id;
     private int id;
     private String name;
     private KpiWeightage kpiWeightage;
@@ -15,6 +16,14 @@ public class KPI {
 
     public void setGroup_kpi_id(int group_kpi_id) {
         this.group_kpi_id = group_kpi_id;
+    }
+
+    public int getDepartment_id() {
+        return department_id;
+    }
+
+    public void setDepartment_id(int department_id) {
+        this.department_id = department_id;
     }
 
     public List<SubKpiWeightage> getSubKpiWeightages() {

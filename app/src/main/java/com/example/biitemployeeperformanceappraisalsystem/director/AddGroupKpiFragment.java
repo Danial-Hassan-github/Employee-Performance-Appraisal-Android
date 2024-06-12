@@ -108,7 +108,7 @@ public class AddGroupKpiFragment extends Fragment {
         subKpiAdapterList = new ArrayList<>();
 
         subKpiService.getSubKPIs(
-                10,
+                sharedPreferencesManager.getSessionId(),
                 subKpiList1 -> {
                     if (subKpiList1 != null) {
                         subKpiList = subKpiList1;

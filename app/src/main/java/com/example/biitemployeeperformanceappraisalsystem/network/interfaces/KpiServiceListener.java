@@ -26,6 +26,8 @@ public interface KpiServiceListener {
     Call<List<KPI>> getKpiGroup(@Query("groupID") int groupID, @Query("sessionID") int sessionID);
     @GET("KPI/GetKpiGroupId")
     Call<Integer> getKpiGroupId(@Query("department_id") int department_id, @Query("designation_id") int designation_id, @Query("employee_type_id") int employee_type_id, @Query("employee_id") int employee_id);
+    @POST("KPI/PostKpi")
+    Call<KPI> postKpi(@Body KpiWithSubKpiWeightages kpiWithSubKpiWeightages);
     @POST("KPI/PostGeneralKpi")
     Call<KPI> postGeneralKpi(@Body KpiWithSubKpiWeightages kpiWithSubKpiWeightages);
     @POST("KPI/PostEmployeeKpi")
