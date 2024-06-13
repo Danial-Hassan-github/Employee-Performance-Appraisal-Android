@@ -1,22 +1,26 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
-public class EmployeeKpiScore extends EmpScore {
-    private int Kpi_id;
-    private String kpi_title;
+import android.hardware.lights.LightsManager;
 
-    public int getKpi_id() {
-        return Kpi_id;
+import java.util.List;
+
+public class EmployeeKpiScore {
+    private Employee employee;
+    private List<KpiScore> kpiScores;
+
+    public List<KpiScore> getKpiScores() {
+        return kpiScores;
     }
 
-    public void setKpi_id(int kpi_id) {
-        Kpi_id = kpi_id;
+    public void setKpiScores(List<KpiScore> kpiScores) {
+        this.kpiScores = kpiScores;
     }
 
-    public String getKpi_title() {
-        return kpi_title;
+    public Employee getEmployee() {
+        return employee;
     }
 
-    public void setKpi_title(String kpi_title) {
-        this.kpi_title = kpi_title;
+    public void setEmployee(Employee employee) {
+        this.employee = employee;
     }
 }

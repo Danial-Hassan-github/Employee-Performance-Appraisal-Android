@@ -4,16 +4,14 @@ import java.util.List;
 
 public class EmployeeCourseScore {
     private Employee employee;
-    private Course course;
-    private double average;
-    private List<QuestionScore> employeeQuestionScores;
+    private List<CourseScore> performance;
 
-    public Course getCourse() {
-        return course;
+    public List<CourseScore> getPerformance() {
+        return performance;
     }
 
-    public void setCourse(Course course) {
-        this.course = course;
+    public void setPerformance(List<CourseScore> performance) {
+        this.performance = performance;
     }
 
     public Employee getEmployee() {
@@ -22,21 +20,5 @@ public class EmployeeCourseScore {
 
     public void setEmployee(Employee employee) {
         this.employee = employee;
-    }
-
-    public List<QuestionScore> getEmployeeQuestionScores() {
-        return employeeQuestionScores;
-    }
-
-    public void setEmployeeQuestionScores(List<QuestionScore> employeeQuestionScores) {
-        this.employeeQuestionScores = employeeQuestionScores;
-    }
-
-    public double getAverage() {
-        return average;
-    }
-
-    public void setAverage(double average) {
-        this.average = average;
     }
 }

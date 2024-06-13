@@ -2,6 +2,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.interfaces;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 
 import java.util.List;
@@ -14,9 +15,9 @@ import retrofit2.http.Query;
 
 public interface EmployeeKpiScoreServiceListener {
     @GET("EmployeeKpiPerformance/GetKpiEmployeePerformance")
-    Call<List<EmployeeKpiScore>> getEmployeeKpiScore(@Query("employeeID") int employeeID, @Query("sessionID") int sessionID);
+    Call<List<KpiScore>> getEmployeeKpiScore(@Query("employeeID") int employeeID, @Query("sessionID") int sessionID);
     @POST("EmployeeKpiPerformance/CompareKpiEmployeePerformance")
-    Call<List<List<EmployeeKpiScore>>> compareEmployeeKpiScore(@Body EmployeeIdsWithSession employeeIdsWithSession);
+    Call<List<EmployeeKpiScore>> compareEmployeeKpiScore(@Body EmployeeIdsWithSession employeeIdsWithSession);
     @GET("EmployeeKpiPerformance/GetKpiEmployeePerformanceMultiSession")
     Call<List<EmployeeKpiScoreMultiSession>> getEmployeeKpiScoreMultiSession(@Query("employeeID") int employeeID, @Query("startingSessionID") int startingSessionID, @Query("endingSessionID") int endingSessionID);
 }

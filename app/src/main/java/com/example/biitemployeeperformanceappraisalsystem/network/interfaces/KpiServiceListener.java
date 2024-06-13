@@ -34,6 +34,8 @@ public interface KpiServiceListener {
     Call<String> postEmployeeKpi(@Body EmployeeKpi employeeKpi);
     @POST("KPI/PostGroupKpi")
     Call<String> postGroupKpi(@Body GroupKpiWithWeightage groupKpiWithWeightage);
+    @PUT("KPI/PutKpi")
+    Call<String> putKpi(@Body List<KPI> kpiList);
     @PUT("KPI/PutEmployeeKpi")
     Call<String> putEmployeeKpi(@Body List<KPI> kpiList);
     @PUT("KPI/PutGroupKpi")

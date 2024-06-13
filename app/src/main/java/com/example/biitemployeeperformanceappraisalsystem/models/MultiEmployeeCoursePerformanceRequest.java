@@ -4,16 +4,16 @@ import java.util.List;
 
 public class MultiEmployeeCoursePerformanceRequest {
     private List<Integer> employeeIds;
-    private int courseId;
+    private List<Integer> courseIds;
     private int sessionId;
     public MultiEmployeeCoursePerformanceRequest()
     {
 
     }
 
-    public MultiEmployeeCoursePerformanceRequest(int courseId, int sessionId, List<Integer> employeeIds)
+    public MultiEmployeeCoursePerformanceRequest(List<Integer> courseIds, int sessionId, List<Integer> employeeIds)
     {
-        this.courseId = courseId;
+        this.courseIds = courseIds;
         this.sessionId = sessionId;
         this.employeeIds = employeeIds;
     }
@@ -26,12 +26,12 @@ public class MultiEmployeeCoursePerformanceRequest {
         this.sessionId = sessionId;
     }
 
-    public int getCourseId() {
-        return courseId;
+    public List<Integer> getCourseId() {
+        return courseIds;
     }
 
-    public void setCourseId(int courseId) {
-        this.courseId = courseId;
+    public void setCourseId(List<Integer> courseIds) {
+        this.courseIds = courseIds;
     }
 
     public List<Integer> getEmployeeIds() {

@@ -25,11 +25,10 @@ import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeCourseScore;
-import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.CourseScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
-import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeSubKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
@@ -50,7 +49,6 @@ import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
-import com.github.mikephil.charting.formatter.ValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.utils.MPPointF;
 import com.google.android.material.tabs.TabLayout;
@@ -74,8 +72,8 @@ public class PerformanceFragment extends Fragment {
     Employee employee2;
     Session session;
     Course course;
-    List<EmployeeKpiScore> employeeKpiScoreList;
-    List<List<EmployeeKpiScore>> multiEmployeesKpiScoreList;
+    List<KpiScore> kpiScoreList;
+    List<List<KpiScore>> multiEmployeesKpiScoreList;
     List<EmployeeKpiScoreMultiSession> employeeKpiScoreMultiSessionList;
     SessionService sessionService;
     CourseService courseService;
@@ -388,12 +386,12 @@ public class PerformanceFragment extends Fragment {
                 employeeID,
                 sessionList.get(sessionSpinner.getSelectedItemPosition()).getId(),
                 employeeKpiScores -> {
-                    employeeKpiScoreList = employeeKpiScores;
+                    kpiScoreList = employeeKpiScores;
                     ArrayList<BarEntry> entries = new ArrayList<>();
                     ArrayList<String> kpiTitles = new ArrayList<>();
                     int index = 0;
 
-                    for (EmployeeKpiScore e : employeeKpiScores) {
+                    for (KpiScore e : employeeKpiScores) {
                         BarEntry barEntry = new BarEntry(index++, e.getScore());
                         entries.add(barEntry);
                         kpiTitles.add(e.getKpi_title()+e.getWeightage()+"%");
@@ -455,7 +453,7 @@ public class PerformanceFragment extends Fragment {
                         ArrayList<String> kpiTitles = new ArrayList<>();
                         int index = 0;
 
-                        for (EmployeeCourseScore e : employeeCourseScores) {
+                        for (CourseScore e : employeeCourseScores) {
                             BarEntry barEntry = new BarEntry(index++, (float) e.getAverage());
                             entries.add(barEntry);
                             kpiTitles.add(e.getCourse().getName());
@@ -609,170 +607,170 @@ public class PerformanceFragment extends Fragment {
         }
     }
 
-    private void updateGroupBarChart() {
-        // pieChart.setVisibility(View.GONE);
-        // sessionLayout.setVisibility(View.VISIBLE);
-
-        // barChart.setVisibility(View.VISIBLE);
-        // employeeLayout.setVisibility(View.VISIBLE);
-        // courseLayout.setVisibility(View.GONE);
-
-//        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
-//            return;
+//    private void updateGroupBarChart() {
+//        // pieChart.setVisibility(View.GONE);
+//        // sessionLayout.setVisibility(View.VISIBLE);
+//
+//        // barChart.setVisibility(View.VISIBLE);
+//        // employeeLayout.setVisibility(View.VISIBLE);
+//        // courseLayout.setVisibility(View.GONE);
+//
+////        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
+////            return;
+////        }
+//
+//        try {
+//            // Define the labels for each group
+//            List<String> groupLabels = new ArrayList<>();
+//            ArrayList<Integer> employeeIds = new ArrayList<>();
+//
+//            employeeIds.add(employeeID);
+//            // Log.i("",customSpinnerAdapter.getSelectedEmployeeIds().get(0).toString());
+//            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
+//            employeeIds.remove(new int[]{0});
+//            // employeeIds.add(employee2.getId());
+//
+//            EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
+//            EmployeeIdsWithSession employeeIdsWithSession = new EmployeeIdsWithSession();
+//            employeeIdsWithSession.setEmployeeIds(employeeIds);
+//            employeeIdsWithSession.setSession_id(session.getId());
+//
+//            employeeKpiScoreService.compareEmployeeKpiScore(
+//                    employeeIdsWithSession,
+//                    employeeKpiScores -> {
+//                        // TODO
+//                        try {
+//                            multiEmployeesKpiScoreList = employeeKpiScores;
+//                            List<String> kpiLabels = new ArrayList<>();
+//                            // Determine the maximum size of the groups
+//                            int maxSize = 0;
+//                            for (List<KpiScore> scores : multiEmployeesKpiScoreList) {
+//                                int newSize = Math.max(maxSize, scores.size());
+//                                if (newSize > maxSize){
+//                                    for (KpiScore s:scores) {
+//                                        kpiLabels.add(s.getKpi_title());
+//                                    }
+//                                }
+//                                maxSize = Math.max(maxSize, scores.size());
+//                            }
+//
+//                            if (multiEmployeesKpiScoreList.size() > 0) {
+//                                ArrayList<Integer> colors = null;
+//                                CommonMethods commonMethods = new CommonMethods();
+//                                colors = commonMethods.generateRandomColors(maxSize);
+//                                int xCounter = 0;
+//                                int xInitialCounter = 1;
+//                                BarData barData = new BarData();
+//
+//                                List<List<BarEntry>> groups = new ArrayList<>();
+//
+//                                // Initialize the list of groups
+//                                for (int i = 0; i < maxSize; i++) {
+//                                    groups.add(new ArrayList<>());
+//                                }
+//
+//                                for (int i = 0; i < multiEmployeesKpiScoreList.size(); i++) {
+//                                    List<KpiScore> kpiScore = multiEmployeesKpiScoreList.get(i);
+//                                    ArrayList<BarEntry> group = new ArrayList<>();
+//
+//                                    String kpiTitle = null;
+//
+//                                    // Pad the list with null items if necessary
+//                                    while (kpiScore.size() < maxSize) {
+//                                        kpiScore.add(new KpiScore());
+//                                    }
+//
+//                                    if (i == 0) {
+//                                        for (int c=0; c < employeeList.size(); c++){
+//                                            if (employeeID == employeeList.get(c).getId()){
+//                                                groupLabels.add(employeeList.get(c).getName());
+//                                            }
+//                                        }
+//                                        for (int j=0; j<customSpinnerAdapter.getSelectedEmployeeIds().size();j++){
+//                                            groupLabels.add(employeeList.get(j).getName());
+//                                        }
+//                                        // groupLabels.add(employee2.getName());
+//                                    }
+//
+//                                    for (int k = 0; k < maxSize; k++) {
+//                                        groups.get(k).add(new BarEntry(xCounter, kpiScore.get(k).getScore()));
+//                                        // group.add(new BarEntry(k , employeeKpiScore.get(k).getScore())); // Use 'k' as x-value for the BarEntry
+//                                        // kpiTitle = employeeKpiScore.get(k).getKpi_title();
+//                                        xCounter = xCounter+3;
+//                                    }
+//
+//                                    // BarDataSet barDataSet = new BarDataSet(group, kpiTitle);
+//                                    // barDataSet.setColors(colors);
+//                                    // barData.addDataSet(barDataSet);
+//
+//                                    xCounter = xInitialCounter;
+//                                    xInitialCounter++;
+//                                }
+//
+//                                // Create BarData and set data sets
+//                                BarData barData1 = new BarData();
+//
+//                                // Create BarDataSet for each group
+//                                List<BarDataSet> dataSets = new ArrayList<>();
+//                                for (int i = 0; i < groups.size(); i++) {
+//                                    BarDataSet barDataSet = new BarDataSet(groups.get(i), kpiLabels.get(i));
+//                                    // CommonMethods commonMethods = new CommonMethods();
+//                                    // ArrayList<Integer> colors = commonMethods.generateRandomColors(groups.get(i).size());
+//                                    barDataSet.setColor(colors.get(i));
+//                                    dataSets.add(barDataSet);
+//                                    barData1.addDataSet(barDataSet);
+//                                }
+//
+//                                // Ensure there are at least 2 BarDataSets
+//                                if (barData1.getDataSetCount() < 2) {
+//                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
+//                                }
+//                                // Ensure there are at least 2 BarDataSets
+//                                if (barData1.getDataSetCount() < 1) {
+//                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
+//                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
+//                                }
+//
+//                                float groupSpace = 0.5f; // space between groups of bars
+//                                float barSpace = 0.02f; // space between individual bars within a group
+//                                float barWidth = 0.2f; // width of each bar
+//
+//                                barData1.setBarWidth(barWidth);
+//                                barChart.setData(barData1);
+//
+//                                barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
+//                                barChart.invalidate();
+//
+//                                // Set custom labels for the x-axis
+//                                XAxis xAxis = barChart.getXAxis();
+//                                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//                                xAxis.setLabelCount(groupLabels.size());
+//                                xAxis.setValueFormatter(new ValueFormatter() {
+//                                    @Override
+//                                    public String getFormattedValue(float value) {
+//                                        int index = (int) value;
+//                                        if (index >= 0 && index < groupLabels.size()) {
+//                                            String label = groupLabels.get(index);
+//                                            return label != null ? label : "Unknown";
+//                                        } else {
+//                                            return "";
+//                                        }
+//                                    }
+//                                });
+//                            }
+//                        }catch (Exception ex){
+//                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+//                        }
+//                    },
+//                    errorMessage -> {
+//                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                    }
+//            );
+//        }catch (Exception ex){
+//            Log.e("","", ex);
+//            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
 //        }
-
-        try {
-            // Define the labels for each group
-            List<String> groupLabels = new ArrayList<>();
-            ArrayList<Integer> employeeIds = new ArrayList<>();
-
-            employeeIds.add(employeeID);
-            // Log.i("",customSpinnerAdapter.getSelectedEmployeeIds().get(0).toString());
-            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
-            employeeIds.remove(new int[]{0});
-            // employeeIds.add(employee2.getId());
-
-            EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
-            EmployeeIdsWithSession employeeIdsWithSession = new EmployeeIdsWithSession();
-            employeeIdsWithSession.setEmployeeIds(employeeIds);
-            employeeIdsWithSession.setSession_id(session.getId());
-
-            employeeKpiScoreService.compareEmployeeKpiScore(
-                    employeeIdsWithSession,
-                    employeeKpiScores -> {
-                        // TODO
-                        try {
-                            multiEmployeesKpiScoreList = employeeKpiScores;
-                            List<String> kpiLabels = new ArrayList<>();
-                            // Determine the maximum size of the groups
-                            int maxSize = 0;
-                            for (List<EmployeeKpiScore> scores : multiEmployeesKpiScoreList) {
-                                int newSize = Math.max(maxSize, scores.size());
-                                if (newSize > maxSize){
-                                    for (EmployeeKpiScore s:scores) {
-                                        kpiLabels.add(s.getKpi_title());
-                                    }
-                                }
-                                maxSize = Math.max(maxSize, scores.size());
-                            }
-
-                            if (multiEmployeesKpiScoreList.size() > 0) {
-                                ArrayList<Integer> colors = null;
-                                CommonMethods commonMethods = new CommonMethods();
-                                colors = commonMethods.generateRandomColors(maxSize);
-                                int xCounter = 0;
-                                int xInitialCounter = 1;
-                                BarData barData = new BarData();
-
-                                List<List<BarEntry>> groups = new ArrayList<>();
-
-                                // Initialize the list of groups
-                                for (int i = 0; i < maxSize; i++) {
-                                    groups.add(new ArrayList<>());
-                                }
-
-                                for (int i = 0; i < multiEmployeesKpiScoreList.size(); i++) {
-                                    List<EmployeeKpiScore> employeeKpiScore = multiEmployeesKpiScoreList.get(i);
-                                    ArrayList<BarEntry> group = new ArrayList<>();
-
-                                    String kpiTitle = null;
-
-                                    // Pad the list with null items if necessary
-                                    while (employeeKpiScore.size() < maxSize) {
-                                        employeeKpiScore.add(new EmployeeKpiScore());
-                                    }
-
-                                    if (i == 0) {
-                                        for (int c=0; c < employeeList.size(); c++){
-                                            if (employeeID == employeeList.get(c).getId()){
-                                                groupLabels.add(employeeList.get(c).getName());
-                                            }
-                                        }
-                                        for (int j=0; j<customSpinnerAdapter.getSelectedEmployeeIds().size();j++){
-                                            groupLabels.add(employeeList.get(j).getName());
-                                        }
-                                        // groupLabels.add(employee2.getName());
-                                    }
-
-                                    for (int k = 0; k < maxSize; k++) {
-                                        groups.get(k).add(new BarEntry(xCounter, employeeKpiScore.get(k).getScore()));
-                                        // group.add(new BarEntry(k , employeeKpiScore.get(k).getScore())); // Use 'k' as x-value for the BarEntry
-                                        // kpiTitle = employeeKpiScore.get(k).getKpi_title();
-                                        xCounter = xCounter+3;
-                                    }
-
-                                    // BarDataSet barDataSet = new BarDataSet(group, kpiTitle);
-                                    // barDataSet.setColors(colors);
-                                    // barData.addDataSet(barDataSet);
-
-                                    xCounter = xInitialCounter;
-                                    xInitialCounter++;
-                                }
-
-                                // Create BarData and set data sets
-                                BarData barData1 = new BarData();
-
-                                // Create BarDataSet for each group
-                                List<BarDataSet> dataSets = new ArrayList<>();
-                                for (int i = 0; i < groups.size(); i++) {
-                                    BarDataSet barDataSet = new BarDataSet(groups.get(i), kpiLabels.get(i));
-                                    // CommonMethods commonMethods = new CommonMethods();
-                                    // ArrayList<Integer> colors = commonMethods.generateRandomColors(groups.get(i).size());
-                                    barDataSet.setColor(colors.get(i));
-                                    dataSets.add(barDataSet);
-                                    barData1.addDataSet(barDataSet);
-                                }
-
-                                // Ensure there are at least 2 BarDataSets
-                                if (barData1.getDataSetCount() < 2) {
-                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
-                                }
-                                // Ensure there are at least 2 BarDataSets
-                                if (barData1.getDataSetCount() < 1) {
-                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
-                                    barData1.addDataSet(new BarDataSet(new ArrayList<>(), "")); // Add an empty dataset if needed
-                                }
-
-                                float groupSpace = 0.5f; // space between groups of bars
-                                float barSpace = 0.02f; // space between individual bars within a group
-                                float barWidth = 0.2f; // width of each bar
-
-                                barData1.setBarWidth(barWidth);
-                                barChart.setData(barData1);
-
-                                barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
-                                barChart.invalidate();
-
-                                // Set custom labels for the x-axis
-                                XAxis xAxis = barChart.getXAxis();
-                                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-                                xAxis.setLabelCount(groupLabels.size());
-                                xAxis.setValueFormatter(new ValueFormatter() {
-                                    @Override
-                                    public String getFormattedValue(float value) {
-                                        int index = (int) value;
-                                        if (index >= 0 && index < groupLabels.size()) {
-                                            String label = groupLabels.get(index);
-                                            return label != null ? label : "Unknown";
-                                        } else {
-                                            return "";
-                                        }
-                                    }
-                                });
-                            }
-                        }catch (Exception ex){
-                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
-                    },
-                    errorMessage -> {
-                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                    }
-            );
-        }catch (Exception ex){
-            Log.e("","", ex);
-            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
-        }
-    }
+//    }
 
     private void updateSubKpiPerformanceChart() {
         try {
@@ -785,7 +783,7 @@ public class PerformanceFragment extends Fragment {
                         ArrayList<String> titles = new ArrayList<>();
                         int index = 0;
 
-                        for (EmployeeSubKpiScore e : employeeSubKpiScores) {
+                        for (SubKpiScore e : employeeSubKpiScores) {
                             BarEntry barEntry = new BarEntry(index++, (float) e.getScore());
                             entries.add(barEntry);
                             titles.add(e.getName());

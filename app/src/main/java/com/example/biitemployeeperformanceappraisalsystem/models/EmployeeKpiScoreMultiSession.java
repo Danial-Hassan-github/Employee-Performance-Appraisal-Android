@@ -4,7 +4,7 @@ import java.util.List;
 
 public class EmployeeKpiScoreMultiSession {
     private Session session;
-    private List<EmployeeKpiScore> scores;
+    private List<KpiScore> scores;
 
     public Session getSession() {
         return session;
@@ -14,11 +14,11 @@ public class EmployeeKpiScoreMultiSession {
         this.session = session;
     }
 
-    public List<EmployeeKpiScore> getScores() {
+    public List<KpiScore> getScores() {
         return scores;
     }
 
-    public void setScores(List<EmployeeKpiScore> scores) {
+    public void setScores(List<KpiScore> scores) {
         this.scores = scores;
     }
 }

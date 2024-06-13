@@ -4,6 +4,7 @@ import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.ApiRequestModels.EmployeeIdsWithSession;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.KpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScoreMultiSession;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeKpiScoreServiceListener;
@@ -23,8 +24,26 @@ public class EmployeeKpiScoreService {
         this.context = context;
     }
 
-    public void getEmployeeKpiScore(int employeeID, int sessionID, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
-        Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.getEmployeeKpiScore(employeeID, sessionID);
+    public void getEmployeeKpiScore(int employeeID, int sessionID, final Consumer<List<KpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<KpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.getEmployeeKpiScore(employeeID, sessionID);
+        employeeKpiScoresCall.enqueue(new Callback<List<KpiScore>>() {
+            @Override
+            public void onResponse(Call<List<KpiScore>> call, Response<List<KpiScore>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<KpiScore>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
+
+    public void compareEmployeeKpiScore(EmployeeIdsWithSession employeeIdsWithSession, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeIdsWithSession);
         employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScore>>() {
             @Override
             public void onResponse(Call<List<EmployeeKpiScore>> call, Response<List<EmployeeKpiScore>> response) {
@@ -36,24 +55,6 @@ public class EmployeeKpiScoreService {
 
             @Override
             public void onFailure(Call<List<EmployeeKpiScore>> call, Throwable t) {
-                onFailure.accept(t.toString());
-            }
-        });
-    }
-
-    public void compareEmployeeKpiScore(EmployeeIdsWithSession employeeIdsWithSession, final Consumer<List<List<EmployeeKpiScore>>> onSuccess, final Consumer<String> onFailure){
-        Call<List<List<EmployeeKpiScore>>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeIdsWithSession);
-        employeeKpiScoresCall.enqueue(new Callback<List<List<EmployeeKpiScore>>>() {
-            @Override
-            public void onResponse(Call<List<List<EmployeeKpiScore>>> call, Response<List<List<EmployeeKpiScore>>> response) {
-                if (response.isSuccessful())
-                    onSuccess.accept(response.body());
-                else
-                    onFailure.accept(response.message());
-            }
-
-            @Override
-            public void onFailure(Call<List<List<EmployeeKpiScore>>> call, Throwable t) {
                 onFailure.accept(t.toString());
             }
         });

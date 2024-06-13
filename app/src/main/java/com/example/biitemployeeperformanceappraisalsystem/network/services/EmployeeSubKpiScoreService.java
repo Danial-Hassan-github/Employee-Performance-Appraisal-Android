@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem.network.services;
 import android.content.Context;
 
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeSubKpiScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EmployeeSubKpiScoreServiceListener;
 
@@ -21,8 +22,27 @@ public class EmployeeSubKpiScoreService {
         employeeSubKpiScoreServiceListener = RetrofitClient.getRetrofitInstance().create(EmployeeSubKpiScoreServiceListener.class);
     }
 
-    public void getSubKpiEmployeePerformance(int employeeID, int sessionID, final Consumer<List<EmployeeSubKpiScore>> onSuccess, final Consumer<String> onFailure){
-        Call<List<EmployeeSubKpiScore>> employeeSubKpiScoreCall = employeeSubKpiScoreServiceListener.getSubKpiEmployeePerformance(employeeID, sessionID);
+    public void getSubKpiEmployeePerformance(int employeeID, int sessionID, final Consumer<List<SubKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<SubKpiScore>> employeeSubKpiScoreCall = employeeSubKpiScoreServiceListener.getSubKpiEmployeePerformance(employeeID, sessionID);
+        employeeSubKpiScoreCall.enqueue(new Callback<List<SubKpiScore>>() {
+            @Override
+            public void onResponse(Call<List<SubKpiScore>> call, Response<List<SubKpiScore>> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<SubKpiScore>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getSubKpiMultiEmployeePerformance(List<Integer> employeeIDs, int sessionID, final Consumer<List<EmployeeSubKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeSubKpiScore>> employeeSubKpiScoreCall = employeeSubKpiScoreServiceListener.getSubKpiMultiEmployeePerformance(employeeIDs, sessionID);
         employeeSubKpiScoreCall.enqueue(new Callback<List<EmployeeSubKpiScore>>() {
             @Override
             public void onResponse(Call<List<EmployeeSubKpiScore>> call, Response<List<EmployeeSubKpiScore>> response) {

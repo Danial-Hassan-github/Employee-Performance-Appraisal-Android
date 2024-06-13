@@ -13,30 +13,30 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
-import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
+import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CustomSpinnerAdapter extends ArrayAdapter<Employee> {
+public class CustomCourseSpinnerAdapter extends ArrayAdapter<Course> {
 
     public interface OnItemSelectionChangedListener {
-        void onItemSelectionChanged(List<Integer> selectedEmployeeIds);
+        void onItemSelectionChanged(List<Integer> selectedCourseIds);
     }
 
-    private List<Integer> evaluatee_ids;
-    private List<Employee> employees;
+    private List<Integer> selectedCourseIds;
+    private List<Course> courses;
     private List<Boolean> itemChecked;
     private LayoutInflater inflater;
     private boolean selectAllChecked = false;
     private OnItemSelectionChangedListener listener;
 
-    public CustomSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Employee> employees) {
-        super(context, resource, employees);
-        this.employees = employees;
-        this.evaluatee_ids = new ArrayList<>();
+    public CustomCourseSpinnerAdapter(@NonNull Context context, int resource, @NonNull List<Course> courses) {
+        super(context, resource, courses);
+        this.courses = courses;
+        this.selectedCourseIds = new ArrayList<>();
         this.itemChecked = new ArrayList<>();
-        for (int i = 0; i < employees.size(); i++) {
+        for (int i = 0; i < courses.size(); i++) {
             itemChecked.add(false);
         }
         inflater = LayoutInflater.from(context);
@@ -71,8 +71,8 @@ public class CustomSpinnerAdapter extends ArrayAdapter<Employee> {
             viewHolder = (ViewHolder) view.getTag();
         }
 
-        final Employee employee = employees.get(position);
-        viewHolder.text.setText(employee.getName());
+        final Course course = courses.get(position);
+        viewHolder.text.setText(course.getName());
 
         viewHolder.checkbox.setOnCheckedChangeListener(null); // Clear previous listener
 
@@ -89,19 +89,19 @@ public class CustomSpinnerAdapter extends ArrayAdapter<Employee> {
                     selectAllChecked = isChecked;
                     for (int i = 1; i < itemChecked.size(); i++) {
                         itemChecked.set(i, isChecked);
-                        evaluatee_ids.add(employees.get(i).getId());
+                        selectedCourseIds.add(courses.get(i).getId());
                     }
                     notifyDataSetChanged();
                 } else {
                     itemChecked.set(position, isChecked);
                     if (isChecked) {
-                        evaluatee_ids.add(employee.getId());
+                        selectedCourseIds.add(course.getId());
                     } else {
-                        evaluatee_ids.remove((Integer) employee.getId());
+                        selectedCourseIds.remove((Integer) course.getId());
                     }
                 }
                 if (listener != null) {
-                    listener.onItemSelectionChanged(new ArrayList<>(evaluatee_ids));
+                    listener.onItemSelectionChanged(new ArrayList<>(selectedCourseIds));
                 }
             }
         });
@@ -114,7 +114,7 @@ public class CustomSpinnerAdapter extends ArrayAdapter<Employee> {
         TextView text;
     }
 
-    public List<Integer> getSelectedEmployeeIds() {
-        return new ArrayList<>(evaluatee_ids);
+    public List<Integer> getSelectedCourseIds() {
+        return new ArrayList<>(selectedCourseIds);
     }
 }

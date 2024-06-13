@@ -94,7 +94,7 @@ public class KpiService {
     }
 
     public void postKpi(KpiWithSubKpiWeightages kpiWithSubKpiWeightages, final Consumer<KPI> onSuccess, final Consumer<String> onFailure){
-        Call<KPI> call = kpiServiceListener.postGeneralKpi(kpiWithSubKpiWeightages);
+        Call<KPI> call = kpiServiceListener.postKpi(kpiWithSubKpiWeightages);
         call.enqueue(new Callback<KPI>() {
             @Override
             public void onResponse(Call<KPI> call, Response<KPI> response) {
@@ -108,6 +108,26 @@ public class KpiService {
 
             @Override
             public void onFailure(Call<KPI> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void putKpi(List<KPI> kpiList, final Consumer<String> onSuccess, final Consumer<String> onFailure){
+        Call<String> call = kpiServiceListener.putKpi(kpiList);
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }
+                else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });
