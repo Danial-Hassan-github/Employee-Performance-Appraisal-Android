@@ -11,12 +11,18 @@ import android.widget.TextView;
 
 import com.example.biitemployeeperformanceappraisalsystem.EmployeeListFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class AdminMainActivity extends AppCompatActivity {
     private TextView topText;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
+
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferencesManager.logoutUser();
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,7 +55,7 @@ public class AdminMainActivity extends AppCompatActivity {
                 } else if (R.id.navigation_settings==item.getItemId()) {
                     // Handle "Settings" click
                     topText.setText("Setting");
-                    replaceFragment(new StudentEvaluationSettingFragment());
+                    replaceFragment(new AdminSettingFragment());
                     return true;
 
                 }

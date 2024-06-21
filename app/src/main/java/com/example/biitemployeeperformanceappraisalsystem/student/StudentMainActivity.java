@@ -10,6 +10,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.EmployeeListFragment;
 import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils;
@@ -30,6 +31,12 @@ public class StudentMainActivity extends AppCompatActivity {
     View fragmentContainer;
 
     @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferencesManager.logoutUser();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_main);
@@ -39,8 +46,8 @@ public class StudentMainActivity extends AppCompatActivity {
 
         txtStudentDetails = findViewById(R.id.txt_student_details);
         txtTop = findViewById(R.id.txt_top);
-        editTextPin = findViewById(R.id.editText_pin);
-        btnSubmitPin = findViewById(R.id.btn_pin_submit);
+//        editTextPin = findViewById(R.id.editText_pin);
+//        btnSubmitPin = findViewById(R.id.btn_pin_submit);
         tabLayout = findViewById(R.id.tab_layout_student);
 
         sharedPreferencesManager = new SharedPreferencesManager(getApplicationContext());
@@ -69,6 +76,9 @@ public class StudentMainActivity extends AppCompatActivity {
                                     Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
                                 });
                         break;
+                    case 2:
+                        replaceFragment(new CourseTeacherFragment());
+                        break;
                     default:
                         break;
                 }
@@ -85,21 +95,6 @@ public class StudentMainActivity extends AppCompatActivity {
             }
         });
 
-        btnSubmitPin.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                evaluationTimeService.checkConfidentialPin(
-                        sharedPreferencesManager.getSessionId(),
-                        editTextPin.getText().toString(),
-                        isConfidential -> {
-                            sharedPreferencesManager.setKeyIsConfidential(isConfidential);
-                        },
-                        errorMessage -> {
-                            Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        }
-                );
-            }
-        });
     }
 
     // Method to replace the content of the FrameLayout with a new fragment

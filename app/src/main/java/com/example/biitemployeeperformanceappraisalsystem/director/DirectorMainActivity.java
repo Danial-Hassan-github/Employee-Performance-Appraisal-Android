@@ -17,6 +17,7 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.TaskFragment;
 import com.example.biitemployeeperformanceappraisalsystem.EmployeeListFragment;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class DirectorMainActivity extends AppCompatActivity {
@@ -24,6 +25,11 @@ public class DirectorMainActivity extends AppCompatActivity {
     private TextView topText;
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
+
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferencesManager.logoutUser();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

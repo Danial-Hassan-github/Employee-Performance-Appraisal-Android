@@ -8,32 +8,51 @@
     android:orientation="vertical"
     tools:context=".student.CourseTeacherFragment">
 
-    <RadioGroup
-        android:id="@+id/evaluation_type_radio_group"
+<!--    <RadioGroup-->
+<!--        android:id="@+id/evaluation_type_radio_group"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:gravity="center"-->
+<!--        android:weightSum="3">-->
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/rd_student"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:checked="true"-->
+<!--            android:text="Student"-->
+<!--            android:layout_weight="1"/>-->
+
+<!--        <RadioButton-->
+<!--            android:id="@+id/rd_confidential"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="Confidential"-->
+<!--            android:layout_weight="1"/>-->
+
+<!--    </RadioGroup>-->
+
+    <EditText
+        android:id="@+id/editText_pin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center"
-        android:weightSum="3">
+        android:hint="Enter Confidential Pin "/>
 
-        <RadioButton
-            android:id="@+id/rd_student"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:checked="true"
-            android:text="Student"
-            android:layout_weight="1"/>
+    <Button
+        android:id="@+id/btn_pin_submit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="submit"
+        android:layout_gravity="center_horizontal"/>
 
-        <RadioButton
-            android:id="@+id/rd_confidential"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Confidential"
-            android:layout_weight="1"/>
+    <ListView
+        android:id="@+id/teachers_list_view"
+        android:visibility="visible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
-    </RadioGroup>
-
-    <TextView
+    <!--<TextView
         android:id="@+id/text_teacher1"
         android:layout_width="match_parent"
         android:layout_height="60dp"
@@ -50,6 +69,6 @@
         android:background="@color/white"
         android:gravity="center"
         android:textSize="20dp"
-        android:visibility="invisible" />
+        android:visibility="invisible" />-->
 
 </LinearLayout>

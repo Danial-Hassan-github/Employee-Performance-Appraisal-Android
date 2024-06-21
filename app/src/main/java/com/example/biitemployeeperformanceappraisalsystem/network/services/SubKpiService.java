@@ -88,7 +88,7 @@ public class SubKpiService {
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
             spinner.setAdapter(adapter);
         } else {
-            Toast.makeText(context, "Session list is empty", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, "SubKpi list is empty", Toast.LENGTH_LONG).show();
         }
     }
 

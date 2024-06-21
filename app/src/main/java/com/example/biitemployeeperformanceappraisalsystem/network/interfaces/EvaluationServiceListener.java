@@ -32,5 +32,5 @@ public interface EvaluationServiceListener {
     @POST("Evaluation/PostDirectorEvaluation")
     Call<String> postDirectorEvaluation(@Body List<DirectorEvaluation> directorEvaluations);
     @GET("Evaluation/IsEvaluated")
-    Call<String> isEvaluated(@Query("studentId") int studentId, @Query("teacherId") int teacherId, @Query("courseId") int courseId, @Query("sessionId") int sessionId, @Query("evaluationType") String evaluationType);
+    Call<String> isEvaluated(@Query("evaluatorId") int evaluatorId, @Query("evaluateeId") int evaluateeId, @Query("courseId") int courseId, @Query("sessionId") int sessionId, @Query("evaluationType") String evaluationType);
 }

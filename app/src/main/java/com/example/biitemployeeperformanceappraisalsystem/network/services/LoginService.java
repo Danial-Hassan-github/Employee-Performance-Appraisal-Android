@@ -30,7 +30,7 @@ public class LoginService {
         this.context = context;
         sharedPreferencesManager = new SharedPreferencesManager(context);
         sessionService = new SessionService(context);
-        sessionService.getCurrentSession();
+        // sessionService.getCurrentSession();
     }
 
     public void loginStudent(String emailOrAridNo, String password) {

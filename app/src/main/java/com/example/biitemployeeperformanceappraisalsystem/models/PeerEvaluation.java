@@ -5,10 +5,19 @@ public class PeerEvaluation {
     private int evaluatee_id;
     private int question_id;
     private int session_id;
+    private int course_id;
     private int score;
 
     public int getEvaluator_id() {
         return evaluator_id;
+    }
+
+    public int getCourse_id() {
+        return course_id;
+    }
+
+    public void setCourse_id(int course_id) {
+        this.course_id = course_id;
     }
 
     public void setEvaluator_id(int evaluator_id) {

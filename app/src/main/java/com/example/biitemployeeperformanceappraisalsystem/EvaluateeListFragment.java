@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.faculty.FacultyMain;
+import com.example.biitemployeeperformanceappraisalsystem.faculty.TeacherCoursesFragment;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.hod.HodMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
@@ -132,7 +133,7 @@ public class EvaluateeListFragment extends Fragment {
                 Employee selectedEmployee = evaluateeList.get(position);
                 int evaluateeID = selectedEmployee.getId();
 
-                EvaluationQuestionnaireFragment fragment=new EvaluationQuestionnaireFragment(evaluateeID,"Peer", fragmentContainer.getId());
+                TeacherCoursesFragment fragment=new TeacherCoursesFragment(evaluateeID);
 
                 replaceFragment(parentActivity.getSupportFragmentManager(),fragment,fragmentContainerId);
 

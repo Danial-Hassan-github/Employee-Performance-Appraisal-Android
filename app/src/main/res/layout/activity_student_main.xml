@@ -44,20 +44,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Degree Exit" />
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_confidential_evaluation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Confidential Evaluation" />
+
     </com.google.android.material.tabs.TabLayout>
-
-    <EditText
-        android:id="@+id/editText_pin"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Enter Confidential Pin "/>
-
-    <Button
-        android:id="@+id/btn_pin_submit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="submit"
-        android:layout_gravity="center"/>
 
     <!-- Your main content layout -->
     <FrameLayout

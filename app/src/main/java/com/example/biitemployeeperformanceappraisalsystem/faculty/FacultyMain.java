@@ -30,6 +30,11 @@ public class FacultyMain extends AppCompatActivity {
     private BottomNavigationView bottomNavigationView;
     private FrameLayout fragmentContainer;
 
+    protected void onDestroy() {
+        super.onDestroy();
+        sharedPreferencesManager.logoutUser();
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

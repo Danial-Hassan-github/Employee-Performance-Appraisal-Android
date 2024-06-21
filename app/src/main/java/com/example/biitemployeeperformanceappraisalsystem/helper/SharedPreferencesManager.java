@@ -19,7 +19,7 @@ public class SharedPreferencesManager {
     private static final String KEY_USER_OBJECT = "userObject";
     private static final String KEY_IS_CONFIDENTIAL = "isConfidential";
     private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
+    private static SharedPreferences.Editor editor;
     private Context context;
     private Gson gson;
 
@@ -94,7 +94,7 @@ public class SharedPreferencesManager {
     }
 
     // Clear session details (logout)
-    public void logoutUser() {
+    public static void logoutUser() {
         editor.clear();
         editor.apply();
     }

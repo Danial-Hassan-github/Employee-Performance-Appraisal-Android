@@ -171,6 +171,7 @@ public class EvaluationQuestionnaireFragment extends Fragment {
                         PeerEvaluation peerEvaluation = new PeerEvaluation();
                         peerEvaluation.setEvaluator_id(sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId()); // Set your student ID
                         peerEvaluation.setSession_id(sessionID); // Set your session ID
+                        peerEvaluation.setCourse_id(courseID);
                         peerEvaluation.setEvaluatee_id(evaluateeID); // Set the teacher ID (evaluatee ID) from the fragment constructor
                         peerEvaluation.setQuestion_id(pair.first); // Set the question ID from the selected answers
                         peerEvaluation.setScore(pair.second); // Set the score from the selected answers

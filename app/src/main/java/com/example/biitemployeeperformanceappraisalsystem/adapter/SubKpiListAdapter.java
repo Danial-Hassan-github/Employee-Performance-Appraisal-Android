@@ -58,10 +58,6 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
             }else {
                 editTextWeightage.setText(String.valueOf(0));
             }
-            // Remove the TextWatcher temporarily
-//            if (editTextWeightage.getTag() != null) {
-//                editTextWeightage.removeTextChangedListener((TextWatcher) editTextWeightage.getTag());
-//            }
 
             // Add the EditText to the list if it's not already there
             if (!editTextList.contains(editTextWeightage)) {
@@ -77,51 +73,43 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
 
                 @Override
                 public void afterTextChanged(Editable s) {
+                    if (isUpdating) return; // Prevent infinite loop
+                    isUpdating = true;
+
+                    int totalWeightage = 0;
+                    int currentWeightage = 0;
+
                     try {
-                        int weightage = Integer.parseInt(s.toString());
-                        if (subKpi.getSubKpiWeightage() == null) {
-                            subKpi.setSubKpiWeightage(new SubKpiWeightage());
-                        }
-                        subKpi.getSubKpiWeightage().setWeightage(weightage);
+                        currentWeightage = Integer.parseInt(s.toString());
                     } catch (NumberFormatException e) {
-                        if (subKpi.getSubKpiWeightage() != null) {
-                            subKpi.getSubKpiWeightage().setWeightage(0);
+                        currentWeightage = 0;
+                    }
+
+                    subKpi.getSubKpiWeightage().setWeightage(currentWeightage);
+
+                    for (int i = 0; i < getCount(); i++) {
+                        View itemView = getViewByPosition(i, parent);
+                        if (itemView != null) {
+                            EditText et = itemView.findViewById(R.id.edit_text_subKpi_weightage);
+                            String weightageStr = et.getText().toString();
+                            if (!weightageStr.isEmpty()) {
+                                totalWeightage += Integer.parseInt(weightageStr);
+                            }
                         }
                     }
+
+                    if (totalWeightage > 100) {
+                        int excess = totalWeightage - 100;
+                        subKpi.getSubKpiWeightage().setWeightage(currentWeightage - excess);
+                        editTextWeightage.setText(String.valueOf(currentWeightage - excess));
+                        Toast.makeText(getContext(), "Total Sub Kpi weightage cannot exceed 100", Toast.LENGTH_SHORT).show();
+                    } else if (totalWeightage < 100) {
+                        Toast.makeText(getContext(), "Total Sub Kpi weightage must be 100", Toast.LENGTH_SHORT).show();
+                    }
+
+                    isUpdating = false;
                 }
             });
-
-//            editTextWeightage.addTextChangedListener(new TextWatcher() {
-//                @Override
-//                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//
-//                }
-//
-//                @Override
-//                public void onTextChanged(CharSequence s, int start, int before, int count) {
-//
-//                }
-//
-//                @Override
-//                public void afterTextChanged(Editable s) {
-//                    int totalWeightage = 0;
-//                    for (int i = 0; i < getCount(); i++) {
-//                        View itemView = getViewByPosition(i, parent);
-//                        if (itemView != null) {
-//                            EditText et = itemView.findViewById(R.id.edit_text_subKpi_weightage);
-//                            String weightageStr = et.getText().toString();
-//                            if (!weightageStr.isEmpty()) {
-//                                totalWeightage += Integer.parseInt(weightageStr);
-//                            }
-//                        }
-//                    }
-//
-//                    // Check if total weightage exceeds 100
-//                    if (totalWeightage > 100) {
-//                        Toast.makeText(getContext(), "Total weightage cannot exceed 100", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
 
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override

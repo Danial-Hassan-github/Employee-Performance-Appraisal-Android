@@ -6,6 +6,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.example.biitemployeeperformanceappraisalsystem.models.DepartmentKPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
@@ -34,12 +35,12 @@ public class KpiService {
         this.context=context;
     }
 
-    public void getSessionKpis(int sessionID, final Consumer<List<GroupKpiDetails>> onSuccess, final Consumer<String> onFailure){
-        Call<List<GroupKpiDetails>> kpiCall = kpiServiceListener.getSessionKpis(sessionID);
+    public void getSessionKpis(int sessionID, final Consumer<List<DepartmentKPI>> onSuccess, final Consumer<String> onFailure){
+        Call<List<DepartmentKPI>> kpiCall = kpiServiceListener.getSessionKpis(sessionID);
 
-        kpiCall.enqueue(new Callback<List<GroupKpiDetails>>() {
+        kpiCall.enqueue(new Callback<List<DepartmentKPI>>() {
             @Override
-            public void onResponse(Call<List<GroupKpiDetails>> call, Response<List<GroupKpiDetails>> response) {
+            public void onResponse(Call<List<DepartmentKPI>> call, Response<List<DepartmentKPI>> response) {
                 if (response.isSuccessful()){
                     onSuccess.accept(response.body());
                 }else {
@@ -48,7 +49,7 @@ public class KpiService {
             }
 
             @Override
-            public void onFailure(Call<List<GroupKpiDetails>> call, Throwable t) {
+            public void onFailure(Call<List<DepartmentKPI>> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });

@@ -1,42 +1,53 @@
-package com.example.biitemployeeperformanceappraisalsystem.student;
+package com.example.biitemployeeperformanceappraisalsystem.faculty;
 
 import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.fragment.app.Fragment;
-
-import com.example.biitemployeeperformanceappraisalsystem.adapter.CourseListAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.EvaluationQuestionnaireFragment;
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.adapter.CourseListAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Course;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
-import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationTimeService;
+import com.example.biitemployeeperformanceappraisalsystem.student.CourseTeacherFragment;
+import com.example.biitemployeeperformanceappraisalsystem.student.StudentMainActivity;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class StudentCoursesFragment extends Fragment {
-    List<Course> studentCourseList;
-    EvaluationTimeService evaluationTimeService;
-    SharedPreferencesManager sharedPreferencesManager;
-    ListView listView;
+/**
+ * A simple {@link Fragment} subclass.
+ * Use the {@link TeacherCoursesFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class TeacherCoursesFragment extends Fragment {
+    int teacherId;
+    List<Course> teacherCourseList;
+    View fragmentContainer;
+    public TeacherCoursesFragment(){
+
+    }
+
+    public TeacherCoursesFragment(int teacherId){
+        this.teacherId = teacherId;
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_student_courses, container, false);
 
-        sharedPreferencesManager = new SharedPreferencesManager(getContext());
-        evaluationTimeService = new EvaluationTimeService(getContext());
 
-        StudentMainActivity studentMainActivity=(StudentMainActivity) getActivity();
-        listView = rootView.findViewById(R.id.courses_list_view);
+        FacultyMain facultyMain = (FacultyMain) getActivity();
+
+        fragmentContainer = facultyMain.findViewById(R.id.fragment_container);
+        ListView listView = rootView.findViewById(R.id.courses_list_view);
         SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(getContext());
 
         // Sample data for demonstration
@@ -48,29 +59,28 @@ public class StudentCoursesFragment extends Fragment {
 //        courses.add(new Course("Numerical Analysis", "CS-492"));
 
         CourseService courseService=new CourseService(getContext());
-        courseService.getStudentCourses(
-                sharedPreferencesManager.getStudentUserObject().getId(),
+        courseService.getTeacherCourses(
+                teacherId,
                 sharedPreferencesManager.getSessionId(),
                 courses -> {
-                    studentCourseList = courses;
-                    CourseListAdapter adapter = new CourseListAdapter(getContext(), R.layout.courses_list_view_layout, studentCourseList);
+                    teacherCourseList = courses;
+                    CourseListAdapter adapter = new CourseListAdapter(getContext(), R.layout.courses_list_view_layout, teacherCourseList);
                     listView.setAdapter(adapter);
                 },
                 errorMessage -> {
-                    Toast.makeText(studentMainActivity, errorMessage, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(facultyMain, errorMessage, Toast.LENGTH_SHORT).show();
                 }
         );
 
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Course clickedCourse = studentCourseList.get(position);
+                Course clickedCourse = teacherCourseList.get(position);
                 int courseID = clickedCourse.getId();
-                studentMainActivity.replaceFragment(new CourseTeacherFragment(courseID));
+                facultyMain.replaceFragment(new EvaluationQuestionnaireFragment(teacherId, courseID, "Peer", fragmentContainer.getId()));
             }
         });
 
         return rootView;
     }
-
 }

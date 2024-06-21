@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,8 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class AddKpiFragment extends Fragment {
+    boolean isSpinnerInitialized = false;
+    boolean ignoreNextSelection = false;
     Department department;
     KPI kpi;
     SharedPreferencesManager sharedPreferencesManager;
@@ -81,9 +84,15 @@ public class AddKpiFragment extends Fragment {
         btnSave = view.findViewById(R.id.btn_save_kpi);
 
         subKpiList = new ArrayList<>();
+        SubKpi subKpi = new SubKpi();
+        subKpi.setName("Select SubKpi");
+        subKpiList.add(subKpi);
         subKpiAdapterList = new ArrayList<>();
 
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
+
+        int sessionId = sharedPreferencesManager.getSessionId();
+        Log.d("Add Kpi Fragment", "Session ID: " + sessionId); // Debug log for session ID
         kpiService = new KpiService(getContext());
         subKpiService = new SubKpiService(getContext());
         DepartmentService departmentService=new DepartmentService(view.getContext());
@@ -93,10 +102,10 @@ public class AddKpiFragment extends Fragment {
         subKpiListView.setAdapter(subKpiListAdapter);
 
         subKpiService.getSubKPIs(
-                10,
+                sharedPreferencesManager.getSessionId(),
                 subKpiList1 -> {
                     if (subKpiList1 != null) {
-                        subKpiList = subKpiList1;
+                        subKpiList.addAll(subKpiList1);
                         String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
                         if (subKpiTitles != null) {
                             subKpiService.populateSpinner(subKpiList,subKpiSpinner);
@@ -125,12 +134,30 @@ public class AddKpiFragment extends Fragment {
         subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                try {
-                    subKpiAdapterList.add(subKpiList.get(position));
-                    // Notify the adapter to refresh the ListView
-                    subKpiListAdapter.notifyDataSetChanged();
-                }catch (Exception ex){
+                if (!isSpinnerInitialized) {
+                    isSpinnerInitialized = true; // Set the flag to true after the first automatic selection
+                    return; // Ignore the automatic selection
+                }
 
+                if (ignoreNextSelection) {
+                    ignoreNextSelection = false; // Reset the flag
+                    return; // Ignore this automatic selection
+                }
+
+                try {
+                    SubKpi selectedSubKpi = subKpiList.get(position);
+                    subKpiAdapterList.add(selectedSubKpi);
+                    subKpiList.remove(position);
+                    // Notify the adapter to refresh the Spinner and the ListView
+                    subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+                    subKpiListAdapter.notifyDataSetChanged();
+
+                    // Clear the selection and set the flag to ignore the next selection event
+                    subKpiSpinner.setSelection(AdapterView.INVALID_POSITION);
+                    ignoreNextSelection = true;
+
+                } catch (Exception ex) {
+                    // Handle the exception if necessary
                 }
             }
 
@@ -139,6 +166,19 @@ public class AddKpiFragment extends Fragment {
                 // Do nothing
             }
         });
+
+        subKpiListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                SubKpi deletedSubKpi = subKpiAdapterList.get(position);
+                subKpiAdapterList.remove(position);
+                subKpiList.add(deletedSubKpi);
+                // Notify the adapter to refresh the Spinner and the ListView
+                subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+                subKpiListAdapter.notifyDataSetChanged();
+            }
+        });
+
 
         departmentSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override

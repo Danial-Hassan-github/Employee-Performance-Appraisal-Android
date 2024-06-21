@@ -31,8 +31,8 @@ public class EvaluationService {
         this.context=context;
     }
 
-    public void IsEvaluated(int studentId, int teacherId, int courseId, int sessionId, String evaluationType, Consumer<Boolean> onSuccess, Consumer<Boolean> onFailure) {
-        Call<String> call = evaluationServiceListener.isEvaluated(studentId, teacherId, courseId, sessionId, evaluationType);
+    public void IsEvaluated(int evaluatorId, int evaluateeId, int courseId, int sessionId, String evaluationType, Consumer<Boolean> onSuccess, Consumer<Boolean> onFailure) {
+        Call<String> call = evaluationServiceListener.isEvaluated(evaluatorId, evaluateeId, courseId, sessionId, evaluationType);
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {

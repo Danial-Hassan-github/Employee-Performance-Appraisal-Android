@@ -45,27 +45,34 @@ public class SessionService {
         });
     }
 
-    public void getCurrentSession() {
+    public void getCurrentSession(Consumer<Session> onSuccess, Consumer<String> onFailure) {
         Call<Session> sessionCall = sessionServiceListener.getCurrentSession();
         sessionCall.enqueue(new Callback<Session>() {
             @Override
             public void onResponse(Call<Session> call, Response<Session> response) {
                 if (response.isSuccessful()) {
-                    // onSuccess.accept(response.body());
                     Session session = response.body();
-                    SharedPreferencesManager sharedPreferencesManager =new SharedPreferencesManager(context.getApplicationContext());
-                    sharedPreferencesManager.saveSessionId(session.getId());
+                    if (session != null) {
+                        // Save session ID
+                        SharedPreferencesManager sharedPreferencesManager = new SharedPreferencesManager(context.getApplicationContext());
+                        sharedPreferencesManager.saveSessionId(session.getId());
+                        // Execute onSuccess callback with the retrieved session
+                        onSuccess.accept(session);
+                    } else {
+                        onFailure.accept("Session object is null");
+                    }
                 } else {
-                    Toast.makeText(context, response.message(), Toast.LENGTH_SHORT).show();
+                    onFailure.accept("Failed to fetch session: " + response.message());
                 }
             }
 
             @Override
             public void onFailure(Call<Session> call, Throwable t) {
-                Toast.makeText(context, "Something went wrong while fetching current session", Toast.LENGTH_SHORT).show();
+                onFailure.accept("Something went wrong while fetching current session: " + t.getMessage());
             }
         });
     }
+
 
     public void postSession(Session session){
         Call<Session> sessionCall = sessionServiceListener.postSession(session);
