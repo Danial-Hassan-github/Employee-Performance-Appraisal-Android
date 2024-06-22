@@ -3,6 +3,7 @@ package com.example.biitemployeeperformanceappraisalsystem.director;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -19,8 +20,10 @@ import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.SubKpiListAdapter;
+import com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Department;
+import com.example.biitemployeeperformanceappraisalsystem.models.DepartmentKPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.Designation;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeType;
 import com.example.biitemployeeperformanceappraisalsystem.models.GroupKpiDetails;
@@ -55,16 +58,16 @@ public class AddKpiFragment extends Fragment {
     SubKpiListAdapter subKpiListAdapter;
     ListView subKpiListView;
     List<Department> departmentList;
+    List<DepartmentKPI> departmentKPIList;
+    List<KPI> kpiList;
     Spinner departmentSpinner,subKpiSpinner;
     Button btnSave;
     public AddKpiFragment() {
         // Required empty public constructor
     }
 
-    public static AddKpiFragment newInstance(String param1, String param2) {
-        AddKpiFragment fragment = new AddKpiFragment();
-        Bundle args = new Bundle();
-        return fragment;
+    public AddKpiFragment(List<DepartmentKPI> departmentKPIList) {
+        this.departmentKPIList = departmentKPIList;
     }
 
     @Override
@@ -184,6 +187,15 @@ public class AddKpiFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 department = departmentList.get(position);
+                try {
+                    for (DepartmentKPI departmentKPI : departmentKPIList) {
+                        if (departmentKPI.getDepartmentId() == department.getId()) {
+                            kpiList = departmentKPI.getKpiList();
+                        }
+                    }
+                }catch (Exception ex) {
+                    Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                }
             }
 
             @Override
@@ -257,21 +269,29 @@ public class AddKpiFragment extends Fragment {
                 kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
                 kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
 
-                kpiService.postKpi(
-                        kpiWithSubKpiWeightages,
-                        kpi1 -> {
-                            Toast.makeText(getContext(), "Kpi Added Successfully", Toast.LENGTH_SHORT).show();
-                        },
-                        errorMessage -> {
-                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                        });
+                navigateToWeightageAdjustmentForm(kpiWithSubKpiWeightages);
+
+//                kpiService.postKpi(
+//                        kpiWithSubKpiWeightages,
+//                        kpi1 -> {
+//                            Toast.makeText(getContext(), "Kpi Added Successfully", Toast.LENGTH_SHORT).show();
+//                        },
+//                        errorMessage -> {
+//                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+//                        });
             }
         });
 
         return view;
     }
 
-
+    public void navigateToWeightageAdjustmentForm(KpiWithSubKpiWeightages kpiWithSubKpiWeightages) {
+        KpiWeightageAdjustmentFormFragment fragment = new KpiWeightageAdjustmentFormFragment(kpiList, kpiWithSubKpiWeightages);
+        FragmentTransaction transaction = requireActivity().getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragment_container, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
+    }
 
 //    private void replaceFragment(int position) {
 //        Fragment fragment = null;

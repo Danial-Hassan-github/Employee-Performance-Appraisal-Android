@@ -25,7 +25,10 @@ import com.example.biitemployeeperformanceappraisalsystem.models.KPI;
 import com.example.biitemployeeperformanceappraisalsystem.models.KpiWithSubKpiWeightages;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.KpiService;
 
+import java.util.List;
+
 public class KpiWeightageAdjustmentFormFragment extends Fragment {
+    List<KPI> kpiList;
     GroupKpiDetails groupKpiDetails;
     KpiWithSubKpiWeightages kpiWithSubKpiWeightages;
     EmployeeKpi employeeKpi;
@@ -49,6 +52,11 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
         this.groupKpiWithWeightage = groupKpiWithWeightage;
     }
 
+    public KpiWeightageAdjustmentFormFragment(List<KPI> kpiList, KpiWithSubKpiWeightages kpiWithSubKpiWeightages){
+        this.kpiList = kpiList;
+        this.kpiWithSubKpiWeightages = kpiWithSubKpiWeightages;
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -59,11 +67,13 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
         Button saveButton = view.findViewById(R.id.save_button);
 
         kpiService = new KpiService(getContext());
+        // TODO
+        // kpiList.add(kpiWithSubKpiWeightages.getKpi());
 
-        EditText[] editTexts = new EditText[groupKpiDetails.getKpiList().size()];
+        EditText[] editTexts = new EditText[kpiList.size()];
 
-        for (int i = 0; i < groupKpiDetails.getKpiList().size(); i++) {
-            KPI kpiDetails = groupKpiDetails.getKpiList().get(i);
+        for (int i = 0; i < kpiList.size(); i++) {
+            KPI kpiDetails = kpiList.get(i);
 
             TextView titleTextView = new TextView(requireContext());
             titleTextView.setText(kpiDetails.getName());
@@ -116,77 +126,24 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                 // KPI newKpi = groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1);
                 // groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1).setSubKpiWeightages(kpiWithSubKpiWeightages);
                 // newKpi.getKpiWeightage().
-                groupKpiDetails.getKpiList().remove(groupKpiDetails.getKpiList().size() - 1);
-                if (groupKpiDetails.getGroupKpi() == null){
-                    kpiService.putGeneralKpi(
-                            groupKpiDetails.getKpiList(),
-                            k -> {
-                                Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
+                kpiService.putKpi(
+                        kpiList,
+                        k -> {
+                            Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
+                        },
+                        errorMessage -> {
+                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                        });
+                if (kpiWithSubKpiWeightages != null){
+                    kpiService.postKpi(
+                            kpiWithSubKpiWeightages,
+                            kpi -> {
+                                Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
                             },
                             errorMessage -> {
                                 Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                            });
-                    if (kpiWithSubKpiWeightages != null){
-                        kpiService.postGeneralKpi(
-                                kpiWithSubKpiWeightages,
-                                kpi -> {
-                                    Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
-                                },
-                                errorMessage -> {
-                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                }
-                        );
-                    }
-                }else {
-                    int group_id = groupKpiDetails.getGroupKpi().getId();
-                    Employee employee = groupKpiDetails.getGroupKpi().getEmployee();
-//                    for (KPI k: groupKpiDetails.getKpiList()) {
-//                        k.setGroup_kpi_id(group_id);
-//                    }
-                    for(int i = 0; i < groupKpiDetails.getKpiList().size(); i++){
-                        groupKpiDetails.getKpiList().get(i).setGroup_kpi_id(group_id);
-                    }
-                    if (employee == null){
-                        kpiService.putGroupKpi(
-                                groupKpiDetails.getKpiList(),
-                                k -> {
-                                    Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
-                                },
-                                errorMessage -> {
-                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                });
-                        if (groupKpiWithWeightage != null){
-                            kpiService.postGroupKpi(
-                                    groupKpiWithWeightage,
-                                    kpi -> {
-                                        Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
-                                    },
-                                    errorMessage -> {
-                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                    }
-                            );
-                        }
-                    }else {
-                        kpiService.putEmployeeKpi(
-                                groupKpiDetails.getKpiList(),
-                                k -> {
-                                    Toast.makeText(getContext(), k, Toast.LENGTH_SHORT).show();
-                                },
-                                errorMessage -> {
-                                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                });
-                        if (employeeKpi != null){
-                            kpiService.postEmployeeKpi(
-                                    employeeKpi,
-                                    kpi -> {
-                                        Toast.makeText(getContext(), "New Kpi Added Successfully", Toast.LENGTH_SHORT).show();
-                                    },
-                                    errorMessage -> {
-                                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                                    }
-                            );
-                        }
-                    }
+                            }
+                    );
                 }
             }
         });

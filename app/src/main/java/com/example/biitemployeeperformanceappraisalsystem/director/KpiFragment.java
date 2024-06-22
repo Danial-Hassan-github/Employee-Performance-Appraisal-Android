@@ -43,6 +43,7 @@ public class KpiFragment extends Fragment {
     DepartmentService departmentService;
     SharedPreferencesManager sharedPreferencesManager;
     List<GroupKpiDetails> groupKpiDetailsList;
+    List<KPI> kpiList;
     List<DepartmentKPI> departmentKpiList;
     List<Department> departmentList;
     List<Session> sessionList;
@@ -63,7 +64,7 @@ public class KpiFragment extends Fragment {
         departmentService = new DepartmentService(view.getContext());
 
         DirectorMainActivity directorMainActivity = (DirectorMainActivity) getActivity();
-        btnAddKpi.setOnClickListener(v -> directorMainActivity.replaceFragment(new AddKpiFragment()));
+        btnAddKpi.setOnClickListener(v -> directorMainActivity.replaceFragment(new AddKpiFragment(departmentKpiList)));
 
         SessionService sessionService = new SessionService(view.getContext());
         sessionService.getSessions(sessions -> {
@@ -119,7 +120,8 @@ public class KpiFragment extends Fragment {
                 departmentKpiList = departmentKPIS;
                 for (DepartmentKPI departmentKPI : departmentKpiList) {
                     if (departmentKPI.getDepartmentId() == selectedDepartment.getId()) {
-                        createPieChart(view, container, departmentKPI.getKpiList());
+                        kpiList = departmentKPI.getKpiList();
+                        createPieChart(view, container, kpiList);
                     }
                 }
             }, errorMessage -> Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show());
@@ -189,10 +191,10 @@ public class KpiFragment extends Fragment {
                 }
 
                 if (selectedKpi != null) {
-                    AddKpiFragment addKpiFragment = new AddKpiFragment();
+                    UpdateKpiFragment updateKpiFragment = new UpdateKpiFragment(kpiList, selectedKpi);
 
                     FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, addKpiFragment);
+                    transaction.replace(R.id.fragment_container, updateKpiFragment);
                     transaction.addToBackStack(null);
                     transaction.commit();
                 }
