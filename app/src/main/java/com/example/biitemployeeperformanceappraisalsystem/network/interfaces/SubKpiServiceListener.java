@@ -12,7 +12,7 @@ public interface SubKpiServiceListener {
     @GET("SubKpi/GetSubKPIs")
     Call<List<SubKpi>> getSubKPIs(@Query("sessionID") int sessionID);
     @GET("SubKpi/GetAvailableSubKpis")
-    Call<List<SubKpi>> getAvailableSubKpis(@Query("sessionID") int sessionID);
+    Call<List<SubKpi>> getAvailableSubKpis(@Query("kpiID") int kpiID, @Query("sessionID") int sessionID);
     @GET("SubKpi/GetSubKPIsOfKpi")
     Call<List<SubKpi>> getSubKPIsOfKpi(@Query("kpi_id") int kpi_id, @Query("sessionID") int sessionID);
 }

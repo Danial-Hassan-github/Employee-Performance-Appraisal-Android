@@ -70,7 +70,7 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
         // TODO
         // kpiList.add(kpiWithSubKpiWeightages.getKpi());
 
-        EditText[] editTexts = new EditText[kpiList.size()];
+        EditText[] editTexts = new EditText[kpiList.size() + (kpiWithSubKpiWeightages != null ? 1 : 0)];
 
         for (int i = 0; i < kpiList.size(); i++) {
             KPI kpiDetails = kpiList.get(i);
@@ -101,8 +101,57 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                 public void afterTextChanged(Editable s) {
                     try {
                         kpiDetails.getKpiWeightage().setWeightage(Integer.parseInt(valueEditText.getText().toString()));
-                    }catch (Exception ex){
+                    } catch (Exception ex) {
+                        // Handle potential number format exception
+                        Toast.makeText(requireContext(), "Invalid number format", Toast.LENGTH_SHORT).show();
+                    }
+                    newSum = calculateTotalSum(editTexts);
+                    txtTotalWeightage.setText(String.format("%.2f", newSum));
+                    if (newSum > 100) {
+                        saveButton.setEnabled(false);
+                        txtTotalWeightage.setTextColor(Color.RED);
+                        txtExceedMsg.setText("Please adjust weightage below 100");
+                    } else {
+                        saveButton.setEnabled(true);
+                        txtTotalWeightage.setTextColor(Color.GREEN);
+                        txtExceedMsg.setText("");
+                    }
+                }
+            });
+        }
 
+        // Add EditText for kpiWithSubKpiWeightages if it is not null
+        if (kpiWithSubKpiWeightages != null) {
+            TextView titleTextView = new TextView(requireContext());
+            titleTextView.setText(kpiWithSubKpiWeightages.getKpi().getName());
+
+            EditText valueEditText = new EditText(requireContext());
+            valueEditText.setText(Float.toString(kpiWithSubKpiWeightages.getKpi().getKpiWeightage().getWeightage()));
+
+            layout.addView(titleTextView);
+            layout.addView(valueEditText);
+
+            int index = kpiList.size();
+            editTexts[index] = valueEditText;
+
+            valueEditText.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                    // Not needed
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    // Not needed
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+                    try {
+                        kpiWithSubKpiWeightages.getKpi().getKpiWeightage().setWeightage(Integer.parseInt(valueEditText.getText().toString()));
+                    } catch (Exception ex) {
+                        // Handle potential number format exception
+                        Toast.makeText(requireContext(), "Invalid number format", Toast.LENGTH_SHORT).show();
                     }
                     newSum = calculateTotalSum(editTexts);
                     txtTotalWeightage.setText(String.format("%.2f", newSum));
@@ -123,9 +172,6 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // Implement save functionality here
-                // KPI newKpi = groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1);
-                // groupKpiDetails.getKpiList().get(groupKpiDetails.getKpiList().size() - 1).setSubKpiWeightages(kpiWithSubKpiWeightages);
-                // newKpi.getKpiWeightage().
                 kpiService.putKpi(
                         kpiList,
                         k -> {
@@ -134,7 +180,7 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                         errorMessage -> {
                             Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
                         });
-                if (kpiWithSubKpiWeightages != null){
+                if (kpiWithSubKpiWeightages != null) {
                     kpiService.postKpi(
                             kpiWithSubKpiWeightages,
                             kpi -> {

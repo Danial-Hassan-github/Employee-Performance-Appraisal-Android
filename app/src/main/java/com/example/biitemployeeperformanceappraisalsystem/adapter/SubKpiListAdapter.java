@@ -17,6 +17,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
 
@@ -29,12 +30,22 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
     private List<SubKpi> subKpiList;
     private List<EditText> editTextList = new ArrayList<>();
     private boolean isUpdating = false;
+    SharedPreferencesManager sharedPreferencesManager;
+    private OnSubKpiRemoveListener onSubKpiRemoveListener;
 
     public SubKpiListAdapter(Context context, int resourceId, List<SubKpi> subKpiList) {
         super(context, resourceId, subKpiList);
         this.inflater = LayoutInflater.from(context);
         this.resourceId = resourceId;
         this.subKpiList = subKpiList;
+    }
+
+    public interface OnSubKpiRemoveListener {
+        void onSubKpiRemove(SubKpi subKpi);
+    }
+
+    public void setOnSubKpiRemoveListener(OnSubKpiRemoveListener listener) {
+        this.onSubKpiRemoveListener = listener;
     }
 
     @NonNull
@@ -44,6 +55,8 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
         if (view == null) {
             view = inflater.inflate(resourceId, parent, false);
         }
+
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
 
         // Get the current sub KPI
         SubKpi subKpi = getItem(position);
@@ -85,7 +98,11 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
                         currentWeightage = 0;
                     }
 
-                    subKpi.getSubKpiWeightage().setWeightage(currentWeightage);
+                    SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
+                    subKpiWeightage.setSub_kpi_id(subKpi.getId());
+                    subKpiWeightage.setSession_id(sharedPreferencesManager.getSessionId());
+                    subKpiWeightage.setWeightage(currentWeightage);
+                    subKpi.setSubKpiWeightage(subKpiWeightage);
 
                     for (int i = 0; i < getCount(); i++) {
                         View itemView = getViewByPosition(i, parent);
@@ -99,9 +116,9 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
                     }
 
                     if (totalWeightage > 100) {
-                        int excess = totalWeightage - 100;
-                        subKpi.getSubKpiWeightage().setWeightage(currentWeightage - excess);
-                        editTextWeightage.setText(String.valueOf(currentWeightage - excess));
+//                        int excess = totalWeightage - 100;
+//                        subKpi.getSubKpiWeightage().setWeightage(currentWeightage - excess);
+//                        editTextWeightage.setText(String.valueOf(currentWeightage - excess));
                         Toast.makeText(getContext(), "Total Sub Kpi weightage cannot exceed 100", Toast.LENGTH_SHORT).show();
                     } else if (totalWeightage < 100) {
                         Toast.makeText(getContext(), "Total Sub Kpi weightage must be 100", Toast.LENGTH_SHORT).show();
@@ -117,6 +134,10 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
                     subKpiList.remove(position);
                     editTextList.remove(editTextWeightage); // Remove the EditText from the list
                     notifyDataSetChanged();
+
+                    if (onSubKpiRemoveListener != null) {
+                        onSubKpiRemoveListener.onSubKpiRemove(subKpi);
+                    }
                 }
             });
         }

@@ -31,19 +31,17 @@ import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage
 import com.example.biitemployeeperformanceappraisalsystem.network.services.DepartmentService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.KpiService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SubKpiService;
+import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link UpdateKpiFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class UpdateKpiFragment extends Fragment {
     List<KPI> kpiList;
     List<SubKpi> subKpiAdapterList;
     SubKpiListAdapter subKpiListAdapter;
+    SubKpiListAdapter newSubKpiListAdapter;
+    List<SubKpi> deletedSubKpis;
     boolean isSpinnerInitialized = false;
     boolean ignoreNextSelection = false;
     Department department;
@@ -52,17 +50,18 @@ public class UpdateKpiFragment extends Fragment {
     KpiService kpiService;
     SubKpiService subKpiService;
     List<SubKpi> subKpiList;
+    List<SubKpi> newSubKpiList;
     ListView subKpiListView;
     ListView newSubKpiListView;
     List<Department> departmentList;
     List<DepartmentKPI> departmentKPIList;
-    Spinner departmentSpinner,subKpiSpinner;
+    Spinner departmentSpinner, subKpiSpinner;
     Button btnSave;
+
     public UpdateKpiFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public UpdateKpiFragment(List<KPI> kpiList, KPI kpi) {
         this.kpi = kpi;
         this.kpiList = kpiList;
@@ -72,7 +71,7 @@ public class UpdateKpiFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-
+            // Handle arguments if necessary
         }
     }
 
@@ -81,12 +80,15 @@ public class UpdateKpiFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_update_kpi, container, false);
+        TabLayout tabLayout = view.findViewById(R.id.tab_layout);
         subKpiSpinner = view.findViewById(R.id.spinner_sub_kpi);
         subKpiListView = view.findViewById(R.id.list_view_subKpi);
         newSubKpiListView = view.findViewById(R.id.list_view_new_subKpi);
         btnSave = view.findViewById(R.id.btn_save_kpi);
 
         subKpiList = new ArrayList<>();
+        newSubKpiList = new ArrayList<>();
+        deletedSubKpis = new ArrayList<>();
         SubKpi subKpi = new SubKpi();
         subKpi.setName("Select SubKpi");
         subKpiList.add(subKpi);
@@ -95,14 +97,55 @@ public class UpdateKpiFragment extends Fragment {
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
 
         int sessionId = sharedPreferencesManager.getSessionId();
-        Log.d("Add Kpi Fragment", "Session ID: " + sessionId); // Debug log for session ID
+        Log.d("Update Kpi Fragment", "Session ID: " + sessionId); // Debug log for session ID
         kpiService = new KpiService(getContext());
         subKpiService = new SubKpiService(getContext());
-        DepartmentService departmentService=new DepartmentService(view.getContext());
+        DepartmentService departmentService = new DepartmentService(view.getContext());
 
-        // Initialize the subKpiList and the adapter
+        // Initialize the subKpiList and the adapters
         subKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, subKpiAdapterList);
         subKpiListView.setAdapter(subKpiListAdapter);
+
+        subKpiListAdapter.setOnSubKpiRemoveListener(s -> {
+            // Move removed subKpi to deletedSubKpis list
+            deletedSubKpis.add(s);
+            subKpiListAdapter.notifyDataSetChanged();
+        });
+
+        newSubKpiListAdapter = new SubKpiListAdapter(getContext(), R.layout.sub_kpi_list_item_view, newSubKpiList);
+        newSubKpiListView.setAdapter(newSubKpiListAdapter);
+
+        newSubKpiListAdapter.setOnSubKpiRemoveListener(s -> {
+            // Remove subKpi from newSubKpiList and add it back to subKpiList
+            subKpiList.add(s);
+            newSubKpiList.remove(s);
+            subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+            newSubKpiListAdapter.notifyDataSetChanged();
+            subKpiSpinner.setSelection(AdapterView.INVALID_POSITION);
+            ignoreNextSelection = true;
+        });
+
+        subKpiService.getAvailableSubKpis(
+                kpi.getId(),
+                sharedPreferencesManager.getSessionId(),
+                subKpiList1 -> {
+                    if (subKpiList1 != null) {
+                        subKpiList.addAll(subKpiList1);
+//                        String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
+                        subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+//                        if (subKpiTitles != null) {
+//                        } else {
+//                            Toast.makeText(getContext(), "No SubKPI titles available", Toast.LENGTH_SHORT).show();
+//                        }
+                    } else {
+                        Toast.makeText(getContext(), "Failed to fetch SubKPIs", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
+
         subKpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -118,11 +161,11 @@ public class UpdateKpiFragment extends Fragment {
 
                 try {
                     SubKpi selectedSubKpi = subKpiList.get(position);
-                    subKpiAdapterList.add(selectedSubKpi);
+                    newSubKpiList.add(selectedSubKpi);
                     subKpiList.remove(position);
-                    // Notify the adapter to refresh the Spinner and the ListView
+                    // Notify the adapters to refresh the Spinner and the ListView
                     subKpiService.populateSpinner(subKpiList, subKpiSpinner);
-                    subKpiListAdapter.notifyDataSetChanged();
+                    newSubKpiListAdapter.notifyDataSetChanged();
 
                     // Clear the selection and set the flag to ignore the next selection event
                     subKpiSpinner.setSelection(AdapterView.INVALID_POSITION);
@@ -139,17 +182,14 @@ public class UpdateKpiFragment extends Fragment {
             }
         });
 
-        subKpiListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                SubKpi deletedSubKpi = subKpiAdapterList.get(position);
-                subKpiAdapterList.remove(position);
-                subKpiList.add(deletedSubKpi);
-                // Notify the adapter to refresh the Spinner and the ListView
-                subKpiService.populateSpinner(subKpiList, subKpiSpinner);
-                subKpiListAdapter.notifyDataSetChanged();
-            }
-        });
+//        subKpiListView.setOnItemClickListener((parent, view1, position, id) -> {
+//            SubKpi deletedSubKpi = subKpiAdapterList.get(position);
+//            subKpiAdapterList.remove(position);
+//            deletedSubKpis.add(deletedSubKpi);
+//            // Notify the adapter to refresh the Spinner and the ListView
+//            subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+//            subKpiListAdapter.notifyDataSetChanged();
+//        });
 
         // Find your text boxes by their IDs
         EditText kpiNameEditText = view.findViewById(R.id.text_title);
@@ -158,12 +198,12 @@ public class UpdateKpiFragment extends Fragment {
         kpiValueEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+                // Do nothing
             }
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                // Do nothing
             }
 
             @Override
@@ -173,13 +213,13 @@ public class UpdateKpiFragment extends Fragment {
                 try {
                     sum = Integer.parseInt(kpiValueEditText.getText().toString());
                     // btnSave.setEnabled(true);
-                }catch (Exception ex){
+                } catch (Exception ex) {
                     Toast.makeText(getContext(), "Weightage must be in numbers", Toast.LENGTH_SHORT).show();
                 }
-                if (sum > 100 || sum < 0){
+                if (sum > 100 || sum < 0) {
                     Toast.makeText(getContext(), "Weightage cannot be more than 100 or less than 0", Toast.LENGTH_SHORT).show();
                     btnSave.setEnabled(false);
-                }else {
+                } else {
                     btnSave.setEnabled(true);
                 }
             }
@@ -197,8 +237,8 @@ public class UpdateKpiFragment extends Fragment {
                     kpi.getId(),
                     sharedPreferencesManager.getSessionId(),
                     subKpiList1 -> {
-                        subKpiList = subKpiList1;
-                        subKpiListAdapter.addAll(subKpiList);
+                        // subKpiList = subKpiList1;
+                        subKpiListAdapter.addAll(subKpiList1);
                         subKpiListAdapter.notifyDataSetChanged();
                     },
                     errorMessage -> {
@@ -209,47 +249,89 @@ public class UpdateKpiFragment extends Fragment {
             // Pass these values to the KpiWeightageAdjustmentFormFragment
         }
 
+//        newSubKpiListView.setOnItemClickListener((parent, view1, position, id) -> {
+//            SubKpi subKpi1 = newSubKpiList.get(position);
+//            newSubKpiList.remove(position);
+//            subKpiList.add(subKpi1);
+//            // Notify the adapter to refresh the Spinner and the ListView
+//            subKpiService.populateSpinner(subKpiList, subKpiSpinner);
+//            newSubKpiListAdapter.notifyDataSetChanged();
+//        });
+
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 KpiWithSubKpiWeightages kpiWithSubKpiWeightages = new KpiWithSubKpiWeightages();
                 List<SubKpiWeightage> subKpiWeightages = new ArrayList<>();
+                List<SubKpiWeightage> deletedSubKpiWeightages = new ArrayList<>();
+
+                kpiList.remove(kpi);
 
                 int weightageSum = Integer.parseInt(kpiValueEditText.getText().toString());
-                KPI newKpi = new KPI();
-                newKpi.setName(kpiNameEditText.getText().toString());
-                newKpi.setDepartment_id(department.getId());
+                // KPI newKpi = new KPI();
+                kpi.setName(kpiNameEditText.getText().toString());
+                // newKpi.setDepartment_id(department.getId());
                 KpiWeightage newKpiWeightage = new KpiWeightage();
                 newKpiWeightage.setWeightage(weightageSum);
                 newKpiWeightage.setSession_id(sharedPreferencesManager.getSessionId());
-                newKpi.setKpiWeightage(newKpiWeightage);
+                kpi.setKpiWeightage(newKpiWeightage);
 
-//                for (int i = 0 ; i < groupKpiDetails.getKpiList().size() - 1; i++){
-//                    weightageSum += groupKpiDetails.getKpiList().get(i).getKpiWeightage().getWeightage();
-//                }
-
-                for (SubKpi s:subKpiAdapterList) {
-                    //SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
+                for (SubKpi s : subKpiAdapterList) {
                     s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
                     s.getSubKpiWeightage().setSub_kpi_id(s.getId());
-                    // s.setSubKpiWeightage(subKpiWeightage);
+                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
                     subKpiWeightages.add(s.getSubKpiWeightage());
                 }
 
-                kpiWithSubKpiWeightages.setKpi(newKpi);
-                kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
-                kpiWithSubKpiWeightages.setSubKpiWeightages(subKpiWeightages);
+                for (SubKpi s : newSubKpiList) {
+                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
+                    subKpiWeightages.add(s.getSubKpiWeightage());
+                }
 
-                navigateToWeightageAdjustmentForm(kpiWithSubKpiWeightages);
+                for (SubKpi s : deletedSubKpis) {
+                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
+                    deletedSubKpiWeightages.add(s.getSubKpiWeightage());
+                }
 
-//                kpiService.postKpi(
-//                        kpiWithSubKpiWeightages,
-//                        kpi1 -> {
-//                            Toast.makeText(getContext(), "Kpi Added Successfully", Toast.LENGTH_SHORT).show();
-//                        },
-//                        errorMessage -> {
-//                            Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
-//                        });
+                // kpiWithSubKpiWeightages.setKpi(newKpi);
+                // kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
+                kpi.setKpiWeightage(newKpiWeightage);
+                kpi.setSubKpiWeightages(subKpiWeightages);
+                kpi.setDeletedSubKpis(deletedSubKpiWeightages);
+
+                kpiList.add(kpi);
+
+                navigateToWeightageAdjustmentForm(null);
+            }
+        });
+
+        tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                switch (tab.getPosition()) {
+                    case 0:
+                        subKpiListView.setVisibility(View.VISIBLE);
+                        newSubKpiListView.setVisibility(View.GONE);
+                        break;
+                    case 1:
+                        subKpiListView.setVisibility(View.GONE);
+                        newSubKpiListView.setVisibility(View.VISIBLE);
+                        break;
+                }
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {
+                // Do nothing
+            }
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {
+                // Do nothing
             }
         });
 

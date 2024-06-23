@@ -93,6 +93,7 @@ public class AddGeneralKpiFragment extends Fragment {
 
 
         subKpiService.getAvailableSubKpis(
+                kpi.getId(),
                 sharedPreferencesManager.getSessionId(),
                 subKpiList1 -> {
                     if (subKpiList1 != null) {

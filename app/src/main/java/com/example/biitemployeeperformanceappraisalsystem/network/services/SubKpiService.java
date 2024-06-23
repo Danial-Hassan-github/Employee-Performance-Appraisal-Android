@@ -25,8 +25,8 @@ public class SubKpiService {
         this.context = context;
     }
 
-    public void getAvailableSubKpis(int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
-        Call<List<SubKpi>> call = subKpiServiceListener.getAvailableSubKpis(sessionID);
+    public void getAvailableSubKpis(int kpiID, int sessionID, final Consumer<List<SubKpi>> onSuccess, final Consumer<String> onFailure){
+        Call<List<SubKpi>> call = subKpiServiceListener.getAvailableSubKpis(kpiID, sessionID);
         call.enqueue(new Callback<List<SubKpi>>() {
             @Override
             public void onResponse(Call<List<SubKpi>> call, Response<List<SubKpi>> response) {

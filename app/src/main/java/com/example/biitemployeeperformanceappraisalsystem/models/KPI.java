@@ -9,14 +9,14 @@ public class KPI {
     private String name;
     private KpiWeightage kpiWeightage;
     private List<SubKpiWeightage> subKpiWeightages;
-    private List<Integer> deletedSubKpiIds;
+    private List<SubKpiWeightage> deletedSubKpis;
 
-    public List<Integer> getDeletedSubKpiIds() {
-        return deletedSubKpiIds;
+    public List<SubKpiWeightage> getDeletedSubKpis() {
+        return deletedSubKpis;
     }
 
-    public void setDeletedSubKpiIds(List<Integer> deletedSubKpiIds) {
-        this.deletedSubKpiIds = deletedSubKpiIds;
+    public void setDeletedSubKpis(List<SubKpiWeightage> deletedSubKpis) {
+        this.deletedSubKpis = deletedSubKpis;
     }
 
     public int getGroup_kpi_id() {
