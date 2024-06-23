@@ -16,12 +16,14 @@ import com.example.biitemployeeperformanceappraisalsystem.R;
 import com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils;
 import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.Student;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationTimeService;
 import com.google.android.material.tabs.TabLayout;
 
 public class StudentMainActivity extends AppCompatActivity {
     TextView txtStudentDetails, txtTop;
     int studentID;
+    EvaluationService evaluationService;
     EditText editTextPin;
     Button btnSubmitPin;
     FragmentUtils fragmentUtils;
@@ -43,6 +45,7 @@ public class StudentMainActivity extends AppCompatActivity {
 
         fragmentContainer = findViewById(R.id.fragment_container);
         fragmentUtils = new FragmentUtils();
+        evaluationService = new EvaluationService(getApplicationContext());
 
         txtStudentDetails = findViewById(R.id.txt_student_details);
         txtTop = findViewById(R.id.txt_top);
@@ -70,7 +73,21 @@ public class StudentMainActivity extends AppCompatActivity {
                         evaluationTimeService.checkDegreeExitEligibility(
                                 studentID,
                                 studentSupervisor -> {
-                                    replaceFragment(new EvaluationQuestionnaireFragment(studentSupervisor.getSupervisorId(), "degree exit", fragmentContainer.getId()));
+                                    evaluationService.IsEvaluated(
+                                            studentID,
+                                            studentSupervisor.getSupervisorId(),
+                                            0,
+                                            sharedPreferencesManager.getSessionId(),
+                                            "degree exit",
+                                            result -> {
+                                                if (result) {
+                                                    Toast.makeText(getApplicationContext(), "You have already Evaluated your supervisor", Toast.LENGTH_SHORT).show();
+                                                } else {
+                                                    replaceFragment(new EvaluationQuestionnaireFragment(studentSupervisor.getSupervisorId(), "degree exit", fragmentContainer.getId()));
+                                                }
+                                            },errorMessage -> {
+                                                Toast.makeText(getApplicationContext(), "something went wrong while checking evaluation", Toast.LENGTH_SHORT).show();
+                                            });
                                 },
                                 errorMessage -> {
                                     Toast.makeText(getApplicationContext(), errorMessage, Toast.LENGTH_SHORT).show();

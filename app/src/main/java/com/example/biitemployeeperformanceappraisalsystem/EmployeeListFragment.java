@@ -20,8 +20,10 @@ import com.example.biitemployeeperformanceappraisalsystem.admin.AddEmployeeFragm
 import com.example.biitemployeeperformanceappraisalsystem.admin.AdminMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.director.DirectorMainActivity;
 import com.example.biitemployeeperformanceappraisalsystem.helper.FragmentUtils;
+import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferencesManager;
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeDetails;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.EvaluationService;
 
 import java.util.List;
 
@@ -35,6 +37,8 @@ public class EmployeeListFragment extends Fragment {
     List<EmployeeDetails> employeeDetailsList;
     ListView listView;
     SearchView searchView;
+    SharedPreferencesManager sharedPreferencesManager;
+    EvaluationService evaluationService;
     EmployeeDetailsListAdapter adapter;
     private FragmentActivity parentActivity;
     @Override
@@ -45,6 +49,9 @@ public class EmployeeListFragment extends Fragment {
         listView = view.findViewById(R.id.list_view);
         searchView = view.findViewById(R.id.search_view);
         btnAddEmployee = view.findViewById(R.id.btn_add_employee);
+        sharedPreferencesManager = new SharedPreferencesManager(getContext());
+        evaluationService = new EvaluationService(getContext());
+
         // employeeDetailsList = view.findViewById(R.id.list_view);
 
         if (parentActivity instanceof DirectorMainActivity){
@@ -105,7 +112,21 @@ public class EmployeeListFragment extends Fragment {
                     adminMainActivity.replaceFragment(fragment);
                 }
                 else if(parentActivity instanceof DirectorMainActivity){
-                    FragmentUtils.replaceFragment(getParentFragmentManager(),new EvaluationQuestionnaireFragment(employeeDetails.getEmployee().getId(),"director", getId()), getId());
+                    evaluationService.IsEvaluated(
+                            sharedPreferencesManager.getEmployeeUserObject().getEmployee().getId(),
+                            employeeDetails.getEmployee().getId(),
+                            0,
+                            sharedPreferencesManager.getSessionId(),
+                            "director",
+                            result -> {
+                                if (result) {
+                                    Toast.makeText(getContext(), "You have already Evaluated this employee", Toast.LENGTH_SHORT).show();
+                                } else {
+                                    FragmentUtils.replaceFragment(getParentFragmentManager(),new EvaluationQuestionnaireFragment(employeeDetails.getEmployee().getId(),"director", getId()), getId());
+                                }
+                            },errorMessage -> {
+                                Toast.makeText(getContext(), "something went wrong while checking evaluation", Toast.LENGTH_SHORT).show();
+                            });
                 }
             }
         });

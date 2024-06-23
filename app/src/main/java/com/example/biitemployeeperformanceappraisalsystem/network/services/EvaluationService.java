@@ -61,10 +61,10 @@ public class EvaluationService {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     // Handle successful response if needed
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
                     // Handle unsuccessful response if needed
-                    Toast.makeText(context.getApplicationContext(), call.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting student evaluation",Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -83,7 +83,7 @@ public class EvaluationService {
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
                     // Handle successful response if needed
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
                     // Handle unsuccessful response if needed
                     Toast.makeText(context.getApplicationContext(), "something went wrong while posting peer evaluation", Toast.LENGTH_SHORT).show();
@@ -104,7 +104,7 @@ public class EvaluationService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context.getApplicationContext(), "something went wrong while posting senior teacher evaluation", Toast.LENGTH_SHORT).show();
                 }
@@ -123,7 +123,7 @@ public class EvaluationService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
                 }
@@ -142,7 +142,7 @@ public class EvaluationService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
                     Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
                 }
@@ -161,9 +161,9 @@ public class EvaluationService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting supervisor evaluation", Toast.LENGTH_SHORT).show();
                 }
             }
 
@@ -180,9 +180,9 @@ public class EvaluationService {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.isSuccessful()) {
-                    Toast.makeText(context.getApplicationContext(), response.toString(),Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), response.message(),Toast.LENGTH_SHORT).show();
                 } else {
-                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting degree exit evaluation", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context.getApplicationContext(), "something went wrong while posting director evaluation", Toast.LENGTH_SHORT).show();
                 }
             }
 

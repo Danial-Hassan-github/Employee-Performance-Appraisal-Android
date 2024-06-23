@@ -4,6 +4,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.biitemployeeperformanceappraisalsystem.R;
+import com.example.biitemployeeperformanceappraisalsystem.ScoresFragment;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CustomCourseSpinnerAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.adapter.CustomSpinnerAdapter;
 import com.example.biitemployeeperformanceappraisalsystem.helper.CommonMethods;
@@ -32,6 +34,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeKpiScor
 import com.example.biitemployeeperformanceappraisalsystem.models.EmployeeQuestionsScores;
 import com.example.biitemployeeperformanceappraisalsystem.models.MultiEmployeeCoursePerformanceRequest;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
+import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
@@ -40,14 +43,18 @@ import com.example.biitemployeeperformanceappraisalsystem.network.services.Emplo
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeQuestionScoreService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeSubKpiScoreService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
+import com.github.mikephil.charting.highlight.Highlight;
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
@@ -69,6 +76,7 @@ public class ComparisonFragment extends Fragment {
     EmployeeService employeeService;
     CourseService courseService;
     SessionService sessionService;
+    QuestionnaireService questionnaireService;
     List<KpiScore> kpiScoreList;
     List<EmployeeQuestionsScores> employeeQuestionsScoresList;
     List<EmployeeKpiScore> multiEmployeesKpiScoreList;
@@ -77,12 +85,13 @@ public class ComparisonFragment extends Fragment {
     List<Employee> employeeList;
     List<Course> courseList;
     List<Session> sessionList;
-    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout;
+    List<QuestionnaireType> questionnaireTypeList;
+    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout, questionnaireTypeLayout;
     CustomSpinnerAdapter customSpinnerAdapter;
     CustomCourseSpinnerAdapter customCourseSpinnerAdapter;
     BarChart barChart;
     TabLayout tabLayout;
-    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,courseSpinner, employeeSpinner;
+    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,questionnaireTypeSpinner,courseSpinner, employeeSpinner;
     List<EmployeeCourseScore> employeeCourseScoresList;
 
     // TODO: Rename and change types and number of parameters
@@ -109,9 +118,11 @@ public class ComparisonFragment extends Fragment {
         employeeLayout = view.findViewById(R.id.employee_spinner_layout);
         sessionLayout = view.findViewById(R.id.session_spinner_layout);
         courseLayout = view.findViewById(R.id.course_spinner_layout);
+        questionnaireTypeLayout = view.findViewById(R.id.questionnaire_type_spinner_layout);
         employeeSpinner = view.findViewById(R.id.spinner_employee);
         courseSpinner = view.findViewById(R.id.spinner_course);
         sessionSpinner = view.findViewById(R.id.spinner_session);
+        questionnaireTypeSpinner = view.findViewById(R.id.spinner_questionnaire_type);
 
         // Initializing required instances
         sharedPreferencesManager = new SharedPreferencesManager(getContext());
@@ -119,6 +130,7 @@ public class ComparisonFragment extends Fragment {
         employeeService = new EmployeeService(getContext());
         courseService = new CourseService(getContext());
         sessionService = new SessionService(view.getContext());
+        questionnaireService = new QuestionnaireService(getContext());
 
         // Setting up session so if session spinner does not populate then there will be current session id being used
         session = new Session();
@@ -169,6 +181,7 @@ public class ComparisonFragment extends Fragment {
                         courseLayout.setVisibility(View.GONE);
                         break;
                     case 3:
+                        questionnaireTypeLayout.setVisibility(View.GONE);
                         isQuestion = false;
                         break;
                     default:
@@ -181,6 +194,16 @@ public class ComparisonFragment extends Fragment {
 
             }
         });
+
+        questionnaireService.getQuestionnaireType(
+                questionnaireTypes -> {
+                    questionnaireTypeList = questionnaireTypes;
+                    questionnaireService.populateSpinner(questionnaireTypeList, questionnaireTypeSpinner);
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
 
         employeeService.getEmployees(
                 employees -> {
@@ -286,8 +309,21 @@ public class ComparisonFragment extends Fragment {
             }
         });
 
+        questionnaireTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                updateChart();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return view;
     }
+
 
 //    private void updateBarChart() {
 //        // pieChart.setVisibility(View.GONE);
@@ -871,25 +907,28 @@ public class ComparisonFragment extends Fragment {
 
     private void updateQuestionComparisonBarChart() {
         // Ensure the spinners have data
-//        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
-//            return;
-//        }
+//    if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
+//        return;
+//    }
 
         try {
+            questionnaireTypeLayout.setVisibility(View.VISIBLE);
             List<String> groupLabels = new ArrayList<>();
             ArrayList<Integer> employeeIds = new ArrayList<>();
 
             // Get selected employee IDs and remove default value if necessary
             employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
-//            if (employeeIds.contains(0)) {
-//                employeeIds.remove((Integer) 0);
-//            }
+//        if (employeeIds.contains(0)) {
+//            employeeIds.remove((Integer) 0);
+//        }
+
+            int evaluationTypeId = questionnaireTypeList.get(questionnaireTypeSpinner.getSelectedItemPosition()).getId();
 
             EmployeeQuestionScoreService employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
             QuestionsScoresRequest questionsScoresRequest = new QuestionsScoresRequest();
             questionsScoresRequest.setEmployeeIDs(employeeIds);
             questionsScoresRequest.setSessionID(session.getId());
-            questionsScoresRequest.setEvaluationTypeID(1);
+            questionsScoresRequest.setEvaluationTypeID(evaluationTypeId);
 
             employeeQuestionScoreService.getMultiEmployeeQuestionsScores(
                     questionsScoresRequest,
@@ -907,7 +946,7 @@ public class ComparisonFragment extends Fragment {
                                     maxSize = newSize;
                                     labels.clear();
                                     for (QuestionScore s : scores.getQuestionScores()) {
-                                        labels.add("Q"+count);
+                                        labels.add("Q" + count);
                                         count++;
                                     }
                                 }
@@ -935,7 +974,7 @@ public class ComparisonFragment extends Fragment {
                                     }
 
                                     if (i == 0) {
-                                        for (int j=0; j<customSpinnerAdapter.getSelectedEmployeeIds().size();j++){
+                                        for (int j = 0; j < customSpinnerAdapter.getSelectedEmployeeIds().size(); j++) {
                                             groupLabels.add(employeeQuestionsScoresList.get(j).getEmployee().getName());
                                         }
                                     }
@@ -986,9 +1025,39 @@ public class ComparisonFragment extends Fragment {
                                         }
                                     }
                                 });
+
+                                // Set up the click listener for the bars
+                                barChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+                                    @Override
+                                    public void onValueSelected(Entry e, Highlight h) {
+                                        int xIndex = (int) e.getX() / 3; // Adjust based on how the xCounter was incremented
+                                        int employeeIndex = xIndex; // Adjust based on your logic
+
+                                        if (employeeIndex >= 0 && employeeIndex < employeeQuestionsScoresList.size()) {
+                                            EmployeeQuestionsScores selectedScore = employeeQuestionsScoresList.get(employeeIndex);
+                                            Fragment newFragment = new ScoresFragment();
+
+                                            Bundle bundle = new Bundle();
+                                            bundle.putString("employeeName", selectedScore.getEmployee().getName());
+                                            bundle.putInt("employeeId", selectedScore.getEmployee().getId());
+                                            newFragment.setArguments(bundle);
+
+                                            FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                                            transaction.replace(R.id.fragment_container, newFragment);
+                                            transaction.addToBackStack(null);
+                                            transaction.commit();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onNothingSelected() {
+                                        // Do nothing
+                                    }
+                                });
+
                             }
                         } catch (Exception ex) {
-                            Log.e("Error","...", ex);
+                            Log.e("Error", "...", ex);
                             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     },
@@ -1001,6 +1070,7 @@ public class ComparisonFragment extends Fragment {
             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
 
     public void updateChart(){
         if (isKpi){
