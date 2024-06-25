@@ -7,15 +7,24 @@ public class KPI {
     private int department_id;
     private int id;
     private String name;
+    private int session_id;
     private KpiWeightage kpiWeightage;
     private List<SubKpiWeightage> subKpiWeightages;
-    private List<SubKpiWeightage> deletedSubKpis;
+    private List<SubKpi> deletedSubKpis;
 
-    public List<SubKpiWeightage> getDeletedSubKpis() {
+    public int getSession_id() {
+        return session_id;
+    }
+
+    public void setSession_id(int session_id) {
+        this.session_id = session_id;
+    }
+
+    public List<SubKpi> getDeletedSubKpis() {
         return deletedSubKpis;
     }
 
-    public void setDeletedSubKpis(List<SubKpiWeightage> deletedSubKpis) {
+    public void setDeletedSubKpis(List<SubKpi> deletedSubKpis) {
         this.deletedSubKpis = deletedSubKpis;
     }
 

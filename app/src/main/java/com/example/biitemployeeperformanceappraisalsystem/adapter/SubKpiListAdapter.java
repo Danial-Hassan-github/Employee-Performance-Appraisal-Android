@@ -21,14 +21,12 @@ import com.example.biitemployeeperformanceappraisalsystem.helper.SharedPreferenc
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiWeightage;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
     private LayoutInflater inflater;
     private int resourceId;
     private List<SubKpi> subKpiList;
-    private List<EditText> editTextList = new ArrayList<>();
     private boolean isUpdating = false;
     SharedPreferencesManager sharedPreferencesManager;
     private OnSubKpiRemoveListener onSubKpiRemoveListener;
@@ -66,18 +64,19 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
             ImageButton btnRemove = view.findViewById(R.id.btn_remove_subKpi);
 
             textName.setText(subKpi.getName());
-            if (subKpi.getSubKpiWeightage() != null){
+
+            if (subKpi.getSubKpiWeightage() != null) {
                 editTextWeightage.setText(String.valueOf(subKpi.getSubKpiWeightage().getWeightage()));
-            }else {
+            } else {
                 editTextWeightage.setText(String.valueOf(0));
             }
 
-            // Add the EditText to the list if it's not already there
-            if (!editTextList.contains(editTextWeightage)) {
-                editTextList.add(editTextWeightage);
+            // Remove existing TextWatcher
+            if (editTextWeightage.getTag() instanceof TextWatcher) {
+                editTextWeightage.removeTextChangedListener((TextWatcher) editTextWeightage.getTag());
             }
 
-            editTextWeightage.addTextChangedListener(new TextWatcher() {
+            TextWatcher textWatcher = new TextWatcher() {
                 @Override
                 public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
@@ -105,20 +104,13 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
                     subKpi.setSubKpiWeightage(subKpiWeightage);
 
                     for (int i = 0; i < getCount(); i++) {
-                        View itemView = getViewByPosition(i, parent);
-                        if (itemView != null) {
-                            EditText et = itemView.findViewById(R.id.edit_text_subKpi_weightage);
-                            String weightageStr = et.getText().toString();
-                            if (!weightageStr.isEmpty()) {
-                                totalWeightage += Integer.parseInt(weightageStr);
-                            }
+                        SubKpi currentSubKpi = getItem(i);
+                        if (currentSubKpi != null && currentSubKpi.getSubKpiWeightage() != null) {
+                            totalWeightage += currentSubKpi.getSubKpiWeightage().getWeightage();
                         }
                     }
 
                     if (totalWeightage > 100) {
-//                        int excess = totalWeightage - 100;
-//                        subKpi.getSubKpiWeightage().setWeightage(currentWeightage - excess);
-//                        editTextWeightage.setText(String.valueOf(currentWeightage - excess));
                         Toast.makeText(getContext(), "Total Sub Kpi weightage cannot exceed 100", Toast.LENGTH_SHORT).show();
                     } else if (totalWeightage < 100) {
                         Toast.makeText(getContext(), "Total Sub Kpi weightage must be 100", Toast.LENGTH_SHORT).show();
@@ -126,13 +118,15 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
 
                     isUpdating = false;
                 }
-            });
+            };
+
+            editTextWeightage.addTextChangedListener(textWatcher);
+            editTextWeightage.setTag(textWatcher);
 
             btnRemove.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     subKpiList.remove(position);
-                    editTextList.remove(editTextWeightage); // Remove the EditText from the list
                     notifyDataSetChanged();
 
                     if (onSubKpiRemoveListener != null) {
@@ -143,19 +137,5 @@ public class SubKpiListAdapter extends ArrayAdapter<SubKpi> {
         }
 
         return view;
-    }
-
-    // Helper method to get view by position in ListView
-    private View getViewByPosition(int position, ViewGroup parent) {
-        ListView listView = (ListView) parent;
-        final int firstListItemPosition = listView.getFirstVisiblePosition();
-        final int lastListItemPosition = firstListItemPosition + listView.getChildCount() - 1;
-
-        if (position < firstListItemPosition || position > lastListItemPosition) {
-            return getView(position, null, parent);
-        } else {
-            final int childIndex = position - firstListItemPosition;
-            return listView.getChildAt(childIndex);
-        }
     }
 }

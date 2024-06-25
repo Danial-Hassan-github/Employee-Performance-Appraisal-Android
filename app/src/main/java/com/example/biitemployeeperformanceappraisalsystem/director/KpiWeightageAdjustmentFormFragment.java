@@ -110,7 +110,11 @@ public class KpiWeightageAdjustmentFormFragment extends Fragment {
                     if (newSum > 100) {
                         saveButton.setEnabled(false);
                         txtTotalWeightage.setTextColor(Color.RED);
-                        txtExceedMsg.setText("Please adjust weightage below 100");
+                        txtExceedMsg.setText("Please adjust weightage to 100");
+                    } else if (newSum < 100) {
+                        saveButton.setEnabled(false);
+                        txtTotalWeightage.setTextColor(Color.RED);
+                        txtExceedMsg.setText("Please adjust weightage to 100");
                     } else {
                         saveButton.setEnabled(true);
                         txtTotalWeightage.setTextColor(Color.GREEN);

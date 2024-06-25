@@ -71,8 +71,14 @@ public class SelectStudentFragment extends Fragment {
         studentService = new StudentService(getContext());
         confidentialEvaluatorStudentList = new ArrayList<>();
 
-        int semester = Integer.parseInt(editTextSemester.getText().toString());
-        String section = editTextSection.getText().toString();
+        int semester = 8;
+        String section = "A";
+        try{
+            semester = Integer.parseInt(editTextSemester.getText().toString());
+            section = editTextSection.getText().toString();
+        }catch (Exception ex){
+
+        }
 
         studentService.getStudentsBySection(
                 semester,

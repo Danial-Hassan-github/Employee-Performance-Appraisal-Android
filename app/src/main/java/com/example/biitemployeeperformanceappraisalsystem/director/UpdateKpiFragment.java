@@ -277,33 +277,37 @@ public class UpdateKpiFragment extends Fragment {
                 kpi.setKpiWeightage(newKpiWeightage);
 
                 for (SubKpi s : subKpiAdapterList) {
-                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
-                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
-                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
+//                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+//                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+//                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
                     subKpiWeightages.add(s.getSubKpiWeightage());
                 }
 
                 for (SubKpi s : newSubKpiList) {
-                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
-                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
-                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
+//                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+//                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+//                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
                     subKpiWeightages.add(s.getSubKpiWeightage());
                 }
 
-                for (SubKpi s : deletedSubKpis) {
-                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
-                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
-                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
-                    deletedSubKpiWeightages.add(s.getSubKpiWeightage());
-                }
+//                for (SubKpi s : deletedSubKpis) {
+//                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+//                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+//                    s.getSubKpiWeightage().setKpi_id(kpi.getId());
+//                    deletedSubKpiWeightages.add(s.getSubKpiWeightage());
+//                }
 
                 // kpiWithSubKpiWeightages.setKpi(newKpi);
                 // kpiWithSubKpiWeightages.setWeightage(newKpiWeightage);
                 kpi.setKpiWeightage(newKpiWeightage);
                 kpi.setSubKpiWeightages(subKpiWeightages);
-                kpi.setDeletedSubKpis(deletedSubKpiWeightages);
-
+                // kpi.setSession_id(sharedPreferencesManager.getSessionId());
+                kpi.setDeletedSubKpis(deletedSubKpis);
                 kpiList.add(kpi);
+
+                for (KPI k: kpiList) {
+                    k.setSession_id(sharedPreferencesManager.getSessionId());
+                }
 
                 navigateToWeightageAdjustmentForm(null);
             }

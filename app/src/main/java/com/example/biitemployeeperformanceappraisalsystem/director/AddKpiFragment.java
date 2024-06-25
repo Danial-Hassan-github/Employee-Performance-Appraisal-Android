@@ -258,9 +258,10 @@ public class AddKpiFragment extends Fragment {
 //                }
 
                 for (SubKpi s:subKpiAdapterList) {
-                    //SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
-                    s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
-                    s.getSubKpiWeightage().setSub_kpi_id(s.getId());
+                    // SubKpiWeightage subKpiWeightage = new SubKpiWeightage();
+                    // s.getSubKpiWeightage().setSession_id(sharedPreferencesManager.getSessionId());
+                    // SubKpiWeightage subKpiWeightage = s.getSubKpiWeightage();
+                    // s.getSubKpiWeightage().setSub_kpi_id(s.getId());
                     // s.setSubKpiWeightage(subKpiWeightage);
                     subKpiWeightages.add(s.getSubKpiWeightage());
                 }

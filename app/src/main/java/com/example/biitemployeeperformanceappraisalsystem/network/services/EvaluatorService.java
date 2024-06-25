@@ -6,6 +6,7 @@ import android.widget.Toast;
 import com.example.biitemployeeperformanceappraisalsystem.models.Employee;
 import com.example.biitemployeeperformanceappraisalsystem.models.Evaluator;
 import com.example.biitemployeeperformanceappraisalsystem.models.EvaluatorEvaluatess;
+import com.example.biitemployeeperformanceappraisalsystem.models.EvaluatorResponse;
 import com.example.biitemployeeperformanceappraisalsystem.network.RetrofitClient;
 import com.example.biitemployeeperformanceappraisalsystem.network.interfaces.EvaluatorServiceListener;
 
@@ -60,6 +61,26 @@ public class EvaluatorService {
 
             @Override
             public void onFailure(Call<List<Evaluator>> call, Throwable t) {
+                onFailure.accept(t.getMessage());
+            }
+        });
+    }
+
+    public void getEmployeeEvaluators(int employeeID, int evaluationTypeID, int sessionID, int courseID, Consumer<EvaluatorResponse> onSuccess, Consumer<String> onFailure){
+        Call<EvaluatorResponse> call = evaluatorServiceListener.getEmployeeEvaluators(employeeID, evaluationTypeID, sessionID, courseID);
+
+        call.enqueue(new Callback<EvaluatorResponse>() {
+            @Override
+            public void onResponse(Call<EvaluatorResponse> call, Response<EvaluatorResponse> response) {
+                if (response.isSuccessful()){
+                    onSuccess.accept(response.body());
+                }else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<EvaluatorResponse> call, Throwable t) {
                 onFailure.accept(t.getMessage());
             }
         });

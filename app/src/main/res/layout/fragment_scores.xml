@@ -69,6 +69,35 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/course_spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/white">
+        <TextView
+            android:id="@+id/txtCourse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Course"/>
+        <Spinner
+            android:id="@+id/spinner_course"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Evaluated By"/>
+
+    <ListView
+        android:id="@+id/evaluatorListView"
+        android:layout_width="match_parent"
+        android:background="@color/white"
+        android:layout_height="wrap_content"/>
     <ListView
         android:id="@+id/employee_questions_scores"
         android:layout_width="match_parent"

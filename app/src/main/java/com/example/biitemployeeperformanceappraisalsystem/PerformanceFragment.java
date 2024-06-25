@@ -189,7 +189,11 @@ public class PerformanceFragment extends Fragment {
                 session.getId(),
                 courses -> {
                     courseList = courses;
-                    course = courseList.get(courseList.size()-1);
+                    try {
+                        course = courseList.get(courseList.size()-1);
+                    }catch (Exception ex){
+                        
+                    }
                     List<String> coursesName = new ArrayList<>();
                     for (Course c: courseList) {
                         coursesName.add(c.getName());
@@ -520,7 +524,7 @@ public class PerformanceFragment extends Fragment {
 
                 // Call the service to get employee question scores based on the selected session, employee, and evaluation type
                 employeeQuestionScoreService = new EmployeeQuestionScoreService(getContext());
-                employeeQuestionScoreService.getEmployeeQuestionScore(
+                employeeQuestionScoreService.getEmployeeQuestionScoreByEvaluationId(
                         employeeID,
                         session.getId(),
                         evaluationTypeId,
