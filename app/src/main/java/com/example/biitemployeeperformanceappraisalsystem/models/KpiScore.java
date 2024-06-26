@@ -4,6 +4,7 @@ public class KpiScore extends EmpScore {
     private int Kpi_id;
     private String kpi_title;
 
+
     public int getKpi_id() {
         return Kpi_id;
     }

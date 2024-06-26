@@ -13,6 +13,8 @@ import retrofit2.http.Query;
 public interface SessionServiceListener {
     @GET("Session/GetSessions")
     Call<List<Session>> getSessions();
+    @GET("Session/GetYears")
+    Call<List<String>> getYears();
     @GET("Session/GetCurrentSession")
     Call<Session> getCurrentSession();
     @POST("Session/PostSession")

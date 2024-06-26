@@ -45,6 +45,25 @@ public class SessionService {
         });
     }
 
+    public void getYears(final Consumer<List<String>> onSuccess, final Consumer<String> onFailure) {
+        Call<List<String>> sessionCall = sessionServiceListener.getYears();
+        sessionCall.enqueue(new Callback<List<String>>() {
+            @Override
+            public void onResponse(Call<List<String>> call, Response<List<String>> response) {
+                if (response.isSuccessful()) {
+                    onSuccess.accept(response.body());
+                } else {
+                    onFailure.accept(response.message());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<List<String>> call, Throwable t) {
+                onFailure.accept("Something went wrong while fetching sessions");
+            }
+        });
+    }
+
     public void getCurrentSession(Consumer<Session> onSuccess, Consumer<String> onFailure) {
         Call<Session> sessionCall = sessionServiceListener.getCurrentSession();
         sessionCall.enqueue(new Callback<Session>() {

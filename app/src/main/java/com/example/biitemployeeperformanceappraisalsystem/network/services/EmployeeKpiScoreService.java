@@ -77,4 +77,22 @@ public class EmployeeKpiScoreService {
             }
         });
     }
+
+    public void compareYearlyEmployeeKpiScore(List<Integer> employeeIds, String year, int kpi_id, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareYearlyKpiEmployeePerformance(employeeIds, year, kpi_id);
+        employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeKpiScore>> call, Response<List<EmployeeKpiScore>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeKpiScore>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
 }

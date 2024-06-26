@@ -16,6 +16,8 @@ import retrofit2.http.Query;
 public interface EmployeeKpiScoreServiceListener {
     @GET("EmployeeKpiPerformance/GetKpiEmployeePerformance")
     Call<List<KpiScore>> getEmployeeKpiScore(@Query("employeeID") int employeeID, @Query("sessionID") int sessionID);
+    @GET("EmployeeKpiPerformance/CompareKpiEmployeePerformanceYearly")
+    Call<List<EmployeeKpiScore>> compareYearlyKpiEmployeePerformance(@Query("employeeIDs") List<Integer> employeeIDs, @Query("year") String year, @Query("kpi_id") int kpi_id);
     @POST("EmployeeKpiPerformance/CompareKpiEmployeePerformance")
     Call<List<EmployeeKpiScore>> compareEmployeeKpiScore(@Body EmployeeIdsWithSession employeeIdsWithSession);
     @GET("EmployeeKpiPerformance/GetKpiEmployeePerformanceMultiSession")
