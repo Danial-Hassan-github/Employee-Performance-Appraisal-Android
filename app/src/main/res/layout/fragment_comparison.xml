@@ -11,6 +11,7 @@
         android:visibility="visible"
         android:id="@+id/comparison_type_tab"
         android:layout_width="match_parent"
+        app:tabMode="scrollable"
         android:layout_height="wrap_content">
 
         <com.google.android.material.tabs.TabItem
@@ -38,6 +39,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Question"/>
+
+        <com.google.android.material.tabs.TabItem
+            android:id="@+id/tab_single_subkpi_comparison"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Single SubKpi"/>
 
     </com.google.android.material.tabs.TabLayout>
 
@@ -172,6 +179,28 @@
 
         <Spinner
             android:id="@+id/spinner_questionnaire_type"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/subkpi_spinner_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:visibility="gone"
+        android:orientation="vertical"
+        android:layout_marginBottom="5dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Select SubKpi"/>
+
+        <Spinner
+            android:id="@+id/spinner_subkpi"
             android:layout_width="match_parent"
             android:layout_height="40dp"
             />

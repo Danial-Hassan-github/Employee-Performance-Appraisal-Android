@@ -36,6 +36,7 @@ import com.example.biitemployeeperformanceappraisalsystem.models.MultiEmployeeCo
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionScore;
 import com.example.biitemployeeperformanceappraisalsystem.models.QuestionnaireType;
 import com.example.biitemployeeperformanceappraisalsystem.models.Session;
+import com.example.biitemployeeperformanceappraisalsystem.models.SubKpi;
 import com.example.biitemployeeperformanceappraisalsystem.models.SubKpiScore;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.CourseService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeCoursePerformanceService;
@@ -45,6 +46,7 @@ import com.example.biitemployeeperformanceappraisalsystem.network.services.Emplo
 import com.example.biitemployeeperformanceappraisalsystem.network.services.EmployeeSubKpiScoreService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.QuestionnaireService;
 import com.example.biitemployeeperformanceappraisalsystem.network.services.SessionService;
+import com.example.biitemployeeperformanceappraisalsystem.network.services.SubKpiService;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -71,12 +73,16 @@ public class ComparisonFragment extends Fragment {
     Boolean isCourse = false;
     Boolean isSubKpi = false;
     Boolean isQuestion = false;
+    Boolean isSingleSubKpi = false;
+    SubKpi subKpi;
     Session session;
     Course course;
     EmployeeService employeeService;
     CourseService courseService;
     SessionService sessionService;
+    SubKpiService subKpiService;
     QuestionnaireService questionnaireService;
+    List<SubKpi> subKpiList;
     List<KpiScore> kpiScoreList;
     List<EmployeeQuestionsScores> employeeQuestionsScoresList;
     List<EmployeeKpiScore> multiEmployeesKpiScoreList;
@@ -86,12 +92,12 @@ public class ComparisonFragment extends Fragment {
     List<Course> courseList;
     List<Session> sessionList;
     List<QuestionnaireType> questionnaireTypeList;
-    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout, questionnaireTypeLayout;
+    LinearLayout sessionLayout, comparisonSessionLayout, employeeLayout, courseLayout, questionnaireTypeLayout, subKpiLayout;
     CustomSpinnerAdapter customSpinnerAdapter;
     CustomCourseSpinnerAdapter customCourseSpinnerAdapter;
     BarChart barChart;
     TabLayout tabLayout;
-    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,questionnaireTypeSpinner,courseSpinner, employeeSpinner;
+    Spinner sessionSpinner,fromSessionSpinner,toSessionSpinner,questionnaireTypeSpinner,courseSpinner, employeeSpinner, subkpiSpinner;
     List<EmployeeCourseScore> employeeCourseScoresList;
 
     // TODO: Rename and change types and number of parameters
@@ -118,7 +124,9 @@ public class ComparisonFragment extends Fragment {
         employeeLayout = view.findViewById(R.id.employee_spinner_layout);
         sessionLayout = view.findViewById(R.id.session_spinner_layout);
         courseLayout = view.findViewById(R.id.course_spinner_layout);
+        subKpiLayout = view.findViewById(R.id.subkpi_spinner_layout);
         questionnaireTypeLayout = view.findViewById(R.id.questionnaire_type_spinner_layout);
+        subkpiSpinner = view.findViewById(R.id.spinner_subkpi);
         employeeSpinner = view.findViewById(R.id.spinner_employee);
         courseSpinner = view.findViewById(R.id.spinner_course);
         sessionSpinner = view.findViewById(R.id.spinner_session);
@@ -131,6 +139,7 @@ public class ComparisonFragment extends Fragment {
         courseService = new CourseService(getContext());
         sessionService = new SessionService(view.getContext());
         questionnaireService = new QuestionnaireService(getContext());
+        subKpiService = new SubKpiService(getContext());
 
         // Setting up session so if session spinner does not populate then there will be current session id being used
         session = new Session();
@@ -161,6 +170,10 @@ public class ComparisonFragment extends Fragment {
                         isQuestion = true;
                         updateQuestionComparisonBarChart();
                         break;
+                    case 4:
+                        updateSingleSubKpiComparisonBarChart();
+                        subKpiLayout.setVisibility(View.VISIBLE);
+                        isSingleSubKpi = true;
                     default:
                         break;
                 }
@@ -183,6 +196,10 @@ public class ComparisonFragment extends Fragment {
                     case 3:
                         questionnaireTypeLayout.setVisibility(View.GONE);
                         isQuestion = false;
+                        break;
+                    case 4:
+                        subKpiLayout.setVisibility(View.GONE);
+                        isSingleSubKpi = false;
                         break;
                     default:
                         break;
@@ -269,6 +286,27 @@ public class ComparisonFragment extends Fragment {
                     Toast.makeText(getContext(), errorMessage, Toast.LENGTH_LONG).show();
                 });
 
+        subKpiService.getSubKPIs(
+                sharedPreferencesManager.getSessionId(),
+                subKpis -> {
+                    if (subKpis != null) {
+                        subKpiList = subKpis;
+                        String subKpiTitles[] = subKpiService.getSubKpiTitles(subKpiList);
+                        subKpiService.populateSpinner(subKpiList,subkpiSpinner);
+
+//                        if (subKpiTitles != null) {
+//                        } else {
+//                            Toast.makeText(getContext(), "No SubKPI titles available", Toast.LENGTH_SHORT).show();
+//                        }
+                    } else {
+                        Toast.makeText(getContext(), "Failed to fetch SubKPIs", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                errorMessage -> {
+                    Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                }
+        );
+
         courseSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -313,6 +351,18 @@ public class ComparisonFragment extends Fragment {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 updateChart();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+        subkpiSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                subKpi = subKpiList.get(position);
             }
 
             @Override
@@ -603,6 +653,110 @@ public class ComparisonFragment extends Fragment {
             Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void updateSingleSubKpiComparisonBarChart() {
+        try {
+            // Define the labels for each group
+            List<String> groupLabels = new ArrayList<>();
+            ArrayList<Integer> employeeIds = new ArrayList<>();
+            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
+
+            EmployeeSubKpiScoreService employeeSubKpiScoreService = new EmployeeSubKpiScoreService(getContext());
+            EmployeeIdsWithSession employeeIdsWithSession = new EmployeeIdsWithSession();
+            employeeIdsWithSession.setEmployeeIds(employeeIds);
+            employeeIdsWithSession.setSession_id(session.getId());
+
+            employeeSubKpiScoreService.getSubKpiMultiEmployeePerformance(
+                    employeeIds,
+                    session.getId(),
+                    employeeSubKpiScores -> {
+                        try {
+                            List<EmployeeSubKpiScore> multiEmployeesSubKpiScoreList = employeeSubKpiScores;
+                            List<String> labels = new ArrayList<>();
+                            int maxSize = 0;
+
+                            // Collect unique sub-KPI names and determine the maximum size of sub-KPI performances
+                            for (EmployeeSubKpiScore scores : multiEmployeesSubKpiScoreList) {
+                                for (SubKpiScore s : scores.getSubKpiPerformances()) {
+                                    if (!labels.contains(s.getName())) {
+                                        labels.add(s.getName());
+                                    }
+                                }
+                                maxSize = Math.max(maxSize, scores.getSubKpiPerformances().size());
+                            }
+
+                            if (multiEmployeesSubKpiScoreList.size() > 0) {
+                                ArrayList<Integer> colors = null;
+                                CommonMethods commonMethods = new CommonMethods();
+                                colors = commonMethods.generateRandomColors(maxSize);
+                                BarData barData = new BarData();
+
+                                List<BarEntry> barEntries = new ArrayList<>();
+                                int xCounter = 0;
+
+                                for (int i = 0; i < multiEmployeesSubKpiScoreList.size(); i++) {
+                                    EmployeeSubKpiScore subKpiScore = multiEmployeesSubKpiScoreList.get(i);
+                                    String employeeName = subKpiScore.getEmployee().getName();
+                                    groupLabels.add(employeeName);
+
+                                    boolean found = false;
+                                    for (SubKpiScore score : subKpiScore.getSubKpiPerformances()) {
+                                        if (subKpi.getId() == score.getSubKpi_id()) {
+                                            barEntries.add(new BarEntry(xCounter, score.getScore()));
+                                            found = true;
+                                            break;
+                                        }
+                                    }
+                                    if (!found) {
+                                        barEntries.add(new BarEntry(xCounter, 0f)); // Default to 0 if no performance found
+                                    }
+                                    xCounter++;
+                                }
+
+                                BarDataSet barDataSet = new BarDataSet(barEntries, "Sub-KPI Scores");
+                                barDataSet.setColors(colors);
+                                barData.addDataSet(barDataSet);
+
+                                float barWidth = 0.2f; // width of each bar
+
+                                barData.setBarWidth(barWidth);
+                                barChart.setData(barData);
+                                barChart.invalidate();
+
+                                // Set custom labels for the x-axis
+                                XAxis xAxis = barChart.getXAxis();
+                                xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+                                xAxis.setLabelCount(groupLabels.size());
+                                xAxis.setValueFormatter(new ValueFormatter() {
+                                    @Override
+                                    public String getFormattedValue(float value) {
+                                        int index = (int) value;
+                                        if (index >= 0 && index < groupLabels.size()) {
+                                            String label = groupLabels.get(index);
+                                            return label != null ? label : "Unknown";
+                                        } else {
+                                            return "";
+                                        }
+                                    }
+                                });
+                            }
+                        } catch (Exception ex) {
+                            Log.e("", "", ex);
+                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    errorMessage -> {
+                        Log.e("", errorMessage);
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+            );
+        } catch (Exception ex) {
+            Log.e("", "", ex);
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
+
 
     public void updateCourseComparisonBarChart(){
         // pieChart.setVisibility(View.GONE);
@@ -1081,6 +1235,8 @@ public class ComparisonFragment extends Fragment {
             updateCourseComparisonBarChart();
         } else if (isQuestion) {
             updateQuestionComparisonBarChart();
+        } else if (isSingleSubKpi){
+            updateSingleSubKpiComparisonBarChart();
         }
     }
 

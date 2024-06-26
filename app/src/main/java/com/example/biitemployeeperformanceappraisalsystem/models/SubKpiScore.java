@@ -1,7 +1,7 @@
 package com.example.biitemployeeperformanceappraisalsystem.models;
 
 public class SubKpiScore extends EmpScore{
-    private int subKpi_id;
+    private int subkpi_id;
     private String name;
 
     public String getName() {
@@ -13,10 +13,10 @@ public class SubKpiScore extends EmpScore{
     }
 
     public int getSubKpi_id() {
-        return subKpi_id;
+        return subkpi_id;
     }
 
-    public void setSubKpi_id(int subKpi_id) {
-        this.subKpi_id = subKpi_id;
+    public void setSubKpi_id(int subkpi_id) {
+        this.subkpi_id = subkpi_id;
     }
 }
