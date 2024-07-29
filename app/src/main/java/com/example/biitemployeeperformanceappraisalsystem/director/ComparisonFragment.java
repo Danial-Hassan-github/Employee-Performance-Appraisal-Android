@@ -55,6 +55,7 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
@@ -78,6 +79,7 @@ public class ComparisonFragment extends Fragment {
     Boolean isQuestion = false;
     Boolean isSingleSubKpi = false;
     Boolean isYearlyKpi = false;
+    Boolean isKpiTask = false;
     KPI kpi;
     SubKpi subKpi;
     Session session;
@@ -158,6 +160,7 @@ public class ComparisonFragment extends Fragment {
         // Setting up session so if session spinner does not populate then there will be current session id being used
         session = new Session();
         session.setId(sharedPreferencesManager.getSessionId());
+        kpi = new KPI();
 
         // To hide bar chart label
         barChart.getDescription().setTextColor(Color.TRANSPARENT);
@@ -196,6 +199,17 @@ public class ComparisonFragment extends Fragment {
                         yearLayout.setVisibility(View.VISIBLE);
                         updateYearlyKpiComparisonBarChart();
                         break;
+                    case 6:
+                        if (kpi.getId() == 0){
+                            isKpiTask = true;
+                            kpiLayout.setVisibility(View.VISIBLE);
+                            updateKpiComparisonBarChart();
+                        } else {
+                            isKpiTask = true;
+                            kpiLayout.setVisibility(View.VISIBLE);
+                            updateSingleKpiComparisonBarChart();
+                        }
+                        break;
                     default:
                         break;
                 }
@@ -228,6 +242,10 @@ public class ComparisonFragment extends Fragment {
                         sessionLayout.setVisibility(View.VISIBLE);
                         kpiLayout.setVisibility(View.GONE);
                         yearLayout.setVisibility(View.GONE);
+                        break;
+                    case 6:
+                        isKpiTask = false;
+                        kpiLayout.setVisibility(View.GONE);
                         break;
                     default:
                         break;
@@ -349,7 +367,12 @@ public class ComparisonFragment extends Fragment {
 
         kpiService.getKpis(
                 kpis -> {
-                    kpiList = kpis;
+                    kpiList = new ArrayList<>();
+                    KPI k = new KPI();
+                    k.setId(0);
+                    k.setName("All");
+                    kpiList.add(k);
+                    kpiList.addAll(kpis);
                     kpiService.populateSpinner(kpiList, kpiSpinner);
                 },
                 errorMessage -> {
@@ -966,6 +989,115 @@ public class ComparisonFragment extends Fragment {
         }
     }
 
+    private void updateSingleKpiComparisonBarChart() {
+        // sessionLayout.setVisibility(View.VISIBLE);
+
+        // barChart.setVisibility(View.VISIBLE);
+        // employeeLayout.setVisibility(View.VISIBLE);
+        // courseLayout.setVisibility(View.GONE);
+
+//        if (employeeSpinner.getAdapter().isEmpty() || sessionSpinner.getAdapter().isEmpty() || courseSpinner.getAdapter().isEmpty()){
+//            return;
+//        }
+
+        try {
+            // Define the labels for each group
+            List<String> groupLabels = new ArrayList<>();
+            ArrayList<Integer> employeeIds = new ArrayList<>();
+
+            // employeeIds.add(employeeID);
+            // Log.i("",customSpinnerAdapter.getSelectedEmployeeIds().get(0).toString());
+            employeeIds.addAll(customSpinnerAdapter.getSelectedEmployeeIds());
+            // employeeIds.remove(new int[]{0});
+            // employeeIds.add(employee2.getId());
+
+            EmployeeKpiScoreService employeeKpiScoreService = new EmployeeKpiScoreService(getContext());
+            EmployeeIdsWithSession employeeIdsWithSession = new EmployeeIdsWithSession();
+            employeeIdsWithSession.setEmployeeIds(employeeIds);
+            employeeIdsWithSession.setSession_id(session.getId());
+
+            employeeKpiScoreService.compareEmployeeSingleKpiScore(
+                    employeeIds,
+                    session.getId(),
+                    kpi.getId(),
+                    employeeKpiScores -> {
+                        // TODO
+                        try {
+                            multiEmployeesKpiScoreList = employeeKpiScores;
+                            List<String> kpiLabels = new ArrayList<>();
+                            // Determine the maximum size of the groups
+//                            int maxSize = 0;
+//                            for (EmployeeKpiScore scores : multiEmployeesKpiScoreList) {
+//                                int newSize = Math.max(maxSize, scores.getKpiScores().size());
+//                                if (newSize > maxSize){
+//                                    kpiLabels.clear();
+//                                    for (KpiScore s:scores.getKpiScores()) {
+//                                        kpiLabels.add(s.getKpi_title());
+//                                    }
+//                                }
+//                                maxSize = Math.max(maxSize, scores.getKpiScores().size());
+//                            }
+                            ArrayList<BarEntry> entries = new ArrayList<>();
+                            ArrayList<Integer> colors = null;
+                            CommonMethods commonMethods = new CommonMethods();
+                            colors = commonMethods.generateRandomColors(multiEmployeesKpiScoreList.size());
+                            ArrayList<String> kpiTitles = new ArrayList<>();
+
+                            if (multiEmployeesKpiScoreList.size() > 0) {
+                                int index = 0;
+
+                                for (int i = 0; i < multiEmployeesKpiScoreList.size(); i++) {
+//                                    EmployeeKpiScore kpiScore = multiEmployeesKpiScoreList.get(i);
+//                                    ArrayList<BarEntry> group = new ArrayList<>();
+                                    groupLabels.add(multiEmployeesKpiScoreList.get(i).getEmployee().getName());
+                                    entries.add(new BarEntry(index++ , multiEmployeesKpiScoreList.get(i).getKpiScores().get(0).getScore()));
+                                }
+                            }
+
+                                // Create BarData and set data sets
+                            BarDataSet dataSet = new BarDataSet(entries, "");
+                                BarData barData1 = new BarData(dataSet);
+                                dataSet.setColors(colors);
+                            // barData1.en
+
+                                float barWidth = 0.2f; // width of each bar
+
+                                barData1.setBarWidth(barWidth);
+                                barChart.setData(barData1);
+                                barChart.setFitBars(true); // make the x-axis fit exactly all bars
+
+
+                                // barChart.groupBars(0, groupSpace, barSpace); // Grouped bars with space between groups
+                                barChart.invalidate();
+
+                            // barChart.setData(data);
+
+                            // Set up the x-axis labels
+                            XAxis xAxis = barChart.getXAxis();
+                            xAxis.setValueFormatter(new IndexAxisValueFormatter(groupLabels));
+                            xAxis.setGranularity(1f); // only intervals of 1
+                            xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+
+                            // Refresh the chart
+                            barChart.notifyDataSetChanged();
+                            barChart.invalidate();
+                            // }
+                        }catch (Exception ex){
+                            Log.e("","", ex);
+                            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    },
+                    errorMessage -> {
+                        Log.e("", errorMessage);
+                        Toast.makeText(getContext(), errorMessage, Toast.LENGTH_SHORT).show();
+                    }
+            );
+        }catch (Exception ex){
+            Log.e("","", ex);
+            Toast.makeText(getContext(), ex.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+    }
+
     private void updateKpiComparisonBarChart() {
         // sessionLayout.setVisibility(View.VISIBLE);
 
@@ -1482,6 +1614,12 @@ public class ComparisonFragment extends Fragment {
             updateSingleSubKpiComparisonBarChart();
         } else if (isYearlyKpi) {
             updateYearlyKpiComparisonBarChart();
+        } else if (isKpiTask) {
+            if (kpi.getId() == 0){
+                updateKpiComparisonBarChart();
+            }else {
+                updateSingleKpiComparisonBarChart();
+            }
         }
     }
 

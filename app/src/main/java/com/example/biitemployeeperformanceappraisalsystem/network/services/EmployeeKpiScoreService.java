@@ -42,6 +42,42 @@ public class EmployeeKpiScoreService {
         });
     }
 
+    public void compareMultiSessionKpiEmployeePerformance(List<Integer> sessionIDs, int employeeId, int kpi_id, final Consumer<List<KpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<KpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareMultiSessionKpiEmployeePerformance(sessionIDs, employeeId, kpi_id);
+        employeeKpiScoresCall.enqueue(new Callback<List<KpiScore>>() {
+            @Override
+            public void onResponse(Call<List<KpiScore>> call, Response<List<KpiScore>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<KpiScore>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
+
+    public void compareEmployeeSingleKpiScore(List<Integer> employeeIds, int session_id, int kpi_id, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeSingleKpiScore(employeeIds, session_id, kpi_id);
+        employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeKpiScore>> call, Response<List<EmployeeKpiScore>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeKpiScore>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
+
     public void compareEmployeeKpiScore(EmployeeIdsWithSession employeeIdsWithSession, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
         Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareEmployeeKpiScore(employeeIdsWithSession);
         employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScore>>() {
@@ -73,6 +109,24 @@ public class EmployeeKpiScoreService {
 
             @Override
             public void onFailure(Call<List<EmployeeKpiScoreMultiSession>> call, Throwable t) {
+                onFailure.accept(t.toString());
+            }
+        });
+    }
+
+    public void compareMultiSessionAllKpiEmployeePerformance(List<Integer> sessionIDs, int employeeId, final Consumer<List<EmployeeKpiScore>> onSuccess, final Consumer<String> onFailure){
+        Call<List<EmployeeKpiScore>> employeeKpiScoresCall = employeeKpiScoreServiceListener.compareMultiSessionAllKpiEmployeePerformance(sessionIDs, employeeId);
+        employeeKpiScoresCall.enqueue(new Callback<List<EmployeeKpiScore>>() {
+            @Override
+            public void onResponse(Call<List<EmployeeKpiScore>> call, Response<List<EmployeeKpiScore>> response) {
+                if (response.isSuccessful())
+                    onSuccess.accept(response.body());
+                else
+                    onFailure.accept(response.message());
+            }
+
+            @Override
+            public void onFailure(Call<List<EmployeeKpiScore>> call, Throwable t) {
                 onFailure.accept(t.toString());
             }
         });

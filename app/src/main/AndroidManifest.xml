@@ -59,6 +59,7 @@
             android:exported="false" />
         <activity
             android:name=".director.DirectorMainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="false" />
     </application>
 

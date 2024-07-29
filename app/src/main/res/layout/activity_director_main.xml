@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/grey"
-    android:orientation="vertical"
     tools:context=".director.DirectorMainActivity">
 
     <LinearLayout
+        android:id="@+id/top_bar"
+        android:layout_alignParentTop="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -31,8 +32,9 @@
     <FrameLayout
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_height="match_parent"
+        android:layout_below="@id/top_bar"
+        android:layout_above="@id/bottom_navigation">
         <!-- Add your main content here -->
     </FrameLayout>
 
@@ -45,6 +47,7 @@
         android:background="@color/bottomBar"
         app:itemTextColor="@color/white"
         app:itemIconTint="@color/white"
+        android:layout_alignParentBottom="true"
         app:menu="@menu/director_menu" />
 
-</LinearLayout>
+</RelativeLayout>
